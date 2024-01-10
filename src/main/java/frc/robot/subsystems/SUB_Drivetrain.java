@@ -5,8 +5,6 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,7 +14,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -58,16 +55,17 @@ public class SUB_Drivetrain extends SubsystemBase {
       new SlewRateLimiter(Constants.Drivetrain.kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
- // Odometry class for tracking robot pose
- SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
-  Constants.Drivetrain.kDriveKinematics,
-  Rotation2d.fromDegrees(-navx.getAngle()),
-  new SwerveModulePosition[] {
-      frontLeft.getPosition(),
-      frontRight.getPosition(),
-      backLeft.getPosition(),
-      backRight.getPosition()
-  }, new Pose2d());
+  // Odometry class for tracking robot pose
+  SwerveDriveOdometry m_odometry =
+      new SwerveDriveOdometry(
+          Constants.Drivetrain.kDriveKinematics,
+          Rotation2d.fromDegrees(-navx.getAngle()),
+          new SwerveModulePosition[] {
+            frontLeft.getPosition(),
+            frontRight.getPosition(),
+            backLeft.getPosition(),
+            backRight.getPosition()
+          });
 
   public SUB_Drivetrain() {}
 
@@ -80,22 +78,21 @@ public class SUB_Drivetrain extends SubsystemBase {
           frontRight.getPosition(),
           backLeft.getPosition(),
           backRight.getPosition()
-      });
-    m_field.setRobotPose(m_odometry.getEstimatedPosition());   
+        });
+    m_field.setRobotPose(m_odometry.getPoseMeters());
     // This method will be called once per scheduler run
 
-    /* 
-    Logger.getInstance().recordOutput("Drivetrain/Robot Pose", m_odometry.getEstimatedPosition());
+    // Logger.getInstance().recordOutput("Drivetrain/Robot Pose", m_odometry.getPoseMeters());
 
-    Logger.getInstance().recordOutput("Driving Velocity", frontLeft.getVelocityDrive());
-    Logger.getInstance().recordOutput("Steering Velocity", frontLeft.getVelocitySteer());
-    Logger.getInstance().recordOutput("Driving Velocity", frontRight.getVelocityDrive());
-    Logger.getInstance().recordOutput("Steering Velocity", frontRight.getVelocitySteer());
-    Logger.getInstance().recordOutput("Driving Velocity", backLeft.getVelocityDrive());
-    Logger.getInstance().recordOutput("Steering Velocity", backLeft.getVelocitySteer());
-    Logger.getInstance().recordOutput("Driving Velocity", backRight.getVelocityDrive());
-    Logger.getInstance().recordOutput("Steering Velocity", backRight.getVelocitySteer());
-    */
+    // Logger.getInstance().recordOutput("Driving Velocity", frontLeft.getVelocityDrive());
+    // Logger.getInstance().recordOutput("Steering Velocity", frontLeft.getVelocitySteer());
+    // Logger.getInstance().recordOutput("Driving Velocity", frontRight.getVelocityDrive());
+    // Logger.getInstance().recordOutput("Steering Velocity", frontRight.getVelocitySteer());
+    // Logger.getInstance().recordOutput("Driving Velocity", backLeft.getVelocityDrive());
+    // Logger.getInstance().recordOutput("Steering Velocity", backLeft.getVelocitySteer());
+    // Logger.getInstance().recordOutput("Driving Velocity", backRight.getVelocityDrive());
+    // Logger.getInstance().recordOutput("Steering Velocity", backRight.getVelocitySteer());
+
     // SmartDashboard.putNumber("Front Left Angle", frontLeft.);
 
     SmartDashboard.putNumber("rotation", getPose().getRotation().getDegrees());
@@ -111,7 +108,7 @@ public class SUB_Drivetrain extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return m_odometry.getEstimatedPosition();
+    return m_odometry.getPoseMeters();
   }
 
   /**
@@ -270,13 +267,5 @@ public class SUB_Drivetrain extends SubsystemBase {
    */
   public double getTurnRate() {
     return navx.getRate() * (Constants.Drivetrain.kGyroReversed ? -1.0 : 1.0);
-  }
-
-  /**
-   * Allows for vision measurements to be added to drive odometry.
-   * @param visionPose The pose supplied by getPose() in SUB_Limelight
-   */
-  public void addVisionMeasurement(Pose2d visionPose){
-    m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp());
   }
 }
