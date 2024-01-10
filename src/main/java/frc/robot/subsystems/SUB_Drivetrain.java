@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utils.*;
-import org.littletonrobotics.junction.Logger;
+//import org.littletonrobotics.junction.Logger;
 
 public class SUB_Drivetrain extends SubsystemBase {
   public final Field2d m_field = new Field2d();
@@ -84,6 +84,7 @@ public class SUB_Drivetrain extends SubsystemBase {
     m_field.setRobotPose(m_odometry.getEstimatedPosition());   
     // This method will be called once per scheduler run
 
+    /* 
     Logger.getInstance().recordOutput("Drivetrain/Robot Pose", m_odometry.getEstimatedPosition());
 
     Logger.getInstance().recordOutput("Driving Velocity", frontLeft.getVelocityDrive());
@@ -94,7 +95,7 @@ public class SUB_Drivetrain extends SubsystemBase {
     Logger.getInstance().recordOutput("Steering Velocity", backLeft.getVelocitySteer());
     Logger.getInstance().recordOutput("Driving Velocity", backRight.getVelocityDrive());
     Logger.getInstance().recordOutput("Steering Velocity", backRight.getVelocitySteer());
-
+    */
     // SmartDashboard.putNumber("Front Left Angle", frontLeft.);
 
     SmartDashboard.putNumber("rotation", getPose().getRotation().getDegrees());
