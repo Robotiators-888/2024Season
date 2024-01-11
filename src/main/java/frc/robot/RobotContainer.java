@@ -5,11 +5,19 @@
 package frc.robot;
 
 import frc.robot.Constants.*;
+import frc.robot.commands.CMD_AbsoluteDriveToTarget;
+import frc.robot.commands.CMD_DriveToTarget;
 import frc.robot.subsystems.SUB_Drivetrain;
+import frc.robot.subsystems.SUB_Limelight;
+import frc.robot.utils.LogiUtils;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -19,12 +27,24 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-   public static SUB_Drivetrain drivetrain = new SUB_Drivetrain();
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController DriverC =
-      new CommandXboxController(OIConstants.kDriverControllerPort);
+  // The robot's subsystems and commands are defined here...
+  public static SUB_Drivetrain drivetrain = new SUB_Drivetrain();
+  public static SUB_Limelight limelight = new SUB_Limelight();
+
+  Joystick joystick = new Joystick(0);
+  LogiUtils DriverC = new LogiUtils(0);
+  LogiUtils logiUtils1 = new LogiUtils(1);
+  JoystickButton leftBumperC = DriverC.getLeftBumperButtonPressed();
+  JoystickButton RightBumperC = DriverC.getRightBumperButtonPressed();
+  JoystickButton leftBumper = logiUtils1.getLeftBumperButtonPressed();
+  JoystickButton rightBumper = logiUtils1.getRightBumperButtonPressed();
+  JoystickButton aButton = logiUtils1.getAButtonPressed(); // Ground
+  JoystickButton yButton = logiUtils1.getYButtonPressed(); // Stow/up
+  JoystickButton xButton = logiUtils1.getXButtonPressed(); // Single Feed
+  JoystickButton bButton = logiUtils1.getBButtonPressed(); // Scoring Height
+  JoystickButton startButton = logiUtils1.getStartButtonPressed();
+  JoystickButton backButton = logiUtils1.getBackButtonPressed();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -53,7 +73,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
+    startButton.whileTrue(new CMD_DriveToTarget(limelight, drivetrain)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
+    backButton.whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, drivetrain.at_field.getTagPose(4))).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
   }
 
   /**
@@ -64,5 +85,12 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return null;
+  }
+
+  public void periodic(){
+    Pose2d visionPose = limelight.getPose();
+    if (visionPose != null){
+      drivetrain.addVisionMeasurement(visionPose);
+    }
   }
 }
