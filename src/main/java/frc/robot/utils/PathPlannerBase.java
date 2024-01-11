@@ -1,12 +1,5 @@
 package frc.robot.utils;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPlannerTrajectory.StopEvent;
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -16,12 +9,17 @@ import frc.robot.Constants.Drivetrain;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SUB_Drivetrain;
 import java.util.HashMap;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerTrajectory;
+import com.pathplanner.lib.util.PIDConstants;
 
 /** Util class for all Path Planner auto builders/generators */
 public class PathPlannerBase {
 
   static final SUB_Drivetrain drivetrain = RobotContainer.drivetrain;
-  static final PathConstraints constraints = new PathConstraints(2, 2);
+  static final PathConstraints constraints = new PathConstraints(2, 2, 2, 2);
 
   /**
    * Generates a usable pathplanner trajectory
@@ -33,11 +31,11 @@ public class PathPlannerBase {
   public static PathPlannerTrajectory getTrajectory(String plannerFile, boolean reversed) {
     PathPlannerTrajectory trajectoryPath;
     trajectoryPath =
-        PathPlanner.loadPath(
+        PathPlannerAuto.loadPath(
             plannerFile,
             constraints,
             reversed); // Filesystem.getDeployDirectory().toPath().resolve(plannerFile);
-
+            
     return trajectoryPath;
   }
 
@@ -55,7 +53,7 @@ public class PathPlannerBase {
             () -> {
               // Reset odometry for the first path you run during auto
               if (isFirstPath) {
-                drivetrain.resetOdometry(traj.getInitialHolonomicPose());
+                drivetrain.resetOdometry(traj.getInitialTargetHolonomicPose());
               }
             }),
         new PPSwerveControllerCommand(
