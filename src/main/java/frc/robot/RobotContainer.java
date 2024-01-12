@@ -12,6 +12,8 @@ import frc.robot.subsystems.SUB_Limelight;
 import frc.robot.utils.LogiUtils;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -50,6 +52,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    Pose3d tagPose = drivetrain.at_field.getTagPose(8).get();
+    drivetrain.resetOdometry(new Pose2d(tagPose.getX(), tagPose.getY(), Rotation2d.fromDegrees(45)));
     drivetrain.setDefaultCommand(
         new RunCommand(
             () -> drivetrain.drive(
@@ -74,7 +78,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     startButton.whileTrue(new CMD_DriveToTarget(limelight, drivetrain)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
-    backButton.whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, drivetrain.at_field.getTagPose(4))).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
+    backButton.whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, drivetrain.at_field.getTagPose(8))).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
   }
 
   /**
