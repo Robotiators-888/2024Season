@@ -15,7 +15,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.SUB_Drivetrain;
 
 /** This utility class is built for selecting made autos */
-public class AutoBuilder {
+public class AutoGenerator {
   SUB_Drivetrain drivetrain;
   //RobotManager manager = RobotManager.getInstance();
   private final SendableChooser<Command> chooser = new SendableChooser<>();
@@ -29,7 +29,7 @@ public class AutoBuilder {
   //                          Routines
   // ====================================================================
 
-  public AutoBuilder(SUB_Drivetrain drivetrain) {
+  public AutoGenerator(SUB_Drivetrain drivetrain) {
     this.drivetrain = drivetrain;
     
 

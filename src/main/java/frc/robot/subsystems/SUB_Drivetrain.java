@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.Drivetrain;
 import frc.robot.utils.*;
 //import org.littletonrobotics.junction.Logger;
 
@@ -28,6 +29,9 @@ public class SUB_Drivetrain extends SubsystemBase {
   public final Field2d m_field = new Field2d();
   /** Creates a new Drivetrain. */
   
+  private MAXSwerveModule[] modules;
+  private SwerveModuleState[] moduleStates;
+
   private final MAXSwerveModule frontLeft 
     = new MAXSwerveModule(Constants.Drivetrain.kFRONT_LEFT_DRIVE_MOTOR_CANID, 
     Constants.Drivetrain.kFRONT_LEFT_STEER_MOTOR_CANID, Constants.Drivetrain.kFrontLeftChassisAngularOffset);
@@ -69,7 +73,12 @@ public class SUB_Drivetrain extends SubsystemBase {
       backRight.getPosition()
   }, new Pose2d());
 
-  public SUB_Drivetrain() {}
+  SwerveDriveOdometry auto_odometry = new SwerveDriveOdometry(Drivetrain.kDriveKinematics, navx.getRotation2d(), getPositions());
+
+  public SUB_Drivetrain() {
+    modules = new MAXSwerveModule[]{frontLeft, frontRight, backLeft, backRight};
+    moduleStates = getModuleStates();
+  }
 
   @Override
   public void periodic() {
@@ -270,6 +279,42 @@ public class SUB_Drivetrain extends SubsystemBase {
    */
   public double getTurnRate() {
     return navx.getRate() * (Constants.Drivetrain.kGyroReversed ? -1.0 : 1.0);
+  }
+
+  public SwerveModuleState[] getModuleStates() {
+    SwerveModuleState[] states = new SwerveModuleState[modules.length];
+    for (int i = 0; i < modules.length; i++) {
+      states[i] = modules[i].getState();
+    }
+    return states;
+  }
+
+  public SwerveModulePosition[] getPositions(){
+    SwerveModulePosition[] positions = new SwerveModulePosition[moduleStates.length];
+    
+    for(int i = 0; i < moduleStates.length; i++){
+      positions[i] = modules[i].getPosition();
+    }
+    return positions;
+  }
+
+  public ChassisSpeeds getChassisSpeeds(){
+    return Drivetrain.kDriveKinematics.toChassisSpeeds(getModuleStates());
+  }
+
+  public Pose2d getPose2d(){
+    return auto_odometry.getPoseMeters();
+  }
+
+  public void driveFieldRelative(ChassisSpeeds fieldRelativeSpeeds){
+    driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getPose2d().getRotation()));
+  }
+
+  public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds){
+    ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
+
+    SwerveModuleState[] targetStates = Drivetrain.kDriveKinematics.toSwerveModuleStates(targetSpeeds);
+    setModuleStates(targetStates);
   }
 
   /**
