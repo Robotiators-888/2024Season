@@ -4,8 +4,11 @@
 
 package frc.robot.subsystems;
 
+import java.io.IOException;
+
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -17,6 +20,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -44,6 +48,8 @@ public class SUB_Drivetrain extends SubsystemBase {
   private final MAXSwerveModule backRight 
     = new MAXSwerveModule(Constants.Drivetrain.kBACK_RIGHT_DRIVE_MOTOR_CANID, 
     Constants.Drivetrain.kBACK_RIGHT_STEER_MOTOR_CANID, Constants.Drivetrain.kBackRightChassisAngularOffset);    
+  
+  public AprilTagFieldLayout at_field;
 
 
   AHRS navx = new AHRS();
@@ -72,7 +78,13 @@ public class SUB_Drivetrain extends SubsystemBase {
           },
           new Pose2d());
 
-  public SUB_Drivetrain() {}
+  public SUB_Drivetrain() {
+    try {
+      at_field = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("2024_at_field.json"));
+    } catch (IOException e){
+      
+    }
+  }
 
   @Override
   public void periodic() {
@@ -86,20 +98,6 @@ public class SUB_Drivetrain extends SubsystemBase {
         });
     m_field.setRobotPose(m_odometry.getEstimatedPosition());
     // This method will be called once per scheduler run
-
-    // Logger.getInstance().recordOutput("Drivetrain/Robot Pose", m_odometry.getPoseMeters());
-
-    // Logger.getInstance().recordOutput("Driving Velocity", frontLeft.getVelocityDrive());
-    // Logger.getInstance().recordOutput("Steering Velocity", frontLeft.getVelocitySteer());
-    // Logger.getInstance().recordOutput("Driving Velocity", frontRight.getVelocityDrive());
-    // Logger.getInstance().recordOutput("Steering Velocity", frontRight.getVelocitySteer());
-    // Logger.getInstance().recordOutput("Driving Velocity", backLeft.getVelocityDrive());
-    // Logger.getInstance().recordOutput("Steering Velocity", backLeft.getVelocitySteer());
-    // Logger.getInstance().recordOutput("Driving Velocity", backRight.getVelocityDrive());
-    // Logger.getInstance().recordOutput("Steering Velocity", backRight.getVelocitySteer());
-
-    // SmartDashboard.putNumber("Front Left Angle", frontLeft.);
-
     SmartDashboard.putNumber("rotation", getPose().getRotation().getDegrees());
     SmartDashboard.putData("Field", m_field);
     SmartDashboard.putNumberArray(
