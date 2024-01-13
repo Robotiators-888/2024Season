@@ -53,7 +53,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     Pose3d tagPose = drivetrain.at_field.getTagPose(16).get();
-    drivetrain.resetOdometry(new Pose2d(tagPose.getX()-1, tagPose.getY()-1, Rotation2d.fromDegrees(45)));
+    //drivetrain.resetOdometry(new Pose2d(tagPose.getX()-1, tagPose.getY()-1, Rotation2d.fromDegrees(45)));
     drivetrain.setDefaultCommand(
         new RunCommand(
             () -> drivetrain.drive(
