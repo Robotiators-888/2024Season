@@ -7,8 +7,6 @@ package frc.robot;
 import frc.robot.Constants.*;
 import frc.robot.subsystems.SUB_Drivetrain;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -44,7 +42,6 @@ public class RobotContainer {
     // log = DataLogManager.getLog();
     // poseEntry = new DoubleArrayLogEntry(log, "odometry/pose");
   }
-
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the

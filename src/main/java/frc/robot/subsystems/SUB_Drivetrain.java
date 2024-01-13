@@ -5,8 +5,6 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -89,22 +87,21 @@ public class SUB_Drivetrain extends SubsystemBase {
           frontRight.getPosition(),
           backLeft.getPosition(),
           backRight.getPosition()
-      });
-    m_field.setRobotPose(m_odometry.getEstimatedPosition());   
+        });
+    m_field.setRobotPose(m_odometry.getPoseMeters());
     // This method will be called once per scheduler run
 
-    /* 
-    Logger.getInstance().recordOutput("Drivetrain/Robot Pose", m_odometry.getEstimatedPosition());
+    // Logger.getInstance().recordOutput("Drivetrain/Robot Pose", m_odometry.getPoseMeters());
 
-    Logger.getInstance().recordOutput("Driving Velocity", frontLeft.getVelocityDrive());
-    Logger.getInstance().recordOutput("Steering Velocity", frontLeft.getVelocitySteer());
-    Logger.getInstance().recordOutput("Driving Velocity", frontRight.getVelocityDrive());
-    Logger.getInstance().recordOutput("Steering Velocity", frontRight.getVelocitySteer());
-    Logger.getInstance().recordOutput("Driving Velocity", backLeft.getVelocityDrive());
-    Logger.getInstance().recordOutput("Steering Velocity", backLeft.getVelocitySteer());
-    Logger.getInstance().recordOutput("Driving Velocity", backRight.getVelocityDrive());
-    Logger.getInstance().recordOutput("Steering Velocity", backRight.getVelocitySteer());
-    */
+    // Logger.getInstance().recordOutput("Driving Velocity", frontLeft.getVelocityDrive());
+    // Logger.getInstance().recordOutput("Steering Velocity", frontLeft.getVelocitySteer());
+    // Logger.getInstance().recordOutput("Driving Velocity", frontRight.getVelocityDrive());
+    // Logger.getInstance().recordOutput("Steering Velocity", frontRight.getVelocitySteer());
+    // Logger.getInstance().recordOutput("Driving Velocity", backLeft.getVelocityDrive());
+    // Logger.getInstance().recordOutput("Steering Velocity", backLeft.getVelocitySteer());
+    // Logger.getInstance().recordOutput("Driving Velocity", backRight.getVelocityDrive());
+    // Logger.getInstance().recordOutput("Steering Velocity", backRight.getVelocitySteer());
+
     // SmartDashboard.putNumber("Front Left Angle", frontLeft.);
 
     SmartDashboard.putNumber("rotation", getPose().getRotation().getDegrees());
@@ -120,7 +117,7 @@ public class SUB_Drivetrain extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return m_odometry.getEstimatedPosition();
+    return m_odometry.getPoseMeters();
   }
 
   /**
