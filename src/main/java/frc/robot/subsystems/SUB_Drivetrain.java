@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -88,7 +90,7 @@ public class SUB_Drivetrain extends SubsystemBase {
           backLeft.getPosition(),
           backRight.getPosition()
         });
-    m_field.setRobotPose(m_odometry.getPoseMeters());
+    m_field.setRobotPose(m_odometry.getEstimatedPosition());
     // This method will be called once per scheduler run
 
     // Logger.getInstance().recordOutput("Drivetrain/Robot Pose", m_odometry.getPoseMeters());
@@ -117,7 +119,7 @@ public class SUB_Drivetrain extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    return m_odometry.getEstimatedPosition();
   }
 
   /**
@@ -303,6 +305,10 @@ public class SUB_Drivetrain extends SubsystemBase {
     return auto_odometry.getPoseMeters();
   }
 
+  public void resetPose(Pose2d pose){
+    auto_odometry.resetPosition(navx.getRotation2d(), getPositions(), pose);
+  }
+
   public void driveFieldRelative(ChassisSpeeds fieldRelativeSpeeds){
     driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getPose2d().getRotation()));
   }
@@ -319,6 +325,6 @@ public class SUB_Drivetrain extends SubsystemBase {
    * @param visionPose The pose supplied by getPose() in SUB_Limelight
    */
   public void addVisionMeasurement(Pose2d visionPose){
-    m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp());
+   // m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp());
   }
 }
