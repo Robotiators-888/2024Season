@@ -1,11 +1,8 @@
 package frc.robot.utils;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -13,17 +10,15 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 //import frc.robot.RobotManager;
 import frc.robot.subsystems.SUB_Drivetrain;
 
 /** This utility class is built for selecting made autos */
 public class AutoGenerator {
-  SUB_Drivetrain drivetrain;
-  //RobotManager manager = RobotManager.getInstance();
-  private final ArrayList<String> commandsList = new ArrayList<>();
-  private final SendableChooser<Command> chooser = new SendableChooser<>();
+  private SUB_Drivetrain drivetrain;
+  private SendableChooser<Command> chooser = new SendableChooser<>();
   
   public AutoGenerator(SUB_Drivetrain drivetrain) {
     this.drivetrain = drivetrain;
@@ -39,12 +34,8 @@ public class AutoGenerator {
     }, drivetrain);
 
     registerAllCommands();
-    /* chooser.addOption("Dummy 1", dummyPathOne());
-    chooser.addOption("Dummy Donut", dummyPathDonut());
-    chooser.addOption("8's HEHEHEHE", figureEight());
-    */
-
-    chooser.setDefaultOption("Score One", null);
+   
+    chooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Selector", chooser);
   }
 
@@ -57,26 +48,34 @@ public class AutoGenerator {
   // ====================================================================
   //                          Routines
   // ====================================================================
+  
+  //TODO: Add Seq once branch is merges
     public Command scoringSequence(){
-      
       return new SequentialCommandGroup(
         
       );
     }
 
+    //TODO: Add intake instant when branch is merged
+    public Command runIntake(double Speed){
+      return new InstantCommand();
+    }
+
   /**
    * @return Returns chosen auto on Smartdashboard
    */
-  public Command getSelectedAuto() {
-    return chooser.getSelected();
-  }
+    public Command getSelectedAuto() {
+      return chooser.getSelected();
+    }
 
   // ====================================================================
   //                          Helpers
   // ====================================================================
 
   public void registerAllCommands(){
-
+    NamedCommands.registerCommand("RunIntake", runIntake(0.75));
+    NamedCommands.registerCommand("ScoringSequence", scoringSequence());
+    NamedCommands.registerCommand("StopIntake", runIntake(0.0));
   }
 
 }

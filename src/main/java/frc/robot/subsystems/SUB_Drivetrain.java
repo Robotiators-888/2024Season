@@ -16,7 +16,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,9 +27,6 @@ import frc.robot.utils.*;
 public class SUB_Drivetrain extends SubsystemBase {
   public final Field2d m_field = new Field2d();
   /** Creates a new Drivetrain. */
-  
-  private MAXSwerveModule[] modules;
-  private SwerveModuleState[] moduleStates;
 
   private final MAXSwerveModule frontLeft 
     = new MAXSwerveModule(Constants.Drivetrain.kFRONT_LEFT_DRIVE_MOTOR_CANID, 
@@ -47,7 +43,9 @@ public class SUB_Drivetrain extends SubsystemBase {
   private final MAXSwerveModule backRight 
     = new MAXSwerveModule(Constants.Drivetrain.kBACK_RIGHT_DRIVE_MOTOR_CANID, 
     Constants.Drivetrain.kBACK_RIGHT_STEER_MOTOR_CANID, Constants.Drivetrain.kBackRightChassisAngularOffset);    
-
+  
+    private MAXSwerveModule[] modules = new MAXSwerveModule[]{frontLeft, frontRight, backLeft, backRight};
+    private SwerveModuleState[] moduleStates = getModuleStates();
 
   AHRS navx = new AHRS();
 
@@ -75,9 +73,8 @@ public class SUB_Drivetrain extends SubsystemBase {
 
   SwerveDriveOdometry auto_odometry = new SwerveDriveOdometry(Drivetrain.kDriveKinematics, navx.getRotation2d(), getPositions());
 
-  public SUB_Drivetrain() {
-    modules = new MAXSwerveModule[]{frontLeft, frontRight, backLeft, backRight};
-    moduleStates = getModuleStates();
+  public SUB_Drivetrain() { 
+    
   }
 
   @Override
@@ -91,6 +88,7 @@ public class SUB_Drivetrain extends SubsystemBase {
           backRight.getPosition()
         });
     m_field.setRobotPose(m_odometry.getEstimatedPosition());
+    modules = new MAXSwerveModule[]{frontLeft, frontRight, backLeft, backRight};
     // This method will be called once per scheduler run
 
     // Logger.getInstance().recordOutput("Drivetrain/Robot Pose", m_odometry.getPoseMeters());
@@ -289,7 +287,7 @@ public class SUB_Drivetrain extends SubsystemBase {
   }
 
   public SwerveModulePosition[] getPositions(){
-    SwerveModulePosition[] positions = new SwerveModulePosition[moduleStates.length];
+    SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
     
     for(int i = 0; i < moduleStates.length; i++){
       positions[i] = modules[i].getPosition();

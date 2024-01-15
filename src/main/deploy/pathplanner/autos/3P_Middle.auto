@@ -40,6 +40,12 @@
           "data": {
             "name": "ShootingSequence"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopIntake"
+          }
         }
       ]
     }
