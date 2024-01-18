@@ -4,14 +4,15 @@ import frc.robot.subsystems.SUB_Drivetrain;
 import java.util.Optional;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class CMD_AbsoluteDriveToTarget extends Command {
   SUB_Drivetrain drivetrain;
 
-  private final PIDController xController = new PIDController(0.3, 0, 2); // 3, 0, 0
-  private final PIDController yController = new PIDController(3/5, 0, 0); // 3, 0, 0
-  private final PIDController omegaController = new PIDController( 0.25, 0, 0); // 2, 0, 0
+  private final PIDController xController = new PIDController(0.3, 0, 0); // 3, 0, 0
+  private final PIDController yController = new PIDController(0, 0, 0); // 3/5, 0, 0
+  private final PIDController omegaController = new PIDController( 0, 0, 0); // 0.25, 0, 0
   private final Pose3d goalPose;
   
   /**
@@ -36,13 +37,15 @@ public class CMD_AbsoluteDriveToTarget extends Command {
   @Override
   public void execute() {
     var robotPose = drivetrain.getPose();
+    SmartDashboard.putNumber("Goal Pose X", goalPose.getX());
+    SmartDashboard.putNumber("Robot Pose X", robotPose.getX());
 
     var xSpeed = xController.calculate(robotPose.getX(), goalPose.getX());
     var ySpeed = yController.calculate(robotPose.getX(), goalPose.getY());
     // In this case, it has to be what angle/rotation we want the robot to be in.
     var omegaSpeed = omegaController.calculate(robotPose.getRotation().getRadians(), goalPose.getRotation().getY());
 
-    drivetrain.drive(xSpeed, ySpeed, omegaSpeed, true, true);
+    drivetrain.drive(xSpeed, 0, 0, false, true);
   }
 
   @Override
@@ -53,6 +56,7 @@ public class CMD_AbsoluteDriveToTarget extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (xController.atSetpoint() && yController.atSetpoint() && omegaController.atSetpoint());
+    //return (xController.atSetpoint() && yController.atSetpoint() && omegaController.atSetpoint());
+    return false;
   }
 }

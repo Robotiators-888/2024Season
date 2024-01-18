@@ -10,6 +10,9 @@ import frc.robot.commands.CMD_DriveToTarget;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Limelight;
 import frc.robot.utils.LogiUtils;
+
+import java.util.Optional;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -52,8 +55,6 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    Pose3d tagPose = drivetrain.at_field.getTagPose(16).get();
-    //drivetrain.resetOdometry(new Pose2d(tagPose.getX()-1, tagPose.getY()-1, Rotation2d.fromDegrees(45)));
     drivetrain.setDefaultCommand(
         new RunCommand(
             () -> drivetrain.drive(
@@ -77,9 +78,10 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    Optional<Pose3d> p3d = Optional.of(new Pose3d(new Pose2d(1, 1, Rotation2d.fromDegrees(45))));
     startButton.whileTrue(new CMD_DriveToTarget(limelight, drivetrain)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
-    backButton.whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, drivetrain.at_field.getTagPose(8))).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
-  }
+    backButton.whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, p3d)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
+  } 
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
