@@ -6,10 +6,13 @@ package frc.robot;
 
 import frc.robot.Constants.*;
 import frc.robot.subsystems.SUB_Drivetrain;
+import frc.robot.utils.LogitechController;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -20,11 +23,23 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-   public static SUB_Drivetrain drivetrain = new SUB_Drivetrain();
+  public static SUB_Drivetrain drivetrain = new SUB_Drivetrain();
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController DriverC =
-      new CommandXboxController(OIConstants.kDriverControllerPort);
+  Joystick joystick = new Joystick(0);
+  LogitechController DriverC = new LogitechController(0);
+  LogitechController AssistC = new LogitechController(1);
+
+  JoystickButton d_leftBumper = DriverC.getLeftBumper();
+  JoystickButton d_rightBumper = DriverC.getRightBumper();
+
+  JoystickButton a_leftBumper = AssistC.getLeftBumper();
+  JoystickButton a_rightBumper = AssistC.getRightBumper();
+  JoystickButton a_aButton = AssistC.getAButton();
+  JoystickButton a_yButton = AssistC.getYButton(); 
+  JoystickButton a_xButton = AssistC.getXButton(); 
+  JoystickButton a_bButton = AssistC.getBButton(); 
+  JoystickButton a_startButton = AssistC.getStartButton();
+  JoystickButton a_backButton = AssistC.getBackButton();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -38,9 +53,6 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(DriverC.getRawAxis(4), OIConstants.kDriveDeadband),
                 true, true),
                 drivetrain));
-    
-    // log = DataLogManager.getLog();
-    // poseEntry = new DoubleArrayLogEntry(log, "odometry/pose");
   }
 
   /**

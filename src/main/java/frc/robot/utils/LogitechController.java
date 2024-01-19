@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 /**
  * Wrapper Class For Logitech F310 Controller
  */
-public class LogiUtils extends Joystick {
+public class LogitechController extends Joystick {
     private JoystickButton AButton;
     private JoystickButton BButton;
     private JoystickButton XButton;
@@ -68,7 +68,7 @@ public class LogiUtils extends Joystick {
      * The Constructor That Allows The User To Pass a Port Number to This Class
      * @param port,
      */
-    public LogiUtils(int port){
+    public LogitechController(int port){
         super(port);
         AButton = new JoystickButton(this, button.kABUTTON.value); 
         BButton = new JoystickButton(this, button.kBBUTTON.value);
@@ -82,43 +82,43 @@ public class LogiUtils extends Joystick {
         rightJoystickPress = new JoystickButton(this, button.kRIGHTJOYSTICKPRESS.value);
     }
     
-    public JoystickButton getAButtonPressed(){
+    public JoystickButton getAButton(){
         return AButton;
     }       
     
-    public JoystickButton getBButtonPressed(){
+    public JoystickButton getBButton(){
         return BButton;
     } 
     
-    public JoystickButton getXButtonPressed(){
+    public JoystickButton getXButton(){
         return XButton;
     }     
           
-    public JoystickButton getYButtonPressed(){
+    public JoystickButton getYButton(){
         return YButton;
     }       
           
-    public JoystickButton getLeftBumperButtonPressed(){
+    public JoystickButton getLeftBumperButton(){
         return leftButton;
     }   
     
-    public JoystickButton getRightBumperButtonPressed(){
+    public JoystickButton getRightBumperButton(){
         return rightButton;
     }  
           
-    public JoystickButton getStartButtonPressed(){
+    public JoystickButton getStartButton(){
         return startButton;
     }   
        
-    public JoystickButton getBackButtonPressed(){
+    public JoystickButton getBackButton(){
         return backButton;
     }      
      
-    public JoystickButton getLeftJoystickButtonPressed(){
+    public JoystickButton getLeftJoystickButton(){
         return leftJoystickPress;
     }       
      
-    public JoystickButton getRightJoystickButtonPressed(){
+    public JoystickButton getRightJoystickButton(){
         return rightJoystickPress;
     }  
      
