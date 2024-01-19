@@ -78,7 +78,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    Optional<Pose3d> p3d = Optional.of(new Pose3d(new Pose2d(1, 1, Rotation2d.fromDegrees(45))));
+    Optional<Pose3d> p3d = Optional.of(new Pose3d(new Pose2d(0.5, 0.5, Rotation2d.fromDegrees(45))));
     startButton.whileTrue(new CMD_DriveToTarget(limelight, drivetrain)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
     backButton.whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, p3d)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
   } 
@@ -93,9 +93,9 @@ public class RobotContainer {
     return null;
   }
 
-  public void periodic(){
+  public void robotPeriodic(){
     Pose2d visionPose = limelight.getPose();
-    if (visionPose != null){
+    if (!visionPose.equals(new Pose2d())){
       drivetrain.addVisionMeasurement(visionPose);
     }
   }

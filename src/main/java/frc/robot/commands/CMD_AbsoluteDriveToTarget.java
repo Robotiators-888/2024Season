@@ -10,9 +10,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class CMD_AbsoluteDriveToTarget extends Command {
   SUB_Drivetrain drivetrain;
 
-  private final PIDController xController = new PIDController(0.3, 0, 0); // 3, 0, 0
-  private final PIDController yController = new PIDController(0, 0, 0); // 3/5, 0, 0
-  private final PIDController omegaController = new PIDController( 0, 0, 0); // 0.25, 0, 0
+  private final PIDController xController = new PIDController(1, 0, 0); // 3, 0, 0
+  private final PIDController yController = new PIDController(1, 0, 0); // 3/5, 0, 0
+  private final PIDController omegaController = new PIDController( 1, 0, 0); // 0.25, 0, 0
   private final Pose3d goalPose;
   
   /**
@@ -37,15 +37,17 @@ public class CMD_AbsoluteDriveToTarget extends Command {
   @Override
   public void execute() {
     var robotPose = drivetrain.getPose();
-    SmartDashboard.putNumber("Goal Pose X", goalPose.getX());
-    SmartDashboard.putNumber("Robot Pose X", robotPose.getX());
+    SmartDashboard.putNumber("Goal Pose Y", goalPose.getY());
+    SmartDashboard.putNumber("Robot Pose Y", robotPose.getY());
+    SmartDashboard.putNumber("Goal Pose Rotation", goalPose.getRotation().getAngle());
+    SmartDashboard.putNumber("Robot Pose Rotation", robotPose.getRotation().getRadians());
 
     var xSpeed = xController.calculate(robotPose.getX(), goalPose.getX());
-    var ySpeed = yController.calculate(robotPose.getX(), goalPose.getY());
+    var ySpeed = yController.calculate(robotPose.getY(), goalPose.getY());
     // In this case, it has to be what angle/rotation we want the robot to be in.
-    var omegaSpeed = omegaController.calculate(robotPose.getRotation().getRadians(), goalPose.getRotation().getY());
+    var omegaSpeed = omegaController.calculate(robotPose.getRotation().getRadians(), goalPose.getRotation().getAngle());
 
-    drivetrain.drive(xSpeed, 0, 0, false, true);
+    drivetrain.drive(xSpeed, ySpeed, omegaSpeed, false, true);
   }
 
   @Override
