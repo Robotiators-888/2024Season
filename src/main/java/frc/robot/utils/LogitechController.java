@@ -98,11 +98,11 @@ public class LogitechController extends Joystick {
         return YButton;
     }       
           
-    public JoystickButton getLeftBumperButton(){
+    public JoystickButton getLeftBumper(){
         return leftButton;
     }   
     
-    public JoystickButton getRightBumperButton(){
+    public JoystickButton getRightBumper(){
         return rightButton;
     }  
           
