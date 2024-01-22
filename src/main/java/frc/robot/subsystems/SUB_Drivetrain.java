@@ -96,7 +96,7 @@ public class SUB_Drivetrain extends SubsystemBase {
           backLeft.getPosition(),
           backRight.getPosition()
         });
-    m_field.setRobotPose(m_odometry.getEstimatedPosition());
+    m_field.setRobotPose(getPose());
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("rotation", getPose().getRotation().getDegrees());
     SmartDashboard.putData("Field", m_field);
@@ -276,7 +276,8 @@ public class SUB_Drivetrain extends SubsystemBase {
    * Allows for vision measurements to be added to drive odometry.
    * @param visionPose The pose supplied by getPose() in SUB_Limelight
    */
-  public void addVisionMeasurement(Pose2d visionPose){
-    m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp());
+  public void addVisionMeasurement(Pose2d visionPose, double latency){
+    m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latency);
   }
+
 }

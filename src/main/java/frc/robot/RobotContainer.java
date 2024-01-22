@@ -17,6 +17,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -34,8 +35,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
-  public static SUB_Drivetrain drivetrain = new SUB_Drivetrain();
   public static SUB_Limelight limelight = new SUB_Limelight();
+  public static SUB_Drivetrain drivetrain = new SUB_Drivetrain();
 
   Joystick joystick = new Joystick(0);
   LogiUtils DriverC = new LogiUtils(0);
@@ -78,9 +79,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    Pose3d op3d = drivetrain.at_field.getTagPose(4).get();
+    Pose3d op = new Pose3d(new Pose2d(op3d.getX()-1, op3d.getY(), Rotation2d.fromDegrees(0)));
     Optional<Pose3d> p3d = Optional.of(new Pose3d(new Pose2d(0.5, 0.5, Rotation2d.fromDegrees(45))));
     startButton.whileTrue(new CMD_DriveToTarget(limelight, drivetrain)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
-    backButton.whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, p3d)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
+    backButton.whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, Optional.of(op))).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
   } 
 
   /**

@@ -23,6 +23,7 @@ public class SUB_Limelight extends SubsystemBase {
   /** Creates a new SUB_Limelight. */
   public SUB_Limelight() {
     allianceColor = DriverStation.getAlliance().get();
+    SmartDashboard.putString("ALLIANCE", allianceColor.toString());
   }
 
   /**
@@ -33,10 +34,11 @@ public class SUB_Limelight extends SubsystemBase {
   public Pose2d getPose(){
     LimelightResults llresults = LimelightHelpers.getLatestResults(LIMELIGHT_NAME);
 
+    // TODO: Limelight shits 
     switch (allianceColor){
-      case Red: return llresults.targetingResults.getBotPose2d_wpiRed();
-      case Blue: return llresults.targetingResults.getBotPose2d_wpiBlue();
-      default: return llresults.targetingResults.getBotPose2d_wpiBlue(); // Default
+      case Blue: return llresults.targetingResults.getBotPose2d_wpiRed();
+      case Red: return llresults.targetingResults.getBotPose2d_wpiBlue();
+      default: return null; // Default
     }
   }
 
@@ -97,5 +99,13 @@ public class SUB_Limelight extends SubsystemBase {
    */
   public void setPipeline(int value) {
     LimelightHelpers.setPipelineIndex(LIMELIGHT_NAME, value);
+  }
+
+  public double getCaptureLatency(){
+    return LimelightHelpers.getLatency_Capture(LIMELIGHT_NAME);
+  }
+
+  public double getPipelineLatency(){
+    return LimelightHelpers.getLatency_Pipeline(LIMELIGHT_NAME);
   }
 }

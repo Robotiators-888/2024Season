@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class CMD_AbsoluteDriveToTarget extends Command {
   SUB_Drivetrain drivetrain;
 
-  private final PIDController xController = new PIDController(1, 0, 0); // 3, 0, 0
-  private final PIDController yController = new PIDController(1, 0, 0); // 3/5, 0, 0
+  private final PIDController xController = new PIDController(0.25, 0, 0); // 3, 0, 0
+  private final PIDController yController = new PIDController(0.25, 0, 0); // 3/5, 0, 0
   private final PIDController omegaController = new PIDController( 1, 0, 0); // 0.25, 0, 0
   private final Pose3d goalPose;
   
