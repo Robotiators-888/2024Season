@@ -6,7 +6,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class CMD_DriveToTarget extends Command {
+public class CMD_RelativeDriveToTarget extends Command {
   SUB_Limelight limelight;
   SUB_Drivetrain drivetrain;
 
@@ -19,7 +19,7 @@ public class CMD_DriveToTarget extends Command {
    * @param limelight The limelight subsystem
    * @param drivetrain The drivetrain subsystem
    */
-  public CMD_DriveToTarget(SUB_Limelight limelight, SUB_Drivetrain drivetrain) {
+  public CMD_RelativeDriveToTarget(SUB_Limelight limelight, SUB_Drivetrain drivetrain) {
     this.limelight = limelight;
     this.drivetrain = drivetrain;
 

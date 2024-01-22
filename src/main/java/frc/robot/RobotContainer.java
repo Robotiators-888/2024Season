@@ -6,7 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.*;
 import frc.robot.commands.CMD_AbsoluteDriveToTarget;
-import frc.robot.commands.CMD_DriveToTarget;
+import frc.robot.commands.CMD_RelativeDriveToTarget;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Limelight;
 import frc.robot.utils.LogiUtils;
@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -45,10 +46,10 @@ public class RobotContainer {
   JoystickButton RightBumperC = DriverC.getRightBumperButtonPressed();
   JoystickButton leftBumper = logiUtils1.getLeftBumperButtonPressed();
   JoystickButton rightBumper = logiUtils1.getRightBumperButtonPressed();
-  JoystickButton aButton = logiUtils1.getAButtonPressed(); // Ground
-  JoystickButton yButton = logiUtils1.getYButtonPressed(); // Stow/up
-  JoystickButton xButton = logiUtils1.getXButtonPressed(); // Single Feed
-  JoystickButton bButton = logiUtils1.getBButtonPressed(); // Scoring Height
+  JoystickButton aButton = logiUtils1.getAButtonPressed();
+  JoystickButton yButton = logiUtils1.getYButtonPressed(); 
+  JoystickButton xButton = logiUtils1.getXButtonPressed(); 
+  JoystickButton bButton = logiUtils1.getBButtonPressed(); 
   JoystickButton startButton = logiUtils1.getStartButtonPressed();
   JoystickButton backButton = logiUtils1.getBackButtonPressed();
 
@@ -64,9 +65,6 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(DriverC.getRawAxis(4), OIConstants.kDriveDeadband),
                 true, true),
                 drivetrain));
-    
-    // log = DataLogManager.getLog();
-    // poseEntry = new DoubleArrayLogEntry(log, "odometry/pose");
   }
 
   /**
@@ -82,8 +80,8 @@ public class RobotContainer {
     Pose3d op3d = drivetrain.at_field.getTagPose(4).get();
     Pose3d op = new Pose3d(new Pose2d(op3d.getX()-1, op3d.getY(), Rotation2d.fromDegrees(0)));
     Optional<Pose3d> p3d = Optional.of(new Pose3d(new Pose2d(0.5, 0.5, Rotation2d.fromDegrees(45))));
-    startButton.whileTrue(new CMD_DriveToTarget(limelight, drivetrain)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
-    backButton.whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, Optional.of(op))).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
+    startButton.whileTrue(new CMD_RelativeDriveToTarget(limelight, drivetrain)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
+    backButton.whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, p3d)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
   } 
 
   /**
@@ -99,7 +97,14 @@ public class RobotContainer {
   public void robotPeriodic(){
     Pose2d visionPose = limelight.getPose();
     if (!visionPose.equals(new Pose2d())){
-      drivetrain.addVisionMeasurement(visionPose);
+      // Check if vision pose is within one meter of the current estiamted pose 
+      // to avoid abnormalities with vision (detecting a tag that isn't present) from
+      // affecting the accuracy of our pose measurement.
+      Transform2d t2d = visionPose.minus(drivetrain.getPose());
+      double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
+      if (dist <= 1){
+        drivetrain.addVisionMeasurement(visionPose, limelight.getCaptureLatency() + limelight.getPipelineLatency());
+      }
     }
   }
 }
