@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -78,10 +79,10 @@ public class RobotContainer {
    */
   private void configureBindings() {
     Pose3d op3d = drivetrain.at_field.getTagPose(4).get();
-    Pose3d op = new Pose3d(new Pose2d(op3d.getX()-1, op3d.getY(), Rotation2d.fromDegrees(0)));
+    Pose3d op = new Pose3d(new Pose2d(op3d.getX()-3, op3d.getY()-1, Rotation2d.fromDegrees(0)));
     Optional<Pose3d> p3d = Optional.of(new Pose3d(new Pose2d(0.5, 0.5, Rotation2d.fromDegrees(45))));
     startButton.whileTrue(new CMD_RelativeDriveToTarget(limelight, drivetrain)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
-    backButton.whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, p3d)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
+    backButton.whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, Optional.of(op))).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
   } 
 
   /**
@@ -100,11 +101,15 @@ public class RobotContainer {
       // Check if vision pose is within one meter of the current estiamted pose 
       // to avoid abnormalities with vision (detecting a tag that isn't present) from
       // affecting the accuracy of our pose measurement.
-      Transform2d t2d = visionPose.minus(drivetrain.getPose());
-      double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
-      if (dist <= 1){
-        drivetrain.addVisionMeasurement(visionPose, limelight.getCaptureLatency() + limelight.getPipelineLatency());
-      }
+
+      // Transform2d t2d = visionPose.minus(drivetrain.getPose());
+      // double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
+      // if (dist <= 1){
+      //   drivetrain.addVisionMeasurement(visionPose, limelight.getCaptureLatency() + limelight.getPipelineLatency());
+      // }
+      SmartDashboard.putNumber("TOTAL LATENCY", limelight.getCaptureLatency() + limelight.getPipelineLatency());
+      double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
+      drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
     }
   }
 }
