@@ -6,8 +6,11 @@ package frc.robot;
 
 import frc.robot.Constants.*;
 import frc.robot.subsystems.SUB_Drivetrain;
+import frc.robot.subsystems.SUB_Shooter;
+import frc.robot.subsystems.SUB_Intake;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -21,7 +24,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
    public static SUB_Drivetrain drivetrain = new SUB_Drivetrain();
-
+   public static SUB_Shooter shooter = new SUB_Shooter();
+   public static SUB_Intake intake = new SUB_Intake();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController DriverC =
       new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -39,8 +43,13 @@ public class RobotContainer {
                 true, true),
                 drivetrain));
     
-    // log = DataLogManager.getLog();
+    DriverC.a().toggleOnTrue(new InstantCommand(()->shooter.driveIndex()));
+    DriverC.b().toggleOnTrue(new InstantCommand(()->shooter.driveShooter()));
+    // log = ataLogManager.getLog();
     // poseEntry = new DoubleArrayLogEntry(log, "odometry/pose");
+    DriverC.x().whileTrue(new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakeSpeed)));
+    DriverC.y().whileTrue(new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed)));
+    DriverC.leftBumper().whileTrue(new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kOutakeSpeed)));
   }
 
   /**
