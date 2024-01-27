@@ -124,8 +124,11 @@ public final class Constants {
     public static final boolean kGyroReversed = true;
   }
 
+<<<<<<< HEAD
   public static class Limelight{
     public static final String LIMELIGHT_NAME = "limelight";
+=======
+>>>>>>> 716fbf17c30a7042a8d6e27194c585f964906b4d
   public static final class Intake{
     public static final int kINTAKE_MOTOR_CANID = 30;
 
