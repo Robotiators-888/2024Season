@@ -126,5 +126,11 @@ public final class Constants {
 
   public static class Limelight{
     public static final String LIMELIGHT_NAME = "limelight";
+  public static final class Intake{
+    public static final int kINTAKE_MOTOR_CANID = 30;
+
+    public static final double kIntakeSpeed = 0.75;
+    public static final double kOutakeSpeed = - 0.75;
+    public static final double kIndexingSpeed = 0.5;
   }
 }
