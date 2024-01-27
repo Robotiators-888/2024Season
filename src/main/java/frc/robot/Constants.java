@@ -122,5 +122,9 @@ public final class Constants {
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
     public static final boolean kGyroReversed = true;
-    }
+  }
+
+  public static class Limelight{
+    public static final String LIMELIGHT_NAME = "limelight";
+  }
 }
