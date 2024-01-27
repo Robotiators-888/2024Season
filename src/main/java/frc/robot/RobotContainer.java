@@ -102,14 +102,12 @@ public class RobotContainer {
       // to avoid abnormalities with vision (detecting a tag that isn't present) from
       // affecting the accuracy of our pose measurement.
 
-      // Transform2d t2d = visionPose.minus(drivetrain.getPose());
-      // double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
-      // if (dist <= 1){
-      //   drivetrain.addVisionMeasurement(visionPose, limelight.getCaptureLatency() + limelight.getPipelineLatency());
-      // }
-      SmartDashboard.putNumber("TOTAL LATENCY", limelight.getCaptureLatency() + limelight.getPipelineLatency());
-      double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
-      drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
+      Transform2d t2d = visionPose.minus(drivetrain.getPose());
+      double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
+      if (dist <= 1){
+        double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
+        drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
+      }
     }
   }
 }
