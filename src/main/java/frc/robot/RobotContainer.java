@@ -47,8 +47,8 @@ public class RobotContainer {
     DriverC.b().toggleOnTrue(new InstantCommand(()->shooter.driveShooter()));
     // log = ataLogManager.getLog();
     // poseEntry = new DoubleArrayLogEntry(log, "odometry/pose");
-    DriverC.x().whileTrue(new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakeSpeed)));
-    DriverC.y().whileTrue(new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed)));
+    DriverC.x().toggleOnTrue((new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakeSpeed))));
+    DriverC.y().toggleOnTrue(new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed)));
     DriverC.leftBumper().whileTrue(new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kOutakeSpeed)));
   }
 
