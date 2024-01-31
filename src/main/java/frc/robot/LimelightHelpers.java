@@ -777,4 +777,24 @@ public class LimelightHelpers {
 
         return results;
     }
+
+    public static double getCL(String limelightName) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getCL'");
+    }
+
+    public static double getTL(String limelightName) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getTL'");
+    }
+
+    public static double getTLONG(String limelightName) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getTLONG'");
+    }
+
+    public static double getTSHORT(String limelightName) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getTSHORT'");
+    }
 }

@@ -108,4 +108,13 @@ public class SUB_Limelight extends SubsystemBase {
   public double getPipelineLatency(){
     return LimelightHelpers.getLatency_Pipeline(LIMELIGHT_NAME);
   }
+
+  public double getTargetPitch(){
+    return LimelightHelpers.getTY(LIMELIGHT_NAME);
+  }
+ 
+  public double getTargetYaw(){
+    return LimelightHelpers.getTX(LIMELIGHT_NAME);
+  }
+
 }
