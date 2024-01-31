@@ -88,14 +88,25 @@ public final class Constants {
   }
 
   public static final class Drivetrain {
-    public static final int kFRONT_LEFT_DRIVE_MOTOR_CANID = 20;
-    public static final int kFRONT_LEFT_STEER_MOTOR_CANID = 21;
-    public static final int kFRONT_RIGHT_DRIVE_MOTOR_CANID = 22;
-    public static final int kFRONT_RIGHT_STEER_MOTOR_CANID = 23;
-    public static final int kBACK_LEFT_DRIVE_MOTOR_CANID = 24;
-    public static final int kBACK_LEFT_STEER_MOTOR_CANID = 25;
-    public static final int kBACK_RIGHT_DRIVE_MOTOR_CANID = 26;
-    public static final int kBACK_RIGHT_STEER_MOTOR_CANID = 27;
+    public static final int kFRONT_LEFT_DRIVE_MOTOR_CANID = 24;
+    public static final int kFRONT_LEFT_STEER_MOTOR_CANID = 25;
+    public static final int kFRONT_RIGHT_DRIVE_MOTOR_CANID = 20;
+    public static final int kFRONT_RIGHT_STEER_MOTOR_CANID = 21;
+    public static final int kBACK_LEFT_DRIVE_MOTOR_CANID = 26;
+    public static final int kBACK_LEFT_STEER_MOTOR_CANID = 27;
+    public static final int kBACK_RIGHT_DRIVE_MOTOR_CANID = 22;
+    public static final int kBACK_RIGHT_STEER_MOTOR_CANID = 23;
+
+//Original IDS
+    // public static final int kFRONT_LEFT_DRIVE_MOTOR_CANID = 20;
+    // public static final int kFRONT_LEFT_STEER_MOTOR_CANID = 21;
+    // public static final int kFRONT_RIGHT_DRIVE_MOTOR_CANID = 22;
+    // public static final int kFRONT_RIGHT_STEER_MOTOR_CANID = 23;
+    // public static final int kBACK_LEFT_DRIVE_MOTOR_CANID = 24;
+    // public static final int kBACK_LEFT_STEER_MOTOR_CANID = 25;
+    // public static final int kBACK_RIGHT_DRIVE_MOTOR_CANID = 26;
+    // public static final int kBACK_RIGHT_STEER_MOTOR_CANID = 27;
+
 
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
@@ -125,5 +136,6 @@ public final class Constants {
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
     public static final boolean kGyroReversed = true;
+    public static final double kGyroRotation = -90;
     }
 }
