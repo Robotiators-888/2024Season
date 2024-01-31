@@ -29,7 +29,7 @@ public class RobotContainer {
    public static SUB_Shooter shooter = new SUB_Shooter();
    public static SUB_Intake intake = new SUB_Intake();
    public static SUB_Pivot pivot = new SUB_Pivot();
-   public static AutoGenerator autod = new AutoGenerator(drivetrain);
+   public static AutoGenerator autos = new AutoGenerator(drivetrain);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController DriverC =
