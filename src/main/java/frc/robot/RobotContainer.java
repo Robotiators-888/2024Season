@@ -9,6 +9,7 @@ import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Shooter;
 import frc.robot.subsystems.SUB_Intake;
 import frc.robot.subsystems.SUB_Pivot;
+import frc.robot.utils.AutoGenerator;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -27,7 +28,8 @@ public class RobotContainer {
    public static SUB_Drivetrain drivetrain = new SUB_Drivetrain();
    public static SUB_Shooter shooter = new SUB_Shooter();
    public static SUB_Intake intake = new SUB_Intake();
-      public static SUB_Pivot pivot = new SUB_Pivot();
+   public static SUB_Pivot pivot = new SUB_Pivot();
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController DriverC =
       new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -86,6 +88,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return autos.getSelectedAuto();
   }
 }
