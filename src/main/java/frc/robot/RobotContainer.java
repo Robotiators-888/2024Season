@@ -55,13 +55,13 @@ public class RobotContainer {
     DriverC.y().toggleOnTrue(new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed)));
     DriverC.leftBumper().whileTrue(new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kOutakeSpeed)));
     new Trigger(() -> 
-      Math.abs(Math.pow(OperatorC.getRawAxis(3), 2) - Math.pow(OperatorC.getRawAxis(2), 3)) > Constants.Pivot.kPivotManualDeadband
+      Math.abs(Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) > Constants.Pivot.kPivotManualDeadband
       ).whileTrue(new RunCommand(
         () ->
-        pivot.runManual((Math.pow(OperatorC.getRawAxis(3), 2) - Math.pow(OperatorC.getRawAxis(2), 3)) * Constants.Pivot.kArmManualScale)
+        pivot.runManual((Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) * Constants.Pivot.kArmManualScale)
         , pivot));
 
-    OperatorC.a().onTrue(new InstantCommand(()-> pivot.setHome()));
+    //OperatorC.a().onTrue(new InstantCommand(()-> pivot.setHome()));
   }
 
   

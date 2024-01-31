@@ -41,11 +41,11 @@ public class SUB_Pivot extends SubsystemBase {
         pivotMotor.setOpenLoopRampRate(0.6); // motor takes 0.6 secs to reach desired power
         pivotMotor.setInverted(true);
         pivotMotor.setIdleMode(IdleMode.kBrake);
-        pivotEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
-        pivotEncoder.setVelocityConversionFactor(1.0/4.0 * 2 * Math.PI);
-        pivotEncoder.setPositionConversionFactor(1.0/4.0 * 2 * Math.PI);
-        rotateRelativeEncoder.setPositionConversionFactor(1.0/(300.0)*2*Math.PI);
-        rotateRelativeEncoder.setPosition(pivotEncoder.getPosition());
+        // pivotEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
+        // pivotEncoder.setVelocityConversionFactor(1.0/4.0 * 2 * Math.PI);
+        // pivotEncoder.setPositionConversionFactor(1.0/4.0 * 2 * Math.PI);
+        // rotateRelativeEncoder.setPositionConversionFactor(1.0/(300.0)*2*Math.PI);
+        // rotateRelativeEncoder.setPosition(pivotEncoder.getPosition());
         pivotPID = pivotMotor.getPIDController();
         PIDGains.setSparkMaxGains(pivotPID, new PIDGains(0, 0, 0));
         pivotSetpoint = khome;
@@ -60,13 +60,14 @@ public void setLimits(){
     //set soft limits and current limits for how far the manip can move
     pivotMotor.setSmartCurrentLimit(kCurrentLimit);
     
-    pivotMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
-    pivotMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    // pivotMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
 
-    // stops motor at 130 encoder clicks, (touching the ground)
-    pivotMotor.setSoftLimit(SoftLimitDirection.kForward, (float) 1.27);
-    // stops motor at 0 encoder clicks when reversing, (touching the robot)
-    pivotMotor.setSoftLimit(SoftLimitDirection.kReverse, (float) .07);
+    // pivotMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+
+    // // stops motor at 130 encoder clicks, (touching the ground)
+    // pivotMotor.setSoftLimit(SoftLimitDirection.kForward, (float) 1.27);
+    // // stops motor at 0 encoder clicks when reversing, (touching the robot)
+    // pivotMotor.setSoftLimit(SoftLimitDirection.kReverse, (float) .07);
    }
    
    private void updateMotionProfile() {
