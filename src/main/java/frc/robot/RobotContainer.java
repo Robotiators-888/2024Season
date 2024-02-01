@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.*;
 import frc.robot.subsystems.SUB_Drivetrain;
+import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Shooter;
 import frc.robot.subsystems.SUB_Intake;
 import frc.robot.subsystems.SUB_Pivot;
@@ -27,6 +28,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
    public static SUB_Drivetrain drivetrain = new SUB_Drivetrain();
    public static SUB_Shooter shooter = new SUB_Shooter();
+   public static SUB_Index index = new SUB_Index();
    public static SUB_Intake intake = new SUB_Intake();
    public static SUB_Pivot pivot = new SUB_Pivot();
    public static AutoGenerator autos = new AutoGenerator(drivetrain);
@@ -50,19 +52,31 @@ public class RobotContainer {
                 true, true),
                 drivetrain));
     
-    DriverC.a().toggleOnTrue(new InstantCommand(()->shooter.driveIndex()));
-    DriverC.b().toggleOnTrue(new InstantCommand(()->shooter.driveShooter()));
+    shooter.setDefaultCommand(new RunCommand(()->shooter.setMotorSpeed(0), shooter));
+    index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
+    
+    DriverC.a().whileTrue(new InstantCommand(()->index.setMotorSpeed(.5)));
+    DriverC.b().whileTrue((new RunCommand(()->shooter.setMotorSpeed(-0.5), shooter)));
+
+    
     // log = ataLogManager.getLog();
     // poseEntry = new DoubleArrayLogEntry(log, "odometry/pose");
-    DriverC.x().toggleOnTrue((new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakeSpeed))));
-    DriverC.y().toggleOnTrue(new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed)));
+    intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
+    DriverC.x().whileTrue((new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakeSpeed))));
+    DriverC.y().whileTrue(new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed)));
     DriverC.leftBumper().whileTrue(new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kOutakeSpeed)));
-    new Trigger(() -> 
-      Math.abs(Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) > Constants.Pivot.kPivotManualDeadband
-      ).whileTrue(new RunCommand(
-        () ->
-        pivot.runManual((Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) * Constants.Pivot.kArmManualScale)
-        , pivot));
+    // new Trigger(() -> 
+    //   Math.abs(Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) > Constants.Pivot.kPivotManualDeadband
+    //   ).whileTrue(new RunCommand(
+    //     () ->
+    //     pivot.runManual((Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) * Constants.Pivot.kArmManualScale)
+    //     , pivot));
+
+    pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(0), pivot));
+
+    DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(.2), pivot));    DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(.2)));
+    DriverC.povDown().whileTrue(new RunCommand(()->pivot.runManual(-.2), pivot));
+
 
     //OperatorC.a().onTrue(new InstantCommand(()-> pivot.setHome()));
   }

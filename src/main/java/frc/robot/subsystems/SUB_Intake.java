@@ -32,11 +32,6 @@ public class SUB_Intake extends SubsystemBase {
    *  @param speed Percent speed of motor
    */
   public void setMotorSpeed(double speed){
-    if(intakeBool){
     intakeMotor.set(speed);
-    }else{
-      intakeMotor.set(0);
-    }
-    intakeBool = !intakeBool;
   }
 }

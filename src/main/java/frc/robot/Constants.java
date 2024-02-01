@@ -155,7 +155,7 @@ public final class Constants {
       public static final int kPIVOT_ROTATE_MOTOR_CANID = 35;
       public static final double lbsArm = 45.0;
       public static final double kPivotManualDeadband = .05;
-      public static final double kArmManualScale = 1;
+      public static final double kArmManualScale = .1;
       public static final int kCurrentLimit = 40; 
       //Setpoints:
       public static double khome = 0;
