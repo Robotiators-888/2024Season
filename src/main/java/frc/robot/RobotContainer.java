@@ -13,26 +13,19 @@ import frc.robot.subsystems.SUB_Shooter;
 import frc.robot.subsystems.SUB_Intake;
 import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.utils.AutoGenerator;
-
 import frc.robot.subsystems.SUB_Limelight;
-import frc.robot.utils.LogiUtils;
 
 import java.util.Optional;
-
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
