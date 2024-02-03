@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7365015087811937,
-        "y": 4.42
+        "x": 2.895296810271618,
+        "y": 7.0050704681015805
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3276743868183205,
-        "y": 4.42
+        "x": 3.732380702686272,
+        "y": 7.284098432239799
       },
       "isLocked": false,
-      "linkedName": "BottomRobotStart"
+      "linkedName": "TopHomeGamePiece"
     },
     {
       "anchor": {
-        "x": 2.895296810271618,
-        "y": 4.141362415104079
+        "x": 8.284942222836145,
+        "y": 7.4309552554704394
       },
       "prevControl": {
-        "x": 2.1902310995023506,
-        "y": 4.141362415104079
+        "x": 7.3761843581811,
+        "y": 7.461101543676269
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "GP_1"
     }
   ],
   "rotationTargets": [],
@@ -39,14 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": {
-    "rotation": -60.0,
-    "velocity": 0
-  },
+  "previewStartingState": null,
   "useDefaultConstraints": false
 }

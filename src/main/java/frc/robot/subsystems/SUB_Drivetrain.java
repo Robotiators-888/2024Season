@@ -16,7 +16,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -76,9 +75,11 @@ public class SUB_Drivetrain extends SubsystemBase {
       backRight.getPosition()
   }, new Pose2d());
 
+  
   SwerveDriveOdometry auto_odometry = new SwerveDriveOdometry(Drivetrain.kDriveKinematics, navx.getRotation2d(), getPositions());
 
   public SUB_Drivetrain() { 
+    
     setGyroRotation();
   }
 
@@ -122,6 +123,7 @@ public class SUB_Drivetrain extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
+    auto_odometry.resetPosition(navx.getRotation2d(), getPositions(), m_odometry.getEstimatedPosition());
     return m_odometry.getEstimatedPosition();
   }
 
@@ -305,11 +307,13 @@ public class SUB_Drivetrain extends SubsystemBase {
   }
 
   public Pose2d getPose2d(){
+    m_odometry.resetPosition(navx.getRotation2d(), getPositions(), auto_odometry.getPoseMeters());
     return auto_odometry.getPoseMeters();
   }
 
   public void resetPose(Pose2d pose){
     auto_odometry.resetPosition(navx.getRotation2d(), getPositions(), pose);
+    m_odometry.resetPosition(navx.getRotation2d(), getPositions(), pose);
   }
 
   public void driveFieldRelative(ChassisSpeeds fieldRelativeSpeeds){
