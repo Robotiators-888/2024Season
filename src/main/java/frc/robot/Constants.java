@@ -126,6 +126,10 @@ public final class Constants {
 
   public static class Limelight{
     public static final String LIMELIGHT_NAME = "limelight";
+    public static final double VERTICAL_FOV_DEGREES = 49.7;
+    public static final double HEIGHT_TARGET_METERS = Units.inchesToMeters(53 + 7/8);
+    public static final double HEIGHT_CAMERA_METERS = 0;
+    public static final double CAMERA_ANGLE_DEGREES = 0; // might be 90 (+ = ___, - = ___)
   }
 
   public static final class Intake{
