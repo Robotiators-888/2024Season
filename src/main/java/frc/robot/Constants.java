@@ -139,4 +139,20 @@ public final class Constants {
     public static final boolean kGyroReversed = true;
     public static final double kGyroRotation = -90;
     }
+
+  public static class Limelight{
+    public static final String LIMELIGHT_NAME = "limelight";
+    public static final double VERTICAL_FOV_DEGREES = 49.7;
+    public static final double HEIGHT_TARGET_METERS = Units.inchesToMeters(53 + 7/8);
+    public static final double HEIGHT_CAMERA_METERS = 0;
+    public static final double CAMERA_ANGLE_DEGREES = 0; // might be 90 (+ = ___, - = ___)
+  }
+
+  public static final class Intake{
+    public static final int kINTAKE_MOTOR_CANID = 30;
+
+    public static final double kIntakeSpeed = 0.75;
+    public static final double kOutakeSpeed = - 0.75;
+    public static final double kIndexingSpeed = 0.5;
+  }
 }
