@@ -8,9 +8,12 @@ import frc.robot.Constants.*;
 import frc.robot.commands.CMD_AbsoluteDriveToTarget;
 import frc.robot.commands.CMD_RelativeDriveToTarget;
 import frc.robot.subsystems.SUB_Drivetrain;
+import frc.robot.subsystems.SUB_Index;
+import frc.robot.subsystems.SUB_Shooter;
+import frc.robot.subsystems.SUB_Intake;
+import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.utils.AutoGenerator;
 import frc.robot.subsystems.SUB_Limelight;
-import frc.robot.utils.LogiUtils;
 
 import java.util.Optional;
 
@@ -18,15 +21,11 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -37,26 +36,21 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+
    public static SUB_Drivetrain drivetrain = new SUB_Drivetrain();
+   public static SUB_Shooter shooter = new SUB_Shooter();
+   public static SUB_Index index = new SUB_Index();
+   public static SUB_Intake intake = new SUB_Intake();
+   public static SUB_Pivot pivot = new SUB_Pivot();
    public static AutoGenerator autos = new AutoGenerator(drivetrain);
 
-  // The robot's subsystems and commands are defined here...
   public static SUB_Limelight limelight = new SUB_Limelight();
 
-  Joystick joystick = new Joystick(0);
-  LogiUtils DriverC = new LogiUtils(0);
-  LogiUtils logiUtils1 = new LogiUtils(1);
-  JoystickButton leftBumperC = DriverC.getLeftBumperButtonPressed();
-  JoystickButton RightBumperC = DriverC.getRightBumperButtonPressed();
-  JoystickButton leftBumper = logiUtils1.getLeftBumperButtonPressed();
-  JoystickButton rightBumper = logiUtils1.getRightBumperButtonPressed();
-  JoystickButton aButton = logiUtils1.getAButtonPressed();
-  JoystickButton yButton = logiUtils1.getYButtonPressed(); 
-  JoystickButton xButton = logiUtils1.getXButtonPressed(); 
-  JoystickButton bButton = logiUtils1.getBButtonPressed(); 
-  JoystickButton startButton = logiUtils1.getStartButtonPressed();
-  JoystickButton backButton = logiUtils1.getBackButtonPressed();
 
+  CommandXboxController DriverC = new CommandXboxController(OIConstants.kDriverControllerPort);
+
+    private final CommandXboxController OperatorC = 
+    new CommandXboxController(OIConstants.kDriver2ControllerPort);   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -69,7 +63,39 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(DriverC.getRawAxis(4), OIConstants.kDriveDeadband),
                 true, true),
                 drivetrain));
+
+    
+    shooter.setDefaultCommand(new RunCommand(()->shooter.setMotorSpeed(0), shooter));
+    index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
+    
+    DriverC.a().whileTrue(new InstantCommand(()->index.setMotorSpeed(.5)));
+    DriverC.b().whileTrue((new RunCommand(()->shooter.setMotorSpeed(-0.5), shooter)));
+
+    
+    // log = ataLogManager.getLog();
+    // poseEntry = new DoubleArrayLogEntry(log, "odometry/pose");
+    intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
+    DriverC.x().whileTrue((new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakeSpeed))));
+    DriverC.y().whileTrue(new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed)));
+    DriverC.leftBumper().whileTrue(new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kOutakeSpeed)));
+    // new Trigger(() -> 
+    //   Math.abs(Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) > Constants.Pivot.kPivotManualDeadband
+    //   ).whileTrue(new RunCommand(
+    //     () ->
+    //     pivot.runManual((Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) * Constants.Pivot.kArmManualScale)
+    //     , pivot));
+
+    pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(0), pivot));
+
+    DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(.2), pivot));    DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(.2)));
+    DriverC.povDown().whileTrue(new RunCommand(()->pivot.runManual(-.2), pivot));
+
+
+    //OperatorC.a().onTrue(new InstantCommand(()-> pivot.setHome()));
+
   }
+
+  
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -84,8 +110,8 @@ public class RobotContainer {
     Pose3d op3d = drivetrain.at_field.getTagPose(4).get();
     Pose3d op = new Pose3d(new Pose2d(op3d.getX()-3, op3d.getY()-1, Rotation2d.fromDegrees(0)));
     Optional<Pose3d> p3d = Optional.of(new Pose3d(new Pose2d(0.5, 0.5, Rotation2d.fromDegrees(45))));
-    startButton.whileTrue(new CMD_RelativeDriveToTarget(limelight, drivetrain)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
-    backButton.whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, Optional.of(op))).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
+    OperatorC.start().whileTrue(new CMD_RelativeDriveToTarget(limelight, drivetrain)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
+    OperatorC.back().whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, Optional.of(op))).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
   } 
 
   /**

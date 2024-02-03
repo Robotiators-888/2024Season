@@ -57,6 +57,7 @@ public class SUB_Drivetrain extends SubsystemBase {
 
 
   AHRS navx = new AHRS();
+  
 
   private void setGyroRotation(){
     navx.setAngleAdjustment(Constants.Drivetrain.kGyroRotation);
@@ -84,7 +85,9 @@ public class SUB_Drivetrain extends SubsystemBase {
             backRight.getPosition()
           },
           new Pose2d());
+
   SwerveDriveOdometry auto_odometry = new SwerveDriveOdometry(Drivetrain.kDriveKinematics, navx.getRotation2d(), getPositions());
+  
   public SUB_Drivetrain() {
     try {
       at_field = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("2024_at_field.json"));
@@ -105,6 +108,7 @@ public class SUB_Drivetrain extends SubsystemBase {
         });
     m_field.setRobotPose(m_odometry.getEstimatedPosition());
     modules = new MAXSwerveModule[]{frontLeft, frontRight, backLeft, backRight};
+
     m_field.setRobotPose(getPose());
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("rotation", getPose().getRotation().getDegrees());

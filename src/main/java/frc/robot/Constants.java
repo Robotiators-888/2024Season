@@ -5,9 +5,13 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkBase.IdleMode;
+
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.libs.PIDGains;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -21,6 +25,7 @@ public final class Constants {
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
     public static final double kDriveDeadband = 0.05;
+    public static final int kDriver2ControllerPort =1;
   }
 
   public static final class NeoMotorConstants {
@@ -137,7 +142,43 @@ public final class Constants {
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
     public static final boolean kGyroReversed = true;
+
     public static final double kGyroRotation = -90;
+    }
+
+    public static final class Intake{
+      public static final int kINTAKE_MOTOR_CANID = 34;
+  
+      public static final double kIntakeSpeed = 0.4;
+      public static final double kOutakeSpeed = - 0.4;
+      public static final double kIndexingSpeed = 0.4;
+    }
+  
+     public static final class Pivot {
+      public static final int kPIVOT_ROTATE_MOTOR_CANID = 35;
+      public static final double lbsArm = 45.0;
+      public static final double kPivotManualDeadband = .05;
+      public static final double kArmManualScale = .1;
+      public static final int kCurrentLimit = 40; 
+      //Setpoints:
+      public static double khome = 0;
+      //
+      public static final double PID_kP = 0.11425;
+      public static final int PID_kI = 0;
+      public static final double PID_kD = 0.021;
+      public static final double FF_kA = .1267;
+      public static final double FF_kG = .4847; //amount of volts to Overcome gravity on the arm
+      public static final double FF_kS = .11092;
+      public static final double FF_kV = 5.9339; 
+      public static final double FF_Velocity = 0.90511;
+      public static final double FF_Accel = 0.68018;
+      public static final TrapezoidProfile.Constraints kArmMotionConstraint = new TrapezoidProfile.Constraints(0.75, 1);
+      public static final ArmFeedforward kArmFeedforward = new ArmFeedforward(FF_kS, FF_kG, FF_kV, FF_kA);
+      public static final PIDGains kArmPositionGains = new PIDGains(0.6, 0.0, 0.0);
+      //public static final double kGroundPosition = 0.1;
+      public static final double kmaxVelocity = 6.47*Math.PI;
+      public static final double kmaxAcceleration = 4.27;
+        
     }
 
   public static class Limelight{
@@ -147,12 +188,6 @@ public final class Constants {
     public static final double HEIGHT_CAMERA_METERS = 0;
     public static final double CAMERA_ANGLE_DEGREES = 0; // might be 90 (+ = ___, - = ___)
   }
-
-  public static final class Intake{
-    public static final int kINTAKE_MOTOR_CANID = 30;
-
-    public static final double kIntakeSpeed = 0.75;
-    public static final double kOutakeSpeed = - 0.75;
-    public static final double kIndexingSpeed = 0.5;
-  }
+  
 }
+

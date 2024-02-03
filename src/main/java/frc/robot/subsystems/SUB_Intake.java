@@ -14,9 +14,15 @@ import frc.robot.Constants.Intake;
 public class SUB_Intake extends SubsystemBase {
 
   CANSparkMax intakeMotor = new CANSparkMax(Intake.kINTAKE_MOTOR_CANID, MotorType.kBrushless);
-  
+  Boolean intakeBool;
+
   /** Creates a new SUB_Intake. */
-  public SUB_Intake() {}
+  public SUB_Intake() {
+    intakeBool = false;
+  }
+
+
+
 
   @Override
   public void periodic() {
