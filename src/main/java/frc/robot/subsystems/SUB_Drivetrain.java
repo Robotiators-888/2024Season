@@ -4,11 +4,17 @@
 
 package frc.robot.subsystems;
 
+import java.io.IOException;
+
 import com.kauailabs.navx.frc.AHRS;
 
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -16,6 +22,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -43,9 +51,12 @@ public class SUB_Drivetrain extends SubsystemBase {
   private final MAXSwerveModule backRight 
     = new MAXSwerveModule(Constants.Drivetrain.kBACK_RIGHT_DRIVE_MOTOR_CANID, 
     Constants.Drivetrain.kBACK_RIGHT_STEER_MOTOR_CANID, Constants.Drivetrain.kBackRightChassisAngularOffset);    
-  
+
     private MAXSwerveModule[] modules = new MAXSwerveModule[]{frontLeft, frontRight, backLeft, backRight};
     private SwerveModuleState[] moduleStates = getModuleStates();
+
+  public AprilTagFieldLayout at_field;
+
 
   AHRS navx = new AHRS();
   
@@ -65,6 +76,7 @@ public class SUB_Drivetrain extends SubsystemBase {
       new SlewRateLimiter(Constants.Drivetrain.kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
+
  // Odometry class for tracking robot pose
  SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
   Constants.Drivetrain.kDriveKinematics,
@@ -78,8 +90,14 @@ public class SUB_Drivetrain extends SubsystemBase {
 
   SwerveDriveOdometry auto_odometry = new SwerveDriveOdometry(Drivetrain.kDriveKinematics, navx.getRotation2d(), getPositions());
 
-  public SUB_Drivetrain() { 
-    setGyroRotation();
+
+
+  public SUB_Drivetrain() {
+    try {
+      at_field = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("2024_at_field.json"));
+    } catch (IOException e){
+      
+    }      
   }
 
   @Override
@@ -94,21 +112,10 @@ public class SUB_Drivetrain extends SubsystemBase {
         });
     m_field.setRobotPose(m_odometry.getEstimatedPosition());
     modules = new MAXSwerveModule[]{frontLeft, frontRight, backLeft, backRight};
+
+    m_field.setRobotPose(getPose());
+
     // This method will be called once per scheduler run
-
-    // Logger.getInstance().recordOutput("Drivetrain/Robot Pose", m_odometry.getPoseMeters());
-
-    // Logger.getInstance().recordOutput("Driving Velocity", frontLeft.getVelocityDrive());
-    // Logger.getInstance().recordOutput("Steering Velocity", frontLeft.getVelocitySteer());
-    // Logger.getInstance().recordOutput("Driving Velocity", frontRight.getVelocityDrive());
-    // Logger.getInstance().recordOutput("Steering Velocity", frontRight.getVelocitySteer());
-    // Logger.getInstance().recordOutput("Driving Velocity", backLeft.getVelocityDrive());
-    // Logger.getInstance().recordOutput("Steering Velocity", backLeft.getVelocitySteer());
-    // Logger.getInstance().recordOutput("Driving Velocity", backRight.getVelocityDrive());
-    // Logger.getInstance().recordOutput("Steering Velocity", backRight.getVelocitySteer());
-
-    // SmartDashboard.putNumber("Front Left Angle", frontLeft.);
-
     SmartDashboard.putNumber("rotation", getPose().getRotation().getDegrees());
     SmartDashboard.putData("Field", m_field);
     SmartDashboard.putNumberArray(
@@ -323,11 +330,14 @@ public class SUB_Drivetrain extends SubsystemBase {
     setModuleStates(targetStates);
   }
 
+
   /**
    * Allows for vision measurements to be added to drive odometry.
    * @param visionPose The pose supplied by getPose() in SUB_Limelight
    */
-  public void addVisionMeasurement(Pose2d visionPose){
-   // m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp());
+
+  public void addVisionMeasurement(Pose2d visionPose, double latency){
+    m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latency);
   }
+
 }
