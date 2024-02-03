@@ -55,19 +55,7 @@ public class RobotContainer {
   public static SUB_Limelight limelight = new SUB_Limelight();
 
 
-  Joystick joystick = new Joystick(0);
-  LogiUtils DriverC = new LogiUtils(0);
-  LogiUtils logiUtils1 = new LogiUtils(1);
-  JoystickButton leftBumperC = DriverC.getLeftBumperButtonPressed();
-  JoystickButton RightBumperC = DriverC.getRightBumperButtonPressed();
-  JoystickButton leftBumper = logiUtils1.getLeftBumperButtonPressed();
-  JoystickButton rightBumper = logiUtils1.getRightBumperButtonPressed();
-  JoystickButton aButton = logiUtils1.getAButtonPressed();
-  JoystickButton yButton = logiUtils1.getYButtonPressed(); 
-  JoystickButton xButton = logiUtils1.getXButtonPressed(); 
-  JoystickButton bButton = logiUtils1.getBButtonPressed(); 
-  JoystickButton startButton = logiUtils1.getStartButtonPressed();
-  JoystickButton backButton = logiUtils1.getBackButtonPressed();
+  CommandXboxController DriverC = new CommandXboxController(OIConstants.kDriverControllerPort);
 
     private final CommandXboxController OperatorC = 
     new CommandXboxController(OIConstants.kDriver2ControllerPort);   
@@ -130,8 +118,8 @@ public class RobotContainer {
     Pose3d op3d = drivetrain.at_field.getTagPose(4).get();
     Pose3d op = new Pose3d(new Pose2d(op3d.getX()-3, op3d.getY()-1, Rotation2d.fromDegrees(0)));
     Optional<Pose3d> p3d = Optional.of(new Pose3d(new Pose2d(0.5, 0.5, Rotation2d.fromDegrees(45))));
-    startButton.whileTrue(new CMD_RelativeDriveToTarget(limelight, drivetrain)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
-    backButton.whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, Optional.of(op))).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
+    OperatorC.start().whileTrue(new CMD_RelativeDriveToTarget(limelight, drivetrain)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
+    OperatorC.back().whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, Optional.of(op))).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
   } 
 
   /**
