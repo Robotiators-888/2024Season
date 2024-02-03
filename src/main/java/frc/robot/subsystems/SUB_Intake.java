@@ -9,14 +9,20 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import static frc.robot.Constants.Intake.*;
+import frc.robot.Constants.Intake;
 
 public class SUB_Intake extends SubsystemBase {
 
-  CANSparkMax intakeMotor = new CANSparkMax(kINTAKE_MOTOR_CANID, MotorType.kBrushless);
-  
+  CANSparkMax intakeMotor = new CANSparkMax(Intake.kINTAKE_MOTOR_CANID, MotorType.kBrushless);
+  Boolean intakeBool;
+
   /** Creates a new SUB_Intake. */
-  public SUB_Intake() {}
+  public SUB_Intake() {
+    intakeBool = false;
+  }
+
+
+
 
   @Override
   public void periodic() {

@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import com.kauailabs.navx.frc.AHRS;
 
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -27,13 +28,14 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.Drivetrain;
 import frc.robot.utils.*;
 //import org.littletonrobotics.junction.Logger;
 
 public class SUB_Drivetrain extends SubsystemBase {
   public final Field2d m_field = new Field2d();
   /** Creates a new Drivetrain. */
-  
+
   private final MAXSwerveModule frontLeft 
     = new MAXSwerveModule(Constants.Drivetrain.kFRONT_LEFT_DRIVE_MOTOR_CANID, 
     Constants.Drivetrain.kFRONT_LEFT_STEER_MOTOR_CANID, Constants.Drivetrain.kFrontLeftChassisAngularOffset);
@@ -49,11 +51,19 @@ public class SUB_Drivetrain extends SubsystemBase {
   private final MAXSwerveModule backRight 
     = new MAXSwerveModule(Constants.Drivetrain.kBACK_RIGHT_DRIVE_MOTOR_CANID, 
     Constants.Drivetrain.kBACK_RIGHT_STEER_MOTOR_CANID, Constants.Drivetrain.kBackRightChassisAngularOffset);    
-  
+
+    private MAXSwerveModule[] modules = new MAXSwerveModule[]{frontLeft, frontRight, backLeft, backRight};
+    private SwerveModuleState[] moduleStates = getModuleStates();
+
   public AprilTagFieldLayout at_field;
 
 
   AHRS navx = new AHRS();
+  
+
+  private void setGyroRotation(){
+    navx.setAngleAdjustment(Constants.Drivetrain.kGyroRotation);
+  }
 
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
@@ -66,17 +76,21 @@ public class SUB_Drivetrain extends SubsystemBase {
       new SlewRateLimiter(Constants.Drivetrain.kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
-  // Odometry class for tracking robot pose
-  SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
-          Constants.Drivetrain.kDriveKinematics,
-          Rotation2d.fromDegrees(-navx.getAngle()),
-          new SwerveModulePosition[] {
-            frontLeft.getPosition(),
-            frontRight.getPosition(),
-            backLeft.getPosition(),
-            backRight.getPosition()
-          },
-          new Pose2d());
+
+ // Odometry class for tracking robot pose
+ SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
+  Constants.Drivetrain.kDriveKinematics,
+  Rotation2d.fromDegrees(-navx.getAngle()),
+  new SwerveModulePosition[] {
+      frontLeft.getPosition(),
+      frontRight.getPosition(),
+      backLeft.getPosition(),
+      backRight.getPosition()
+  }, new Pose2d());
+
+  SwerveDriveOdometry auto_odometry = new SwerveDriveOdometry(Drivetrain.kDriveKinematics, navx.getRotation2d(), getPositions());
+
+
 
   public SUB_Drivetrain() {
     try {
@@ -96,7 +110,11 @@ public class SUB_Drivetrain extends SubsystemBase {
           backLeft.getPosition(),
           backRight.getPosition()
         });
+    m_field.setRobotPose(m_odometry.getEstimatedPosition());
+    modules = new MAXSwerveModule[]{frontLeft, frontRight, backLeft, backRight};
+
     m_field.setRobotPose(getPose());
+
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("rotation", getPose().getRotation().getDegrees());
     SmartDashboard.putData("Field", m_field);
@@ -272,10 +290,52 @@ public class SUB_Drivetrain extends SubsystemBase {
     return navx.getRate() * (Constants.Drivetrain.kGyroReversed ? -1.0 : 1.0);
   }
 
+  public SwerveModuleState[] getModuleStates() {
+    SwerveModuleState[] states = new SwerveModuleState[modules.length];
+    for (int i = 0; i < modules.length; i++) {
+      states[i] = modules[i].getState();
+    }
+    return states;
+  }
+
+  public SwerveModulePosition[] getPositions(){
+    SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
+    
+    for(int i = 0; i < moduleStates.length; i++){
+      positions[i] = modules[i].getPosition();
+    }
+    return positions;
+  }
+
+  public ChassisSpeeds getChassisSpeeds(){
+    return Drivetrain.kDriveKinematics.toChassisSpeeds(getModuleStates());
+  }
+
+  public Pose2d getPose2d(){
+    return auto_odometry.getPoseMeters();
+  }
+
+  public void resetPose(Pose2d pose){
+    auto_odometry.resetPosition(navx.getRotation2d(), getPositions(), pose);
+  }
+
+  public void driveFieldRelative(ChassisSpeeds fieldRelativeSpeeds){
+    driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getPose2d().getRotation()));
+  }
+
+  public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds){
+    ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
+
+    SwerveModuleState[] targetStates = Drivetrain.kDriveKinematics.toSwerveModuleStates(targetSpeeds);
+    setModuleStates(targetStates);
+  }
+
+
   /**
    * Allows for vision measurements to be added to drive odometry.
    * @param visionPose The pose supplied by getPose() in SUB_Limelight
    */
+
   public void addVisionMeasurement(Pose2d visionPose, double latency){
     m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latency);
   }

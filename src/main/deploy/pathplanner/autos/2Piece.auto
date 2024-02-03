@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "RunIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootingSequence"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Back_to_Podium"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootingSequence"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopIntake"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
