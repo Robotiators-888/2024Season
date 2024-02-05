@@ -5,20 +5,28 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.Intake;
 
 public class SUB_Intake extends SubsystemBase {
 
   CANSparkMax intakeMotor = new CANSparkMax(Intake.kINTAKE_MOTOR_CANID, MotorType.kBrushless);
   Boolean intakeBool;
+  
 
   /** Creates a new SUB_Intake. */
   public SUB_Intake() {
     intakeBool = false;
+
+    intakeMotor.getPIDController().setP(1);
+    intakeMotor.getPIDController().setI(0);
+     intakeMotor.getPIDController().setD(0);
+    
   }
 
 
@@ -27,7 +35,7 @@ public class SUB_Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Intake Speed", intakeMotor.get());
+    SmartDashboard.putNumber("Intake Speed", intakeMotor.getEncoder().getVelocity());
   }
 
   /**
@@ -35,6 +43,7 @@ public class SUB_Intake extends SubsystemBase {
    *  @param speed Percent speed of motor
    */
   public void setMotorSpeed(double speed){
-    intakeMotor.set(speed);
+    //intakeMotor.set(speed);
+    intakeMotor.getPIDController().setReference(speed*Constants.Intake.kOutakeRPM, ControlType.kVelocity);
   }
 }

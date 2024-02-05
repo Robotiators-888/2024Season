@@ -148,9 +148,10 @@ public final class Constants {
     public static final class Intake{
       public static final int kINTAKE_MOTOR_CANID = 34;
   
-      public static final double kIntakeSpeed = 0.4;
-      public static final double kOutakeSpeed = - 0.4;
-      public static final double kIndexingSpeed = 0.4;
+      public static final double kIntakeSpeed = 1;
+      public static final double kOutakeSpeed = -1;
+      public static final double kOutakeRPM = NeoMotorConstants.kFreeSpeedRpm * 0.5;
+      public static final double kIndexingSpeed = 1;
     }
   
      public static final class Pivot {

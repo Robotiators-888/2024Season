@@ -117,6 +117,7 @@ public class SUB_Drivetrain extends SubsystemBase {
 
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("rotation", getPose().getRotation().getDegrees());
+    //SmartDashboard.putNumber("Speed", m_odometry);
     SmartDashboard.putData("Field", m_field);
     SmartDashboard.putNumberArray(
         "Odometry",
