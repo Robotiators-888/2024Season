@@ -8,8 +8,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 
 public class SUB_Shooter extends SubsystemBase {
-  CANSparkMax shooterLeft = new CANSparkMax(30, MotorType.kBrushed);
-  CANSparkMax shooterRight = new CANSparkMax(31, MotorType.kBrushed);
+  CANSparkMax shooterLeft = new CANSparkMax(30, MotorType.kBrushless);
+  CANSparkMax shooterRight = new CANSparkMax(31, MotorType.kBrushless);
 
   public void setMotorSpeed(double speed){
     shooterLeft.set(speed);

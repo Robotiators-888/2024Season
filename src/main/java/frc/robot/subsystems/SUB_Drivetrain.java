@@ -331,13 +331,13 @@ public class SUB_Drivetrain extends SubsystemBase {
   }
 
 
-  /**
-   * Allows for vision measurements to be added to drive odometry.
-   * @param visionPose The pose supplied by getPose() in SUB_Limelight
-   */
+  // /**
+  //  * Allows for vision measurements to be added to drive odometry.
+  //  * @param visionPose The pose supplied by getPose() in SUB_Limelight
+  //  */
 
-  public void addVisionMeasurement(Pose2d visionPose, double latency){
-    //m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latency);
-  }
+  // public void addVisionMeasurement(Pose2d visionPose, double latency){
+  //   //m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latency);
+  // }
 
 }
