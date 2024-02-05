@@ -93,11 +93,11 @@ public class SUB_Drivetrain extends SubsystemBase {
 
 
   public SUB_Drivetrain() {
-    try {
-      at_field = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("2024_at_field.json"));
-    } catch (IOException e){
+    // try {
+    //   at_field = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("2024_at_field.json"));
+    // } catch (IOException e){
       
-    }      
+    // }      
   }
 
   @Override
@@ -337,7 +337,7 @@ public class SUB_Drivetrain extends SubsystemBase {
    */
 
   public void addVisionMeasurement(Pose2d visionPose, double latency){
-    m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latency);
+    //m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latency);
   }
 
 }
