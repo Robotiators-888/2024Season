@@ -23,9 +23,9 @@ public class SUB_Intake extends SubsystemBase {
   public SUB_Intake() {
     intakeBool = false;
 
-    intakeMotor.getPIDController().setP(1);
+    intakeMotor.getPIDController().setP(0.15);
     intakeMotor.getPIDController().setI(0);
-     intakeMotor.getPIDController().setD(0);
+     intakeMotor.getPIDController().setD(0.005);
     
   }
 
