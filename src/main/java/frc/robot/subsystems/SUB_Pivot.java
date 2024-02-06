@@ -42,11 +42,7 @@ public class SUB_Pivot extends SubsystemBase {
         pivotMotor.setOpenLoopRampRate(0.6); // motor takes 0.6 secs to reach desired power
         pivotMotor.setInverted(true);
         pivotMotor.setIdleMode(IdleMode.kBrake);
-        // pivotEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
-        // pivotEncoder.setVelocityConversionFactor(1.0/4.0 * 2 * Math.PI);
-        // pivotEncoder.setPositionConversionFactor(1.0/4.0 * 2 * Math.PI);
-        // rotateRelativeEncoder.setPositionConversionFactor(1.0/(300.0)*2*Math.PI);
-        // rotateRelativeEncoder.setPosition(pivotEncoder.getPosition());
+        pivotEncoder.setPositionConversionFactor(360);
         pivotPID = pivotMotor.getPIDController();
         PIDGains.setSparkMaxGains(pivotPID, new PIDGains(0, 0, 0));
         pivotSetpoint = khome;
@@ -96,13 +92,13 @@ public double getAutoBalanceVolts(){
 }
 
 public double calculateDegreesRotation(){
-    double encoderClicksToDegrees = 8192.00/360.00;
-    return (encoderClicksToDegrees*getRotations());
+    return (getRotations());
 }
 
-public double calculateDegreesFromFlat(){
-    double encoderClicksToDegrees = 8192.00/360.00;
-    return (encoderClicksToDegrees*getRotations() - Constants.Pivot.kAngularEncoderOffsetInDeg);
+public void goToAngle(double angle){
+  if((angle<Constants.Pivot.kMaxArmAngle) && (angle>Constants.Pivot.kMinArmAngle)){
+  pivotSetpoint = angle/360;
+  }
 }
 // public void runManual(double _power) {
 //     //reset and zero out a bunch of automatic mode stuff so exiting manual mode happens cleanly and passively

@@ -154,6 +154,6 @@ public class RobotContainer {
 
     SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
     SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
-    SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.calculateDegreesFromFlat());
+    SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.calculateDegreesRotation());
   }
 }
