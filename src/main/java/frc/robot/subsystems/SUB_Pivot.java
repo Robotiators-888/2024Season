@@ -14,6 +14,7 @@ import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController.ArbFFUnits;
 
 import frc.libs.PIDGains;
+import frc.robot.Constants;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -97,6 +98,11 @@ public double getAutoBalanceVolts(){
 public double calculateDegreesRotation(){
     double encoderClicksToDegrees = 8192.00/360.00;
     return (encoderClicksToDegrees*getRotations());
+}
+
+public double calculateDegreesFromFlat(){
+    double encoderClicksToDegrees = 8192.00/360.00;
+    return (encoderClicksToDegrees*getRotations() - Constants.Pivot.kAngularEncoderOffsetInDeg);
 }
 // public void runManual(double _power) {
 //     //reset and zero out a bunch of automatic mode stuff so exiting manual mode happens cleanly and passively

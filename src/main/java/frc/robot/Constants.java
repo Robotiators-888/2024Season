@@ -161,6 +161,9 @@ public final class Constants {
       public static final int kCurrentLimit = 40; 
       //Setpoints:
       public static double khome = 0;
+
+      public static final double kAngularEncoderOffsetInDeg = 0;
+
       //
       public static final double PID_kP = 0.11425;
       public static final int PID_kI = 0;
