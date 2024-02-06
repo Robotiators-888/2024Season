@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -86,6 +87,17 @@ public class RobotContainer {
     //     pivot.runManual((Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) * Constants.Pivot.kArmManualScale)
     //     , pivot));
 
+    OperatorC.leftBumper().onTrue(new InstantCommand(()->
+      shooter.MANUAL_RPM -= 100
+    )); // Decrease manual RPM by 100
+
+    OperatorC.rightBumper().onTrue(
+      new InstantCommand(()->
+        shooter.MANUAL_RPM += 100
+    )); // Increase manual RPM by 100
+
+    OperatorC.a().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
+
     pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(0), pivot));
 
     DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(.2), pivot));    DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(.2)));
@@ -139,5 +151,9 @@ public class RobotContainer {
         drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
       }
     }
+
+    SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
+    SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
+    SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.calculateDegreesRotation());
   }
 }
