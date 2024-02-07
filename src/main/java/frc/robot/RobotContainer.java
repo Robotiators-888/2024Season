@@ -69,7 +69,7 @@ public class RobotContainer {
     shooter.setDefaultCommand(new RunCommand(()->shooter.setMotorSpeed(0), shooter));
     index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
     
-    DriverC.a().whileTrue(new RunCommand(()->index.setMotorSpeed(.5)));
+    DriverC.a().whileTrue(new RunCommand(()->index.setMotorSpeed(.25)));
     DriverC.b().whileTrue((new RunCommand(()->shooter.setMotorSpeed(-0.5), shooter)));
 
     

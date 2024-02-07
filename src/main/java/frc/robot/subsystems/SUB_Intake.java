@@ -24,8 +24,8 @@ public class SUB_Intake extends SubsystemBase {
     intakeBool = false;
 
     intakeMotor.getPIDController().setP(0.15);
-    intakeMotor.getPIDController().setI(0);
-     intakeMotor.getPIDController().setD(0.005);
+    intakeMotor.getPIDController().setI(0.0);
+     intakeMotor.getPIDController().setD(0.008);
     
   }
 
@@ -35,7 +35,9 @@ public class SUB_Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Intake Speed", intakeMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Intake RPM", intakeMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Intake Speed (m/sec)", (((intakeMotor.getEncoder().getVelocity()*2*Math.PI)/8))/60);
+
   }
 
   /**
@@ -44,6 +46,10 @@ public class SUB_Intake extends SubsystemBase {
    */
   public void setMotorSpeed(double speed){
     //intakeMotor.set(speed);
-    intakeMotor.getPIDController().setReference(speed*Constants.Intake.kOutakeRPM, ControlType.kVelocity);
+    if(speed == 0.0){
+        intakeMotor.set(0.0);
+    }else{
+      intakeMotor.getPIDController().setReference(speed*Constants.Intake.kOutakeRPM, ControlType.kVelocity);
+    }
   }
 }
