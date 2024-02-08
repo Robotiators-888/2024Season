@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,11 +22,14 @@ public class SUB_Intake extends SubsystemBase {
 
   /** Creates a new SUB_Intake. */
   public SUB_Intake() {
+    intakeMotor.setIdleMode(IdleMode.kCoast);
     intakeBool = false;
 
-    intakeMotor.getPIDController().setP(0.15);
+    intakeMotor.setSmartCurrentLimit(60);
+    intakeMotor.getPIDController().setP(0.0);
     intakeMotor.getPIDController().setI(0.0);
-     intakeMotor.getPIDController().setD(0.008);
+    intakeMotor.getPIDController().setD(0.0);
+    intakeMotor.getPIDController().setFF(1.0/5800.0);
     
   }
 
@@ -36,6 +40,7 @@ public class SUB_Intake extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Intake RPM", intakeMotor.getEncoder().getVelocity());
+    //SmartDashboard.putNumber(getName(), 0)
     SmartDashboard.putNumber("Intake Speed (m/sec)", (((intakeMotor.getEncoder().getVelocity()*2*Math.PI)/8))/60);
 
   }

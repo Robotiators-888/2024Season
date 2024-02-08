@@ -88,9 +88,8 @@ public class RobotContainer {
 
     pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(0), pivot));
 
-    DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(.2), pivot));    
-    DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(.2)));
-    DriverC.povDown().whileTrue(new RunCommand(()->pivot.runManual(-.2), pivot));
+    DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));    
+    DriverC.povDown().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));
 
 
     //OperatorC.a().onTrue(new InstantCommand(()-> pivot.setHome()));

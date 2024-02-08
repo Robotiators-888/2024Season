@@ -150,7 +150,7 @@ public final class Constants {
   
       public static final double kIntakeSpeed = 1;
       public static final double kOutakeSpeed = -1;
-      public static final double kOutakeRPM = NeoMotorConstants.kFreeSpeedRpm * 0.5;
+      public static final double kOutakeRPM = NeoMotorConstants.kFreeSpeedRpm;
       public static final double kIndexingSpeed = 1;
     }
   
