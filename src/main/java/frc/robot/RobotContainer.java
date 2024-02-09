@@ -68,15 +68,18 @@ public class RobotContainer {
     
     shooter.setDefaultCommand(new RunCommand(()->shooter.setMotorSpeed(0), shooter));
     index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
-    
-    DriverC.a().whileTrue(new RunCommand(()->index.setMotorSpeed(.25)));
-    DriverC.b().whileTrue((new RunCommand(()->shooter.setMotorSpeed(-0.5), shooter)));
+    pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(0.05), pivot));
+
+    DriverC.a().whileTrue(new RunCommand(()->index.setMotorSpeed(0.25)));
+    DriverC.b().whileTrue((new RunCommand(()->shooter.setMotorSpeed(-1), shooter)));
+    DriverC.x().whileTrue((new RunCommand(()->index.setMotorSpeed(-0.25), shooter)));
+    DriverC.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(.25), shooter));
 
     
     // log = ataLogManager.getLog();
     // poseEntry = new DoubleArrayLogEntry(log, "odometry/pose");
     intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
-    DriverC.x().whileTrue((new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakeSpeed))));
+    //DriverC.x().whileTrue((new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakeSpeed))));
     DriverC.y().whileTrue(new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed)));
     DriverC.leftBumper().whileTrue(new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kOutakeSpeed)));
     // new Trigger(() -> 
