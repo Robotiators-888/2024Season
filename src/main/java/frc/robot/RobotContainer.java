@@ -15,6 +15,7 @@ import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.utils.AutoGenerator;
 import frc.robot.subsystems.SUB_Limelight;
 
+import java.sql.Driver;
 import java.util.Optional;
 
 import edu.wpi.first.math.MathUtil;
@@ -25,6 +26,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -70,12 +72,13 @@ public class RobotContainer {
     index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
     pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(0.05), pivot));
 
+    new Trigger(()->(index.bannersensor())).whileTrue(new RunCommand(()->index.setMotorSpeed(0)));
     DriverC.a().whileTrue(new RunCommand(()->index.setMotorSpeed(0.25)));
     DriverC.b().whileTrue((new RunCommand(()->shooter.setMotorSpeed(-1), shooter)));
     DriverC.x().whileTrue((new RunCommand(()->index.setMotorSpeed(-0.25), shooter)));
     DriverC.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(.25), shooter));
+    OperatorC.a().onTrue(new SequentialCommandGroup());
 
-    
     // log = ataLogManager.getLog();
     // poseEntry = new DoubleArrayLogEntry(log, "odometry/pose");
     intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
