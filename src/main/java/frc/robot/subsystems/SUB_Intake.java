@@ -23,6 +23,7 @@ public class SUB_Intake extends SubsystemBase {
   /** Creates a new SUB_Intake. */
   public SUB_Intake() {
     intakeMotor.setIdleMode(IdleMode.kCoast);
+    intakeMotor.burnFlash();
     intakeBool = false;
 
     intakeMotor.setSmartCurrentLimit(60);

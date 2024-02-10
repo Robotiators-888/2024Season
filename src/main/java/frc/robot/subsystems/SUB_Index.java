@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.BooleanSupplier;
-
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -31,6 +29,8 @@ public class SUB_Index extends SubsystemBase {
     indexRight.follow(indexLeft, true); 
     indexLeft.setIdleMode(IdleMode.kBrake);
     indexRight.setIdleMode(IdleMode.kBrake);
+    indexLeft.burnFlash();
+    indexRight.burnFlash();
   }
 
   @Override
