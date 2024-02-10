@@ -21,11 +21,11 @@
       },
       "prevControl": {
         "x": 2.895296810271618,
-        "y": 6.990384785778517
+        "y": 7.019756150424644
       },
       "nextControl": {
         "x": 2.895296810271618,
-        "y": 7.019756150424644
+        "y": 6.990384785778517
       },
       "isLocked": false,
       "linkedName": "TopHomeGamePiece"
@@ -47,12 +47,12 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": 90.0,
+      "rotationDegrees": -91.80000000000001,
       "rotateFast": false
     },
     {
       "waypointRelativePos": 0.5,
-      "rotationDegrees": 90.0,
+      "rotationDegrees": -90.0,
       "rotateFast": true
     }
   ],
@@ -66,7 +66,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 60.0,
+    "rotation": -151.89669709525646,
     "rotateFast": false
   },
   "reversed": false,
