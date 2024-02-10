@@ -41,6 +41,7 @@ public class SUB_Pivot extends SubsystemBase {
         pivotMotor.setOpenLoopRampRate(0.6); // motor takes 0.6 secs to reach desired power
         pivotMotor.setInverted(true);
         pivotMotor.setIdleMode(IdleMode.kBrake);
+        pivotMotor.setSmartCurrentLimit(50);
         // pivotEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
         // pivotEncoder.setVelocityConversionFactor(1.0/4.0 * 2 * Math.PI);
         // pivotEncoder.setPositionConversionFactor(1.0/4.0 * 2 * Math.PI);
