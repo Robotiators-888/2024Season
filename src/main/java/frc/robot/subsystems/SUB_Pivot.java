@@ -97,7 +97,7 @@ public double calculateDegreesRotation(){
 
 public void goToAngle(double angle){
   if((angle<Constants.Pivot.kMaxArmAngle) && (angle>Constants.Pivot.kMinArmAngle)){
-  pivotSetpoint = angle/360;
+  pivotSetpoint = angle;
   }
 }
 // public void runManual(double _power) {
