@@ -10,14 +10,19 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 public class SUB_Shooter extends SubsystemBase {
   CANSparkMax shooterLeft = new CANSparkMax(30, MotorType.kBrushed);
   CANSparkMax shooterRight = new CANSparkMax(31, MotorType.kBrushed);
+  public SUB_Shooter(){
+    shooterLeft.burnFlash();
+    shooterRight.burnFlash();
+    shooterRight.setInverted(false);
+    shooterRight.follow(shooterLeft, true);
+    
+  }
+
+
 
   public void setMotorSpeed(double speed){
     shooterLeft.set(speed);
   }
 
-  public SUB_Shooter(){
-    shooterRight.setInverted(false);
-    shooterRight.follow(shooterLeft, true);
-    
-  }
+
 }

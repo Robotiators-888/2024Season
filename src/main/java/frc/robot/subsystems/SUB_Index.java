@@ -19,6 +19,8 @@ public class SUB_Index extends SubsystemBase {
     indexLeft.setInverted(true);
     indexRight.setInverted(false);
     indexRight.follow(indexLeft, true); 
+    indexLeft.burnFlash();
+    indexRight.burnFlash();
   }
 
   @Override

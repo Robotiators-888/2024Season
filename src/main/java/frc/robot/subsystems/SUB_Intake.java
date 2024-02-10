@@ -19,6 +19,7 @@ public class SUB_Intake extends SubsystemBase {
   /** Creates a new SUB_Intake. */
   public SUB_Intake() {
     intakeBool = false;
+    intakeMotor.burnFlash();
   }
 
 
