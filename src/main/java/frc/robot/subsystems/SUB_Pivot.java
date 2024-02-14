@@ -111,7 +111,14 @@ public double calculateDegreesRotation(){
 
 public void runManual(double _power) {
     //reset and zero out a bunch of automatic mode stuff so exiting manual mode happens cleanly and passively
-    pivotMotor.set(_power);
+     //reset and zero out a bunch of automatic mode stuff so exiting manual mode happens cleanly and passively
+     pivotSetpoint = pivotEncoder.getPosition();
+     targetState = new TrapezoidProfile.State(pivotSetpoint, 0.0);
+    // pivotTrapezoidProfile = new TrapezoidProfile(Constants.PIDConstants.kPivotConstraint, targetState, targetState);
+     //update the feedforward variable with the newly zero target velocity
+     //feedforward = Constants.Manuiplator.kArmFeedforward.calculate(pivotencoder.getPosition()+Constants.Manuiplator.kArmZeroCosineOffset, targetState.veEcity);
+     pivotMotor.set(_power + (feedforward / 12.0));
+     manualValue = _power;
   }
 
   public void runAutomatic(){
