@@ -18,7 +18,13 @@ public class SUB_Index extends SubsystemBase {
   public SUB_Index() {
     indexLeft.setInverted(true);
     indexRight.setInverted(false);
+    indexLeft.setSmartCurrentLimit(40);
+    indexRight.setSmartCurrentLimit(40);
+    indexLeft.enableVoltageCompensation(12);
+    indexRight.enableVoltageCompensation(12);
     indexRight.follow(indexLeft, true); 
+    indexLeft.burnFlash();
+    indexRight.burnFlash();
   }
 
   @Override
