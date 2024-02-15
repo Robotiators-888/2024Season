@@ -2,7 +2,11 @@
   "robotWidth": 0.6731,
   "robotLength": 0.6985,
   "holonomicMode": true,
-  "pathFolders": [],
+  "pathFolders": [
+    "2 Piece Path",
+    "3 Piece Path",
+    "Silly Paths"
+  ],
   "autoFolders": [
     "2 Piece",
     "Silly Autos",
