@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 8.284942222836145,
-        "y": 7.4309552554704394
+        "y": 7.445640937793504
       },
       "prevControl": {
         "x": 7.37568447320462,
-        "y": 7.4309552554704394
+        "y": 7.445640937793504
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "3 Piece Path",
   "previewStartingState": null,
   "useDefaultConstraints": false
 }
