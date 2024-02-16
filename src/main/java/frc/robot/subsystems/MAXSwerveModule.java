@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 import frc.robot.Constants.Swerve;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.RelativeEncoder;
@@ -9,9 +10,10 @@ import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import com.revrobotics.CANSparkFlex;
 
 public class MAXSwerveModule {
-  private final CANSparkMax m_drivingSparkMax;
+  private final CANSparkFlex m_drivingSparkMax;
   private final CANSparkMax m_turningSparkMax;
 
   private final RelativeEncoder m_drivingEncoder;
@@ -29,7 +31,7 @@ public class MAXSwerveModule {
    * MAX, and a Through Bore Encoder.
    */
   public MAXSwerveModule(int drivingCANId, int turningCANId, double chassisAngularOffset) {
-    m_drivingSparkMax = new CANSparkMax(drivingCANId, MotorType.kBrushless);
+    m_drivingSparkMax = new CANSparkFlex(drivingCANId, MotorType.kBrushless);
     m_turningSparkMax = new CANSparkMax(turningCANId, MotorType.kBrushless);
 
     // Factory reset, so we get the SPARKS MAX to a known state before configuring
@@ -147,7 +149,7 @@ public class MAXSwerveModule {
 
     // Command driving and turning SPARKS MAX towards their respective setpoints.
     m_drivingPIDController.setReference(
-        optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
+        optimizedDesiredState.speedMetersPerSecond, CANSparkFlex.ControlType.kVelocity);
     m_turningPIDController.setReference(
         optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
 

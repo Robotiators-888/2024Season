@@ -41,11 +41,13 @@ public class SUB_Pivot extends SubsystemBase {
         pivotMotor.setOpenLoopRampRate(0.6); // motor takes 0.6 secs to reach desired power
         pivotMotor.setInverted(true);
         pivotMotor.setIdleMode(IdleMode.kBrake);
+        pivotMotor.setSmartCurrentLimit(50);
         // pivotEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
         // pivotEncoder.setVelocityConversionFactor(1.0/4.0 * 2 * Math.PI);
         // pivotEncoder.setPositionConversionFactor(1.0/4.0 * 2 * Math.PI);
         // rotateRelativeEncoder.setPositionConversionFactor(1.0/(300.0)*2*Math.PI);
         // rotateRelativeEncoder.setPosition(pivotEncoder.getPosition());
+        pivotMotor.burnFlash();
         pivotPID = pivotMotor.getPIDController();
         PIDGains.setSparkMaxGains(pivotPID, new PIDGains(0, 0, 0));
         pivotSetpoint = khome;
@@ -111,7 +113,14 @@ public double calculateDegreesRotation(){
 
 public void runManual(double _power) {
     //reset and zero out a bunch of automatic mode stuff so exiting manual mode happens cleanly and passively
-    pivotMotor.set(_power);
+     //reset and zero out a bunch of automatic mode stuff so exiting manual mode happens cleanly and passively
+     pivotSetpoint = pivotEncoder.getPosition();
+     targetState = new TrapezoidProfile.State(pivotSetpoint, 0.0);
+    // pivotTrapezoidProfile = new TrapezoidProfile(Constants.PIDConstants.kPivotConstraint, targetState, targetState);
+     //update the feedforward variable with the newly zero target velocity
+     //feedforward = Constants.Manuiplator.kArmFeedforward.calculate(pivotencoder.getPosition()+Constants.Manuiplator.kArmZeroCosineOffset, targetState.veEcity);
+     pivotMotor.set(_power + (feedforward / 12.0));
+     manualValue = _power;
   }
 
   public void runAutomatic(){

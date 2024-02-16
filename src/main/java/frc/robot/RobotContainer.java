@@ -77,14 +77,17 @@ public class RobotContainer {
     DriverC.b().whileTrue((new RunCommand(()->shooter.setMotorSpeed(-1), shooter)));
     DriverC.x().whileTrue((new RunCommand(()->index.setMotorSpeed(-0.25), shooter)));
     DriverC.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(.25), shooter));
-    OperatorC.a().onTrue(new SequentialCommandGroup());
+    //OperatorC.a().onTrue(new SequentialCommandGroup());
+    
+    DriverC.a().whileTrue(new RunCommand(()->index.setMotorSpeed(.5), index));
+    DriverC.b().whileTrue((new RunCommand(()->shooter.setMotorSpeed(-0.5), shooter)));
 
     // log = ataLogManager.getLog();
     // poseEntry = new DoubleArrayLogEntry(log, "odometry/pose");
     intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
-    //DriverC.x().whileTrue((new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakeSpeed))));
-    DriverC.y().whileTrue(new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed)));
-    DriverC.leftBumper().whileTrue(new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kOutakeSpeed)));
+   // DriverC.x().whileTrue((new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakeSpeed), intake)));
+    DriverC.y().whileTrue(new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed), intake));
+    DriverC.leftBumper().whileTrue(new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kOutakeSpeed), intake));
     // new Trigger(() -> 
     //   Math.abs(Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) > Constants.Pivot.kPivotManualDeadband
     //   ).whileTrue(new RunCommand(

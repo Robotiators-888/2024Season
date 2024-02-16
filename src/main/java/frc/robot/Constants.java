@@ -32,6 +32,10 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 5676;
   }
 
+  public static final class VortexMotorConstants{
+    public static final double kFreeSpeedRpm = 6784;
+  }
+
   public static class Swerve {
     // The MAXSwerve module can be configured with one of three pinion gears: 12T, 13T, or 14T.
     // This changes the drive speed of the module (a pinion gear with more teeth will result in a
