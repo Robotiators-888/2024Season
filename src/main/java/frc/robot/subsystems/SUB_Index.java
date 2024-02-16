@@ -40,7 +40,7 @@ public class SUB_Index extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Index RPM", indexLeft.getEncoder().getVelocity());
+    //SmartDashboard.putNumber("Index RPM", indexLeft.getEncoder().getVelocity());
   }
 
   public void setMotorSpeed(double speed){

@@ -123,6 +123,8 @@ public class SUB_Drivetrain extends SubsystemBase {
     SmartDashboard.putNumberArray(
         "Odometry",
         new double[] {getPose().getX(), getPose().getY(), getPose().getRotation().getDegrees()});
+
+    SmartDashboard.putNumber("Robot Speed", modules[0].getVelocityDrive());
   }
 
   /**
