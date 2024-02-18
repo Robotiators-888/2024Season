@@ -70,7 +70,7 @@ public class RobotContainer {
     shooter.setDefaultCommand(new RunCommand(()->shooter.setMotorSpeed(0), shooter));
     index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
     
-    DriverC.a().whileTrue(new InstantCommand(()->index.setMotorSpeed(.5)));
+    DriverC.a().whileTrue(new RunCommand(()->index.setMotorSpeed(.5)));
     DriverC.b().whileTrue((new RunCommand(()->shooter.setMotorSpeed(-0.5), shooter)));
 
     
@@ -154,6 +154,6 @@ public class RobotContainer {
 
     SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
     SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
-    SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.calculateDegreesRotation());
+    SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.getRotations());
   }
 }

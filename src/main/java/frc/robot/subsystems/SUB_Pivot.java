@@ -42,7 +42,9 @@ public class SUB_Pivot extends SubsystemBase {
         pivotMotor.setOpenLoopRampRate(0.6); // motor takes 0.6 secs to reach desired power
         pivotMotor.setInverted(true);
         pivotMotor.setIdleMode(IdleMode.kBrake);
-        pivotEncoder.setPositionConversionFactor(360);
+        rotateEncoder.setPositionConversionFactor(360);
+        rotateEncoder.setInverted(false);
+        rotateEncoder.setZeroOffset(138.3960950);
         pivotPID = pivotMotor.getPIDController();
         PIDGains.setSparkMaxGains(pivotPID, new PIDGains(0, 0, 0));
         pivotSetpoint = khome;
@@ -76,7 +78,7 @@ public void setLimits(){
 public double getRotations(){
   
     //gets position
-    return pivotEncoder.getPosition();
+    return rotateEncoder.getPosition();
 }
 
 public void armMoveVoltage(double volts) {
