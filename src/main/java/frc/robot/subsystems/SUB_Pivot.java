@@ -21,9 +21,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class SUB_Pivot extends SubsystemBase {
-    private final CANSparkMax pivotMotor = new CANSparkMax(kPIVOT_ROTATE_MOTOR_CANID, MotorType.kBrushless);
-    public final SparkAbsoluteEncoder rotateEncoder = pivotMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
-    private final RelativeEncoder rotateRelativeEncoder = pivotMotor.getEncoder();
+    private final CANSparkMax pivotMotor;
+    public final SparkAbsoluteEncoder rotateEncoder;
+    private final RelativeEncoder rotateRelativeEncoder;
     private Timer pivotTimer;
     private TrapezoidProfile pivotTrapezoidProfile;
     private SparkPIDController pivotPID;
@@ -38,6 +38,11 @@ public class SUB_Pivot extends SubsystemBase {
 
 
  public SUB_Pivot(){
+        pivotMotor = new CANSparkMax(kPIVOT_ROTATE_MOTOR_CANID, MotorType.kBrushless);
+        rotateEncoder = pivotMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+        rotateRelativeEncoder = pivotMotor.getEncoder();
+
+        pivotMotor.restoreFactoryDefaults();
         pivotMotor.setOpenLoopRampRate(0.6); // motor takes 0.6 secs to reach desired power
         pivotMotor.setInverted(true);
         pivotMotor.setIdleMode(IdleMode.kBrake);
@@ -57,6 +62,8 @@ public class SUB_Pivot extends SubsystemBase {
         pivotTimer.reset(); 
         setLimits();
         updateMotionProfile();
+
+        Timer.delay(0.2);
     }
 public void setLimits(){
     //set soft limits and current limits for how far the manip can move

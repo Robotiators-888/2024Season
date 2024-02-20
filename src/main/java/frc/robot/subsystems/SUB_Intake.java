@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -16,23 +17,24 @@ import frc.robot.Constants.Intake;
 
 public class SUB_Intake extends SubsystemBase {
 
-  CANSparkMax intakeMotor = new CANSparkMax(Intake.kINTAKE_MOTOR_CANID, MotorType.kBrushless);
+  CANSparkMax intakeMotor;
   Boolean intakeBool;
   
 
   /** Creates a new SUB_Intake. */
   public SUB_Intake() {
+    intakeMotor = new CANSparkMax(Intake.kINTAKE_MOTOR_CANID, MotorType.kBrushless);
+    intakeMotor.restoreFactoryDefaults();
     intakeMotor.setIdleMode(IdleMode.kCoast);
     intakeMotor.burnFlash();
     intakeBool = false;
 
-    intakeMotor.setSmartCurrentLimit(60);
-    intakeMotor.getPIDController().setP(0.0);
-    intakeMotor.getPIDController().setI(0.0);
-    intakeMotor.getPIDController().setD(0.0);
-    intakeMotor.getPIDController().setFF(1.0/5800.0);
-    
-    intakeMotor.burnFlash();
+    // intakeMotor.setSmartCurrentLimit(60);
+    // intakeMotor.getPIDController().setP(0.0);
+    // intakeMotor.getPIDController().setI(0.0);
+    // intakeMotor.getPIDController().setD(0.0);
+    // intakeMotor.getPIDController().setFF(1.0/5800.0);
+    Timer.delay(0.2);
   }
 
 
@@ -52,11 +54,6 @@ public class SUB_Intake extends SubsystemBase {
    *  @param speed Percent speed of motor
    */
   public void setMotorSpeed(double speed){
-    //intakeMotor.set(speed);
-    if(speed == 0.0){
-        intakeMotor.set(0.0);
-    }else{
-      intakeMotor.getPIDController().setReference(speed*Constants.Intake.kOutakeRPM, ControlType.kVelocity);
-    }
+    intakeMotor.set(speed);
   }
 }

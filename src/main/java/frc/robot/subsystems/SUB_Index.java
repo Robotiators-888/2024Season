@@ -9,13 +9,14 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SUB_Index extends SubsystemBase {
 
-  CANSparkMax indexLeft = new CANSparkMax(32, MotorType.kBrushless);
-  CANSparkMax indexRight = new CANSparkMax(33, MotorType.kBrushless);
+  CANSparkMax indexLeft;
+  CANSparkMax indexRight;
   DigitalInput dio9 = new DigitalInput(9);
 
   public boolean bannersensor(){
@@ -24,8 +25,15 @@ public class SUB_Index extends SubsystemBase {
 
   /** Creates a new SUB_Index. */
   public SUB_Index() {
+    this.indexLeft = new CANSparkMax(32, MotorType.kBrushless);
+    this.indexRight = new CANSparkMax(33, MotorType.kBrushless);
+
+    indexLeft.restoreFactoryDefaults();
+    indexRight.restoreFactoryDefaults();
+    
     indexLeft.setInverted(true);
     indexRight.setInverted(false);
+
     indexLeft.setSmartCurrentLimit(40);
     indexRight.setSmartCurrentLimit(40);
     indexLeft.enableVoltageCompensation(12);
@@ -35,6 +43,8 @@ public class SUB_Index extends SubsystemBase {
     indexRight.setIdleMode(IdleMode.kBrake);
     indexLeft.burnFlash();
     indexRight.burnFlash();
+
+    Timer.delay(0.2);
   }
 
   @Override

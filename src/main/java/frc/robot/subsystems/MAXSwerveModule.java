@@ -10,6 +10,8 @@ import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
+
 import com.revrobotics.CANSparkFlex;
 
 public class MAXSwerveModule {
@@ -18,7 +20,7 @@ public class MAXSwerveModule {
 
   private final RelativeEncoder m_drivingEncoder;
   private final AbsoluteEncoder m_turningEncoder;
-
+ 
   private final SparkPIDController m_drivingPIDController;
   private final SparkPIDController m_turningPIDController;
 
@@ -102,6 +104,9 @@ public class MAXSwerveModule {
     m_chassisAngularOffset = chassisAngularOffset;
     m_desiredState.angle = new Rotation2d(m_turningEncoder.getPosition());
     m_drivingEncoder.setPosition(0);
+
+    // Add delay for MAXSwerveModule initialization
+    Timer.delay(0.2);
   }
 
   /**
