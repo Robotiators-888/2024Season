@@ -15,6 +15,7 @@ import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.utils.AutoGenerator;
 import frc.robot.subsystems.SUB_Limelight;
 
+import java.sql.Driver;
 import java.util.Optional;
 
 import edu.wpi.first.math.MathUtil;
@@ -26,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -46,7 +48,7 @@ public class RobotContainer {
    public static SUB_Pivot pivot = new SUB_Pivot();
    public static AutoGenerator autos = new AutoGenerator(drivetrain);
 
-  public static SUB_Limelight limelight = new SUB_Limelight();
+  //public static SUB_Limelight limelight = new SUB_Limelight();
 
 
   CommandXboxController DriverC = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -86,6 +88,26 @@ public class RobotContainer {
       new InstantCommand(()->
         shooter.MANUAL_RPM += 250
     )); // Increase manual RPM by 100
+    //pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(0.05), pivot));
+
+    //new Trigger(()->(index.bannersensor())).whileTrue(new RunCommand(()->index.setMotorSpeed(0)));
+    
+     /* ================== *\
+            Driver One 
+     \* ================== */ 
+
+    // log = ataLogManager.getLog();
+    // poseEntry = new DoubleArrayLogEntry(log, "odometry/pose");
+    
+   // DriverC.x().whileTrue((new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakeSpeed), intake)));
+    // new Trigger(() -> 
+    //   Math.abs(Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) > Constants.Pivot.kPivotManualDeadband
+    //   ).whileTrue(new RunCommand(
+    //     () ->
+    //     pivot.runManual((Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) * Constants.Pivot.kArmManualScale)
+    //     , pivot));
+
+    
 
     DriverC.b().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
      
@@ -115,11 +137,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    Pose3d op3d = drivetrain.at_field.getTagPose(4).get();
-    Pose3d op = new Pose3d(new Pose2d(op3d.getX()-3, op3d.getY()-1, Rotation2d.fromDegrees(0)));
-    Optional<Pose3d> p3d = Optional.of(new Pose3d(new Pose2d(0.5, 0.5, Rotation2d.fromDegrees(45))));
-    OperatorC.start().whileTrue(new CMD_RelativeDriveToTarget(limelight, drivetrain)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
-    OperatorC.back().whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, Optional.of(op))).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
+    // Pose3d op3d = drivetrain.at_field.getTagPose(4).get();
+    // Pose3d op = new Pose3d(new Pose2d(op3d.getX()-3, op3d.getY()-1, Rotation2d.fromDegrees(0)));
+    // Optional<Pose3d> p3d = Optional.of(new Pose3d(new Pose2d(0.5, 0.5, Rotation2d.fromDegrees(45))));
+    // OperatorC.start().whileTrue(new CMD_RelativeDriveToTarget(limelight, drivetrain)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
+    // OperatorC.back().whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, Optional.of(op))).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
   } 
 
   /**
@@ -133,22 +155,21 @@ public class RobotContainer {
   }
 
   public void robotPeriodic(){
-    Pose2d visionPose = limelight.getPose();
-    if (!visionPose.equals(new Pose2d())){
-      // Check if vision pose is within one meter of the current estiamted pose 
-      // to avoid abnormalities with vision (detecting a tag that isn't present) from
-      // affecting the accuracy of our pose measurement.
-
-      Transform2d t2d = visionPose.minus(drivetrain.getPose());
-      double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
-      if (dist <= 1){
-        double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
-        drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
-      }
-    }
+  //   Pose2d visionPose = limelight.getPose();
+  //   if (!visionPose.equals(new Pose2d())){
+  //     // Check if vision pose is within one meter of the current estiamted pose 
+  //     // to avoid abnormalities with vision (detecting a tag that isn't present) from
+  //     // affecting the accuracy of our pose measurement.
 
     SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
     SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
     SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.getRotations());
+  //     Transform2d t2d = visionPose.minus(drivetrain.getPose());
+  //     double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
+  //     if (dist <= 1){
+  //       double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
+  //       drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
+  //     }
+  //   }
   }
 }

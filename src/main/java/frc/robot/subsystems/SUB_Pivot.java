@@ -26,10 +26,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class SUB_Pivot extends SubsystemBase {
-    private final CANSparkMax pivotMotor = new CANSparkMax(kPIVOT_ROTATE_MOTOR_CANID, MotorType.kBrushless);
-    public final SparkAbsoluteEncoder rotateEncoder = pivotMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
-    private final RelativeEncoder rotateRelativeEncoder = pivotMotor.getEncoder();
     public InterpolatingDoubleTreeMap constantApplicationMap = new InterpolatingDoubleTreeMap();
+    private final CANSparkMax pivotMotor;
+    public final SparkAbsoluteEncoder rotateEncoder;
+    private final RelativeEncoder rotateRelativeEncoder;
     private Timer pivotTimer;
     private TrapezoidProfile pivotTrapezoidProfile;
     private SparkPIDController pivotPID;
@@ -44,6 +44,10 @@ public class SUB_Pivot extends SubsystemBase {
 
 
  public SUB_Pivot(){
+        pivotMotor = new CANSparkMax(kPIVOT_ROTATE_MOTOR_CANID, MotorType.kBrushless);
+        rotateEncoder = pivotMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+        rotateRelativeEncoder = pivotMotor.getEncoder();
+
         pivotMotor.restoreFactoryDefaults();
         pivotMotor.setOpenLoopRampRate(0.6); // motor takes 0.6 secs to reach desired power
         pivotMotor.setInverted(true);
@@ -51,6 +55,12 @@ public class SUB_Pivot extends SubsystemBase {
         rotateEncoder.setPositionConversionFactor(360);
         rotateEncoder.setInverted(true);
         rotateEncoder.setZeroOffset(0);
+        pivotMotor.setSmartCurrentLimit(50);
+        // pivotEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
+        // pivotEncoder.setVelocityConversionFactor(1.0/4.0 * 2 * Math.PI);
+        // pivotEncoder.setPositionConversionFactor(1.0/4.0 * 2 * Math.PI);
+        // rotateRelativeEncoder.setPositionConversionFactor(1.0/(300.0)*2*Math.PI);
+        // rotateRelativeEncoder.setPosition(pivotEncoder.getPosition());
         pivotMotor.burnFlash();
         pivotPID = pivotMotor.getPIDController();
         PIDGains.setSparkMaxGains(pivotPID, new PIDGains(0, 0, 0));
@@ -65,6 +75,7 @@ public class SUB_Pivot extends SubsystemBase {
         constantApplicationMap.put(107.0 , 0.04);
         constantApplicationMap.put(95.0, 0.09);
         constantApplicationMap.put(61.0, 0.04);
+        Timer.delay(0.2);
     }
 public void setLimits(){
     //set soft limits and current limits for how far the manip can move
@@ -125,8 +136,9 @@ public void goToAngle(double angle){
 //   }
 
 public void runManual(double _power) {
-    //reset and zero out a bunch of automatic mode stuff so exiting manual mode happens cleanly and passively
-    pivotMotor.set(_power);
+   
+     pivotMotor.set(_power);
+     
   }
 
   public void runAutomatic(){

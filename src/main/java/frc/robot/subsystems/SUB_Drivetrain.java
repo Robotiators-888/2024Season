@@ -93,11 +93,12 @@ public class SUB_Drivetrain extends SubsystemBase {
 
 
   public SUB_Drivetrain() {
-    try {
-      at_field = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("2024_at_field.json"));
-    } catch (IOException e){
+    
+    // try {
+    //   at_field = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("2024_at_field.json"));
+    // } catch (IOException e){
       
-    }      
+    // }      
   }
 
   @Override
@@ -117,10 +118,13 @@ public class SUB_Drivetrain extends SubsystemBase {
 
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("rotation", getPose().getRotation().getDegrees());
+    //SmartDashboard.putNumber("Speed", m_odometry);
     SmartDashboard.putData("Field", m_field);
     SmartDashboard.putNumberArray(
         "Odometry",
         new double[] {getPose().getX(), getPose().getY(), getPose().getRotation().getDegrees()});
+
+    SmartDashboard.putNumber("Robot Speed", modules[0].getVelocityDrive());
   }
 
   /**
@@ -331,13 +335,13 @@ public class SUB_Drivetrain extends SubsystemBase {
   }
 
 
-  /**
-   * Allows for vision measurements to be added to drive odometry.
-   * @param visionPose The pose supplied by getPose() in SUB_Limelight
-   */
+  // /**
+  //  * Allows for vision measurements to be added to drive odometry.
+  //  * @param visionPose The pose supplied by getPose() in SUB_Limelight
+  //  */
 
-  public void addVisionMeasurement(Pose2d visionPose, double latency){
-    m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latency);
-  }
+  // public void addVisionMeasurement(Pose2d visionPose, double latency){
+  //   //m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latency);
+  // }
 
 }

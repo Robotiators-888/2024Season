@@ -24,12 +24,16 @@ import frc.libs.PIDGains;
 public final class Constants {
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
-    public static final double kDriveDeadband = 0.05;
+    public static final double kDriveDeadband = 0.15;
     public static final int kDriver2ControllerPort =1;
   }
 
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
+  }
+
+  public static final class VortexMotorConstants{
+    public static final double kFreeSpeedRpm = 6784;
   }
 
   public static class Swerve {
@@ -123,9 +127,9 @@ public final class Constants {
     public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
 
     // Chassis configuration
-    public static final double kTrackWidth = Units.inchesToMeters(23);
+    public static final double kTrackWidth = Units.inchesToMeters(24);
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(28);
+    public static final double kWheelBase = Units.inchesToMeters(31);
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics =
         new SwerveDriveKinematics(
@@ -135,22 +139,23 @@ public final class Constants {
             new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
     // Angular offsets of the modules relative to the chassis in radians
-    public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
-    public static final double kFrontRightChassisAngularOffset = 0;
+    public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2.0;
+    public static final double kFrontRightChassisAngularOffset = 0.0;
     public static final double kBackLeftChassisAngularOffset = Math.PI;
-    public static final double kBackRightChassisAngularOffset = Math.PI / 2;
+    public static final double kBackRightChassisAngularOffset = Math.PI / 2.0;
 
     public static final boolean kGyroReversed = true;
 
-    public static final double kGyroRotation = -90;
+    public static final double kGyroRotation = 0;
     }
 
     public static final class Intake{
       public static final int kINTAKE_MOTOR_CANID = 34;
   
-      public static final double kIntakeSpeed = 0.4;
-      public static final double kOutakeSpeed = - 0.4;
-      public static final double kIndexingSpeed = 0.4;
+      public static final double kIntakeSpeed = 0.6;
+      public static final double kOutakeSpeed = -0.5;
+      public static final double kOutakeRPM = NeoMotorConstants.kFreeSpeedRpm;
+      public static final double kIndexingSpeed = 0.35;
     }
   
      public static final class Pivot {
