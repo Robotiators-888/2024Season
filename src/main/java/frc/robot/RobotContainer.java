@@ -82,8 +82,8 @@ public class RobotContainer {
     DriverC.a().whileTrue(new RunCommand(()->index.setMotorSpeed(.5), index)); //Drive Index IN
     DriverC.x().whileTrue((new RunCommand(()->index.setMotorSpeed(-0.25), index))); //Drive Index OUT
 
-    DriverC.b().whileTrue((new RunCommand(()->shooter.setMotorSpeed(-0.5), shooter))); // Spin Shooter OUT
-    DriverC.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(.25), shooter)); // Spin Shooter IN
+    DriverC.b().whileTrue((new RunCommand(()->shooter.setMotorSpeed(0.5), shooter))); // Spin Shooter OUT
+    DriverC.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
     
     DriverC.y().whileTrue(new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed), intake)); // Drive Intake IN
     DriverC.leftBumper().whileTrue(new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT

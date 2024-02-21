@@ -20,7 +20,7 @@ public class SUB_Shooter extends SubsystemBase {
     shooterLeft.restoreFactoryDefaults();
     shooterRight.restoreFactoryDefaults();
     shooterRight.setInverted(false);
-    shooterRight.follow(shooterLeft, true);
+    shooterRight.follow(shooterLeft, false);
     shooterLeft.burnFlash();
     shooterRight.burnFlash();
     Timer.delay(0.2);

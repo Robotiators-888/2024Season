@@ -26,15 +26,19 @@ public class SUB_Intake extends SubsystemBase {
     intakeMotor = new CANSparkMax(Intake.kINTAKE_MOTOR_CANID, MotorType.kBrushless);
     intakeMotor.restoreFactoryDefaults();
     intakeMotor.setIdleMode(IdleMode.kCoast);
+    intakeMotor.setInverted(true);
     intakeMotor.burnFlash();
     intakeBool = false;
 
     // intakeMotor.setSmartCurrentLimit(60);
+    intakeMotor.setSmartCurrentLimit(60);
     // intakeMotor.getPIDController().setP(0.0);
     // intakeMotor.getPIDController().setI(0.0);
     // intakeMotor.getPIDController().setD(0.0);
     // intakeMotor.getPIDController().setFF(1.0/5800.0);
     Timer.delay(0.2);
+    
+    intakeMotor.burnFlash();
   }
 
 
