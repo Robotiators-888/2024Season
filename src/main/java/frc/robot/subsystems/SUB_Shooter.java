@@ -14,14 +14,13 @@ public class SUB_Shooter extends SubsystemBase {
   CANSparkMax shooterLeft = new CANSparkMax(30, MotorType.kBrushless);
   CANSparkMax shooterRight = new CANSparkMax(31, MotorType.kBrushless);
   private SparkPIDController PIDController = shooterLeft.getPIDController();
-  public int MANUAL_RPM = 0;
+  public int MANUAL_RPM = 1000;
 
   public void setMotorSpeed(double speed){
     shooterLeft.set(speed);
   }
 
   public SUB_Shooter(){
-    shooterRight.setInverted(false);
     shooterRight.follow(shooterLeft, false);  // invert j0aj
     PIDController.setOutputRange(-1, 1);
     
@@ -43,7 +42,7 @@ public class SUB_Shooter extends SubsystemBase {
   }
 
   public void shootFlywheelOnRPM(double rpm) {
-    PIDController.setReference(-rpm, ControlType.kVelocity);
+    PIDController.setReference(rpm, ControlType.kVelocity);
   }
 
 

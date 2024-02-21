@@ -69,40 +69,35 @@ public class RobotContainer {
     
     shooter.setDefaultCommand(new RunCommand(()->shooter.setMotorSpeed(0), shooter));
     index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
-    
-    DriverC.a().whileTrue(new RunCommand(()->index.setMotorSpeed(.5)));
-    DriverC.b().whileTrue((new RunCommand(()->shooter.setMotorSpeed(-0.5), shooter)));
-
-    
-    // log = ataLogManager.getLog();
-    // poseEntry = new DoubleArrayLogEntry(log, "odometry/pose");
     intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
-    DriverC.x().whileTrue((new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakeSpeed))));
-    DriverC.y().whileTrue(new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed)));
-    DriverC.leftBumper().whileTrue(new InstantCommand(()->intake.setMotorSpeed(Constants.Intake.kOutakeSpeed)));
-    // new Trigger(() -> 
-    //   Math.abs(Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) > Constants.Pivot.kPivotManualDeadband
-    //   ).whileTrue(new RunCommand(
-    //     () ->
-    //     pivot.runManual((Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) * Constants.Pivot.kArmManualScale)
-    //     , pivot));
+    pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(pivot.calculateConstantApp(()->pivot.getRotations()))));
 
+    //new Trigger(()->(index.bannersensor())).whileTrue(new RunCommand(()->index.setMotorSpeed(0)));
+    
+     /* ================== *\
+            Driver One 
+     \* ================== */
+     
     OperatorC.leftBumper().onTrue(new InstantCommand(()->
-      shooter.MANUAL_RPM -= 100
+      shooter.MANUAL_RPM -= 250
     )); // Decrease manual RPM by 100
 
     OperatorC.rightBumper().onTrue(
       new InstantCommand(()->
-        shooter.MANUAL_RPM += 100
+        shooter.MANUAL_RPM += 250
     )); // Increase manual RPM by 100
 
-    OperatorC.a().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
+    DriverC.b().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
+     
+    DriverC.a().whileTrue(new RunCommand(()->index.setMotorSpeed(.5), index)); //Drive Index IN
+    DriverC.x().whileTrue((new RunCommand(()->index.setMotorSpeed(-0.25), index))); //Drive Index OUT
 
-    pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(0), pivot));
-
-    DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(.2), pivot));    DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(.2)));
-    DriverC.povDown().whileTrue(new RunCommand(()->pivot.runManual(-.2), pivot));
-
+    DriverC.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
+    
+    DriverC.y().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kIndexingSpeed), intake)); // Drive Intake IN
+    DriverC.leftBumper().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
+    DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));    
+    DriverC.povDown().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));
 
     //OperatorC.a().onTrue(new InstantCommand(()-> pivot.setHome()));
 

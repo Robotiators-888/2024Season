@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 import static frc.robot.Constants.Pivot.*;
+
+import java.util.function.Supplier;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -15,6 +18,7 @@ import com.revrobotics.SparkPIDController.ArbFFUnits;
 
 import frc.libs.PIDGains;
 import frc.robot.Constants;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,6 +29,7 @@ public class SUB_Pivot extends SubsystemBase {
     private final CANSparkMax pivotMotor = new CANSparkMax(kPIVOT_ROTATE_MOTOR_CANID, MotorType.kBrushless);
     public final SparkAbsoluteEncoder rotateEncoder = pivotMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
     private final RelativeEncoder rotateRelativeEncoder = pivotMotor.getEncoder();
+    public InterpolatingDoubleTreeMap constantApplicationMap = new InterpolatingDoubleTreeMap();
     private Timer pivotTimer;
     private TrapezoidProfile pivotTrapezoidProfile;
     private SparkPIDController pivotPID;
@@ -39,12 +44,14 @@ public class SUB_Pivot extends SubsystemBase {
 
 
  public SUB_Pivot(){
+        pivotMotor.restoreFactoryDefaults();
         pivotMotor.setOpenLoopRampRate(0.6); // motor takes 0.6 secs to reach desired power
         pivotMotor.setInverted(true);
         pivotMotor.setIdleMode(IdleMode.kBrake);
         rotateEncoder.setPositionConversionFactor(360);
-        rotateEncoder.setInverted(false);
-        rotateEncoder.setZeroOffset(138.3960950);
+        rotateEncoder.setInverted(true);
+        rotateEncoder.setZeroOffset(0);
+        pivotMotor.burnFlash();
         pivotPID = pivotMotor.getPIDController();
         PIDGains.setSparkMaxGains(pivotPID, new PIDGains(0, 0, 0));
         pivotSetpoint = khome;
@@ -54,6 +61,10 @@ public class SUB_Pivot extends SubsystemBase {
         pivotTimer.reset(); 
         setLimits();
         updateMotionProfile();
+
+        constantApplicationMap.put(107.0 , 0.04);
+        constantApplicationMap.put(95.0, 0.09);
+        constantApplicationMap.put(61.0, 0.04);
     }
 public void setLimits(){
     //set soft limits and current limits for how far the manip can move
@@ -78,7 +89,7 @@ public void setLimits(){
 public double getRotations(){
   
     //gets position
-    return rotateEncoder.getPosition();
+    return rotateEncoder.getPosition()-27;
 }
 
 public void armMoveVoltage(double volts) {
@@ -94,7 +105,7 @@ public double getAutoBalanceVolts(){
 }
 
 public double calculateDegreesRotation(){
-    return (getRotations());
+    return (getRotations()-27);
 }
 
 public void goToAngle(double angle){
@@ -133,5 +144,13 @@ public void runManual(double _power) {
 
   public void setHome(){
     khome = pivotSetpoint;
+  }
+
+  public double calculateConstantApp(Supplier<Double> encoderPosition){
+    return constantApplicationMap.get(encoderPosition.get());
+  }
+
+  public void periodic(){
+    SmartDashboard.putNumber("Abs encoder offset", rotateEncoder.getZeroOffset());
   }
 }
