@@ -75,7 +75,7 @@ public class SUB_Pivot extends SubsystemBase {
         constantApplicationMap.put(107.0 , 0.04);
         constantApplicationMap.put(95.0, 0.09);
         constantApplicationMap.put(61.0, 0.04);
-        Timer.delay(0.2);
+        //Timer.delay(0.2);
     }
 public void setLimits(){
     //set soft limits and current limits for how far the manip can move
@@ -164,5 +164,13 @@ public void runManual(double _power) {
 
   public void periodic(){
     SmartDashboard.putNumber("Abs encoder offset", rotateEncoder.getZeroOffset());
+    SmartDashboard.putNumber("Pivot % out", pivotMotor.get());
   }
 }
+
+
+/*
+ * 10.5ft 55 Degree
+ * Amp 500RPM 58 ~ 60
+ * 
+ */

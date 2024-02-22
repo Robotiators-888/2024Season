@@ -106,7 +106,7 @@ public class MAXSwerveModule {
     m_drivingEncoder.setPosition(0);
 
     // Add delay for MAXSwerveModule initialization
-    Timer.delay(0.2);
+    //Timer.delay(0.2);
   }
 
   /**

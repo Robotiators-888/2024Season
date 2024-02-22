@@ -13,26 +13,26 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class SUB_Shooter extends SubsystemBase {
   private SparkPIDController PIDController;
-  public int MANUAL_RPM = 1000;
+  public static int MANUAL_RPM = 1000;
   
   CANSparkMax shooterLeft;
   CANSparkMax shooterRight;
 
   public SUB_Shooter(){
-    PIDController = shooterLeft.getPIDController();
     shooterLeft = new CANSparkMax(30, MotorType.kBrushless);
     shooterRight = new CANSparkMax(31, MotorType.kBrushless);
     shooterLeft.restoreFactoryDefaults();
     shooterRight.restoreFactoryDefaults();
     shooterRight.setInverted(false);
     shooterRight.follow(shooterLeft, false);
+    PIDController = shooterLeft.getPIDController();
     PIDController.setOutputRange(-1, 1);
     shooterLeft.getEncoder().setVelocityConversionFactor(1);
     shooterLeft.enableVoltageCompensation(12);
     setPIDF(PIDController, 0, 0, 0, 1.0/5800.0 * (3000.0/2600.0));
     shooterLeft.burnFlash();
     shooterRight.burnFlash();
-    Timer.delay(0.2);    
+    //Timer.delay(0.2);    
   }
 
 

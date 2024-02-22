@@ -19,7 +19,7 @@ public class SUB_Index extends SubsystemBase {
   CANSparkMax indexRight;
   DigitalInput dio9 = new DigitalInput(9);
 
-  public boolean bannersensor(){
+  public boolean getBannerSensor(){
     return dio9.get();
   }
 
@@ -44,13 +44,14 @@ public class SUB_Index extends SubsystemBase {
     indexLeft.burnFlash();
     indexRight.burnFlash();
 
-    Timer.delay(0.2);
+    //Timer.delay(0.2);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     //SmartDashboard.putNumber("Index RPM", indexLeft.getEncoder().getVelocity());
+    SmartDashboard.putBoolean("Top Banner", getBannerSensor());
   }
 
   public void setMotorSpeed(double speed){
