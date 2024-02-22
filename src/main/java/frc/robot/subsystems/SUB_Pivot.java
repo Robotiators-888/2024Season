@@ -163,7 +163,6 @@ public void runManual(double _power) {
   }
 
   public void periodic(){
-    SmartDashboard.putNumber("Abs encoder offset", rotateEncoder.getZeroOffset());
     SmartDashboard.putNumber("Pivot % out", pivotMotor.get());
   }
 }
