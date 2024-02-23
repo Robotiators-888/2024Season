@@ -74,13 +74,48 @@ public class RobotContainer {
     shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(0), shooter));
     index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
     intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
-    pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(pivot.calculateConstantApp(()->pivot.getRotations()))));
+    pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(pivot.calculateConstantApp(()->pivot.getRotations())), pivot));
+
+    //new Trigger(()->(index.bannersensor())).whileTrue(new RunCommand(()->index.setMotorSpeed(0)));
+    
+     /* ================== *\
+            Driver One 
+<<<<<<< HEAD
+     \* ================== */ 
+=======
+     \* ================== */
+     
+    OperatorC.leftBumper().onTrue(new InstantCommand(()->
+      SUB_Shooter.MANUAL_RPM -= 250
+    )); // Decrease manual RPM by 100
+
+    OperatorC.rightBumper().onTrue(
+      new InstantCommand(()->
+        SUB_Shooter.MANUAL_RPM += 250
+    )); // Increase manual RPM by 100
+    //pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(0.05), pivot));
 
     //new Trigger(()->(index.bannersensor())).whileTrue(new RunCommand(()->index.setMotorSpeed(0)));
     
      /* ================== *\
             Driver One 
      \* ================== */ 
+
+    // log = ataLogManager.getLog();
+    // poseEntry = new DoubleArrayLogEntry(log, "odometry/pose");
+    
+   // DriverC.x().whileTrue((new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakeSpeed), intake)));
+    // new Trigger(() -> 
+    //   Math.abs(Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) > Constants.Pivot.kPivotManualDeadband
+    //   ).whileTrue(new RunCommand(
+    //     () ->
+    //     pivot.runManual((Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) * Constants.Pivot.kArmManualScale)
+    //     , pivot));
+
+    
+
+    DriverC.b().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
+>>>>>>> 29e4dff (shooter changes)
      
     DriverC.a().whileTrue(
     new ParallelCommandGroup(
@@ -106,10 +141,10 @@ public class RobotContainer {
     ); // Spin Shooter OUT
     DriverC.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
     
-    DriverC.y().whileTrue(new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed), intake)); // Drive Intake IN
-    DriverC.leftBumper().whileTrue(new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
-    DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));    
-    DriverC.povDown().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));
+    DriverC.y().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kIndexingSpeed), intake)); // Drive Intake IN
+    DriverC.leftBumper().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
+    DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));    
+    DriverC.povDown().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));
 
   }
 
@@ -148,7 +183,6 @@ public class RobotContainer {
   //     // Check if vision pose is within one meter of the current estiamted pose 
   //     // to avoid abnormalities with vision (detecting a tag that isn't present) from
   //     // affecting the accuracy of our pose measurement.
-
     SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
     SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
     SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.getRotations());
