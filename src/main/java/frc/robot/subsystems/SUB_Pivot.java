@@ -48,7 +48,7 @@ public class SUB_Pivot extends SubsystemBase {
         pivotMotor = new CANSparkMax(kPIVOT_ROTATE_MOTOR_CANID, MotorType.kBrushless);
         rotateEncoder = pivotMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
         rotateRelativeEncoder = pivotMotor.getEncoder();
-
+        pivotTrapezoidProfile = new TrapezoidProfile(kArmMotionConstraint);
         pivotMotor.restoreFactoryDefaults();
         pivotMotor.setOpenLoopRampRate(0.6); // motor takes 0.6 secs to reach desired power
         pivotMotor.setInverted(true);
@@ -141,7 +141,8 @@ public void runManual(double _power) {
     , pivotEncoder.getVelocity());
         targetState = pivotTrapezoidProfile.calculate(elapsedTime, state, targetState);
     }
-    feedforward = kArmFeedforward.calculate(pivotEncoder.getPosition(), targetState.velocity);
+    feedforward = kArmFeedforward.calculate(targetState.velocity) + 
+                  constantApplicationMap.get(pivotEncoder.getPosition());
     pivotPID.setReference(targetState.position, ControlType.kPosition, 0, feedforward, ArbFFUnits.kVoltage);
   }
 
