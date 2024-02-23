@@ -64,6 +64,7 @@ public class SUB_Pivot extends SubsystemBase {
         // rotateRelativeEncoder.setPosition(pivotEncoder.getPosition());
         pivotMotor.burnFlash();
         pivotPID = pivotMotor.getPIDController();
+        pivotPID.setFeedbackDevice(rotateEncoder);
         PIDGains.setSparkMaxGains(pivotPID, new PIDGains(0, 0, 0));
         pivotSetpoint = khome;
         

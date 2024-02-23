@@ -178,7 +178,7 @@ public final class Constants {
       public static final double FF_kA = 0;
       public static final double FF_kG = 0; //amount of volts to Overcome gravity on the arm
       public static final double FF_kS = .11092;
-      public static final double FF_kV = 5.9339; 
+      public static final double FF_kV = 0.02; 
 
       public static final TrapezoidProfile.Constraints kArmMotionConstraint = new TrapezoidProfile.Constraints(10 , 10);
       public static final SimpleMotorFeedforward kArmFeedforward = new SimpleMotorFeedforward(FF_kS, FF_kV);
