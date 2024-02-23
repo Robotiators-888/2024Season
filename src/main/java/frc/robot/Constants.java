@@ -168,7 +168,8 @@ public final class Constants {
       public static double khome = 0;
 
       public static final double kAngularEncoderOffsetInDeg = 0;
-
+      public static final double kMaxArmAngle = 0;
+      public static final double kMinArmAngle = 0;
       //
       public static final double PID_kP = 0.11425;
       public static final int PID_kI = 0;
