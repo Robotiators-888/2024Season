@@ -31,10 +31,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-<<<<<<< HEAD
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-=======
->>>>>>> 1cc5ff35c144c98cb67c7070ba63a6bf34fbe242
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
