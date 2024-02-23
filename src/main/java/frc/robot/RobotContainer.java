@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.*;
 import frc.robot.commands.CMD_AbsoluteDriveToTarget;
 import frc.robot.commands.CMD_RelativeDriveToTarget;
+import frc.robot.commands.SEQ_StaticAimedShot;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Shooter;
@@ -48,6 +49,7 @@ public class RobotContainer {
    public static SUB_Index index = new SUB_Index();
    public static SUB_Intake intake = new SUB_Intake();
    public static SUB_Pivot pivot = new SUB_Pivot();
+   public static SUB_Limelight limelight = new SUB_Limelight();
    public static AutoGenerator autos = new AutoGenerator(drivetrain);
 
   //public static SUB_Limelight limelight = new SUB_Limelight();
@@ -80,42 +82,7 @@ public class RobotContainer {
     
      /* ================== *\
             Driver One 
-<<<<<<< HEAD
      \* ================== */ 
-=======
-     \* ================== */
-     
-    OperatorC.leftBumper().onTrue(new InstantCommand(()->
-      SUB_Shooter.MANUAL_RPM -= 250
-    )); // Decrease manual RPM by 100
-
-    OperatorC.rightBumper().onTrue(
-      new InstantCommand(()->
-        SUB_Shooter.MANUAL_RPM += 250
-    )); // Increase manual RPM by 100
-    //pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(0.05), pivot));
-
-    //new Trigger(()->(index.bannersensor())).whileTrue(new RunCommand(()->index.setMotorSpeed(0)));
-    
-     /* ================== *\
-            Driver One 
-     \* ================== */ 
-
-    // log = ataLogManager.getLog();
-    // poseEntry = new DoubleArrayLogEntry(log, "odometry/pose");
-    
-   // DriverC.x().whileTrue((new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakeSpeed), intake)));
-    // new Trigger(() -> 
-    //   Math.abs(Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) > Constants.Pivot.kPivotManualDeadband
-    //   ).whileTrue(new RunCommand(
-    //     () ->
-    //     pivot.runManual((Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) * Constants.Pivot.kArmManualScale)
-    //     , pivot));
-
-    
-
-    DriverC.b().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
->>>>>>> 29e4dff (shooter changes)
      
     DriverC.a().whileTrue(
     new ParallelCommandGroup(
@@ -185,7 +152,7 @@ public class RobotContainer {
   //     // affecting the accuracy of our pose measurement.
     SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
     SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
-    SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.getRotations());
+    SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.calculateDegreesRotation());
   //     Transform2d t2d = visionPose.minus(drivetrain.getPose());
   //     double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
   //     if (dist <= 1){
