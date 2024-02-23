@@ -62,7 +62,7 @@ public class SUB_Shooter extends SubsystemBase {
   }
 
   public void shootFlywheelOnRPM(double rpm) {
-    PIDController.setReference(-rpm, ControlType.kVelocity);
+    PIDController.setReference(rpm, ControlType.kVelocity);
   }
 
 
