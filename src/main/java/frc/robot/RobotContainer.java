@@ -25,8 +25,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -68,10 +70,10 @@ public class RobotContainer {
                 drivetrain));
 
     
-    shooter.setDefaultCommand(new RunCommand(()->shooter.setMotorSpeed(0), shooter));
+    shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(1500), shooter));
     index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
     intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
-    //pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(0.05), pivot));
+    pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(pivot.calculateConstantApp(()->pivot.getRotations())), pivot));
 
     //new Trigger(()->(index.bannersensor())).whileTrue(new RunCommand(()->index.setMotorSpeed(0)));
     
@@ -79,33 +81,33 @@ public class RobotContainer {
             Driver One 
      \* ================== */ 
      
-    DriverC.a().whileTrue(new RunCommand(()->index.setMotorSpeed(.5), index)); //Drive Index IN
+    DriverC.a().toggleOnTrue(
+    new ParallelCommandGroup(
+      new RunCommand(()->index.setMotorSpeed(.5), index),
+      new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed))).until(
+        ()->index.getTopBannerSensor()
+    )).onFalse(new ParallelCommandGroup(
+      new InstantCommand(()->index.setMotorSpeed(0)),
+      new InstantCommand(()->intake.setMotorSpeed(0))
+    )); // Suspicious if it will work or not, if it doesn't, just put onTrue();
+
     DriverC.x().whileTrue((new RunCommand(()->index.setMotorSpeed(-0.25), index))); //Drive Index OUT
 
-    DriverC.b().whileTrue((new RunCommand(()->shooter.setMotorSpeed(0.5), shooter))); // Spin Shooter OUT
+    DriverC.b().whileTrue(
+        new ParallelCommandGroup(
+          new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
+          new SequentialCommandGroup(
+            new WaitUntilCommand(()->shooter.getFlywheelRPM() == 4000),
+            new RunCommand(()->index.setMotorSpeed(0.5), shooter)
+          )
+        )
+    ); // Spin Shooter OUT
     DriverC.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
     
     DriverC.y().whileTrue(new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed), intake)); // Drive Intake IN
     DriverC.leftBumper().whileTrue(new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
     DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));    
     DriverC.povDown().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));
-
-
-    // log = ataLogManager.getLog();
-    // poseEntry = new DoubleArrayLogEntry(log, "odometry/pose");
-    
-   // DriverC.x().whileTrue((new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakeSpeed), intake)));
-    // new Trigger(() -> 
-    //   Math.abs(Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) > Constants.Pivot.kPivotManualDeadband
-    //   ).whileTrue(new RunCommand(
-    //     () ->
-    //     pivot.runManual((Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) * Constants.Pivot.kArmManualScale)
-    //     , pivot));
-
-    
-
-
-    //OperatorC.a().onTrue(new InstantCommand(()-> pivot.setHome()));
 
   }
 

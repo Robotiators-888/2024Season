@@ -182,6 +182,9 @@ public final class Constants {
       //public static final double kGroundPosition = 0.1;
       public static final double kmaxVelocity = 6.47*Math.PI;
       public static final double kmaxAcceleration = 4.27;
+
+      public static final double kMaxArmAngle = .213 *360;
+      public static final double kMinArmAngle = .101*360;
         
     }
 

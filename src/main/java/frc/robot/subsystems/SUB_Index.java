@@ -19,7 +19,7 @@ public class SUB_Index extends SubsystemBase {
   CANSparkMax indexRight;
   DigitalInput dio9 = new DigitalInput(9);
 
-  public boolean bannersensor(){
+  public boolean getTopBannerSensor(){
     return dio9.get();
   }
 
