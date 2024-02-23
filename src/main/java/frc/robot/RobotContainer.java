@@ -70,7 +70,7 @@ public class RobotContainer {
                 drivetrain));
 
     
-    shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(1500), shooter));
+    shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(0), shooter));
     index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
     intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
     pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(pivot.calculateConstantApp(()->pivot.getRotations())), pivot));
@@ -81,12 +81,13 @@ public class RobotContainer {
             Driver One 
      \* ================== */ 
      
-    DriverC.a().toggleOnTrue(
+    DriverC.a().whileTrue(
     new ParallelCommandGroup(
       new RunCommand(()->index.setMotorSpeed(.5), index),
       new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed))).until(
         ()->index.getTopBannerSensor()
     )).onFalse(new ParallelCommandGroup(
+
       new InstantCommand(()->index.setMotorSpeed(0)),
       new InstantCommand(()->intake.setMotorSpeed(0))
     )); // Suspicious if it will work or not, if it doesn't, just put onTrue();
@@ -98,7 +99,7 @@ public class RobotContainer {
           new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
           new SequentialCommandGroup(
             new WaitUntilCommand(()->shooter.getFlywheelRPM() == 4000),
-            new RunCommand(()->index.setMotorSpeed(0.5), shooter)
+            new RunCommand(()->index.setMotorSpeed(0.5), index)
           )
         )
     ); // Spin Shooter OUT

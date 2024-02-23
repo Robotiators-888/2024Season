@@ -20,7 +20,7 @@ public class SUB_Index extends SubsystemBase {
   DigitalInput dio9 = new DigitalInput(9);
 
   public boolean getTopBannerSensor(){
-    return dio9.get();
+    return !dio9.get();
   }
 
   /** Creates a new SUB_Index. */
@@ -51,6 +51,7 @@ public class SUB_Index extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     //SmartDashboard.putNumber("Index RPM", indexLeft.getEncoder().getVelocity());
+    SmartDashboard.putBoolean("Banner", getTopBannerSensor());
   }
 
   public void setMotorSpeed(double speed){
