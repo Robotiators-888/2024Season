@@ -80,6 +80,7 @@ public class CMD_AimOnDist extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putBoolean("SPEAKER LOCK?", false);
     currentPose = drivetrain.getPose();
     pivot.goToAngle(pivot.distToPivotAngle.get(positionError));
     SmartDashboard.putNumber("Distance error", positionError);
