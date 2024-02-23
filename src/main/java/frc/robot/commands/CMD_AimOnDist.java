@@ -26,7 +26,7 @@ public class CMD_AimOnDist extends Command {
   Pose2d currentPose;
   Double positionError;
 
-  private final PIDController robotAngleController = new PIDController( 1, 0, 0); // 0.25, 0, 0
+  //private final PIDController robotAngleController = new PIDController( 1, 0, 0); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
   public CMD_AimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain) {
@@ -72,8 +72,8 @@ public class CMD_AimOnDist extends Command {
         angle = -Math.PI - Math.atan(yError/xError);
       }
     }
-    robotAngleController.setTolerance(0.07);
-    robotAngleController.setSetpoint(angle);
+    //robotAngleController.setTolerance(0.07);
+    //robotAngleController.setSetpoint(angle);
 
   }
 
@@ -83,9 +83,10 @@ public class CMD_AimOnDist extends Command {
     SmartDashboard.putBoolean("SPEAKER LOCK?", false);
     currentPose = drivetrain.getPose();
     pivot.goToAngle(pivot.distToPivotAngle.get(positionError));
+    pivot.runAutomatic();
     SmartDashboard.putNumber("Distance error", positionError);
-    drivetrain.drive(0, 0, robotAngleController.calculate(currentPose.getRotation().getRadians()),
-     false, true);
+    // drivetrain.drive(0, 0, robotAngleController.calculate(currentPose.getRotation().getRadians()),
+    //  false, true);
   }
 
   // Called once the command ends or is interrupted.
@@ -97,7 +98,6 @@ public class CMD_AimOnDist extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return robotAngleController.atSetpoint() && 
-            Math.abs(pivot.calculateDegreesRotation()-pivot.distToPivotAngle.get(positionError)) < 5;
+    return Math.abs(pivot.calculateDegreesRotation()-pivot.distToPivotAngle.get(positionError)) < 5;
   }
 }
