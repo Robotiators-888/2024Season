@@ -149,6 +149,9 @@ public class RobotContainer {
   //     // to avoid abnormalities with vision (detecting a tag that isn't present) from
   //     // affecting the accuracy of our pose measurement.
 
+    SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
+    SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
+    SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.getRotations());
   //     Transform2d t2d = visionPose.minus(drivetrain.getPose());
   //     double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
   //     if (dist <= 1){
