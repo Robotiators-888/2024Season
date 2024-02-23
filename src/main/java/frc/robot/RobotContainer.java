@@ -31,7 +31,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+<<<<<<< HEAD
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+=======
+>>>>>>> 1cc5ff35c144c98cb67c7070ba63a6bf34fbe242
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -78,6 +81,22 @@ public class RobotContainer {
     index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
     intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
     pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(pivot.calculateConstantApp(()->pivot.getRotations())), pivot));
+
+    //new Trigger(()->(index.bannersensor())).whileTrue(new RunCommand(()->index.setMotorSpeed(0)));
+    
+     /* ================== *\
+            Driver One 
+     \* ================== */
+     
+    OperatorC.leftBumper().onTrue(new InstantCommand(()->
+      SUB_Shooter.MANUAL_RPM -= 250
+    )); // Decrease manual RPM by 100
+
+    OperatorC.rightBumper().onTrue(
+      new InstantCommand(()->
+        SUB_Shooter.MANUAL_RPM += 250
+    )); // Increase manual RPM by 100
+    //pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(0.05), pivot));
 
     //new Trigger(()->(index.bannersensor())).whileTrue(new RunCommand(()->index.setMotorSpeed(0)));
     
