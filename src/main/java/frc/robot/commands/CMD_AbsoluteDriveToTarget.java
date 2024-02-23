@@ -26,7 +26,7 @@ public class CMD_AbsoluteDriveToTarget extends Command {
 
     xController.setTolerance(0.1);
     yController.setTolerance(0.1);
-    omegaController.setTolerance(0.05);
+    omegaController.setTolerance(0.07);
     addRequirements(drivetrain);
   }
 
@@ -58,7 +58,6 @@ public class CMD_AbsoluteDriveToTarget extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //return (xController.atSetpoint() && yController.atSetpoint() && omegaController.atSetpoint());
-    return false;
+    return (xController.atSetpoint() && yController.atSetpoint() && omegaController.atSetpoint());
   }
 }

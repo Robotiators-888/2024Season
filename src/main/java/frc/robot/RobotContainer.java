@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.*;
 import frc.robot.commands.CMD_AbsoluteDriveToTarget;
 import frc.robot.commands.CMD_RelativeDriveToTarget;
+import frc.robot.commands.SEQ_StaticAimedShot;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Shooter;
@@ -46,6 +47,7 @@ public class RobotContainer {
    public static SUB_Index index = new SUB_Index();
    public static SUB_Intake intake = new SUB_Intake();
    public static SUB_Pivot pivot = new SUB_Pivot();
+   public static SUB_Limelight limelight = new SUB_Limelight();
    public static AutoGenerator autos = new AutoGenerator(drivetrain);
 
   //public static SUB_Limelight limelight = new SUB_Limelight();
@@ -68,7 +70,6 @@ public class RobotContainer {
                 true, true),
                 drivetrain));
 
-    
     shooter.setDefaultCommand(new RunCommand(()->shooter.setMotorSpeed(0), shooter));
     index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
     intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
@@ -107,7 +108,7 @@ public class RobotContainer {
     //     pivot.runManual((Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) * Constants.Pivot.kArmManualScale)
     //     , pivot));
 
-    
+    OperatorC.b().whileTrue(new SEQ_StaticAimedShot(drivetrain, shooter, intake, index, pivot, limelight));
 
     DriverC.b().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
      
@@ -162,7 +163,7 @@ public class RobotContainer {
   //     // affecting the accuracy of our pose measurement.
     SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
     SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
-    SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.getRotations());
+    SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.calculateDegreesRotation());
   //     Transform2d t2d = visionPose.minus(drivetrain.getPose());
   //     double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
   //     if (dist <= 1){

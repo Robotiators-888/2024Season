@@ -20,6 +20,7 @@ import frc.libs.PIDGains;
 import frc.robot.Constants;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -39,7 +40,7 @@ public class SUB_Pivot extends SubsystemBase {
     private double feedforward;
     private double manualValue;
     //Counteract Gravity on Arm, Currently lbsArm is arbitrary (For kG of FF)
-    
+    public InterpolatingDoubleTreeMap distToPivotAngle = new InterpolatingDoubleTreeMap();
     double gravitional_force_in_Kg = (lbsArm*4.44822162)/9.8;
 
 
@@ -54,7 +55,7 @@ public class SUB_Pivot extends SubsystemBase {
         pivotMotor.setIdleMode(IdleMode.kBrake);
         rotateEncoder.setPositionConversionFactor(360);
         rotateEncoder.setInverted(true);
-        rotateEncoder.setZeroOffset(0);
+        rotateEncoder.setZeroOffset(0); // We are accepting that this is broken
         pivotMotor.setSmartCurrentLimit(50);
         // pivotEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
         // pivotEncoder.setVelocityConversionFactor(1.0/4.0 * 2 * Math.PI);
@@ -75,6 +76,10 @@ public class SUB_Pivot extends SubsystemBase {
         constantApplicationMap.put(107.0 , 0.04);
         constantApplicationMap.put(95.0, 0.09);
         constantApplicationMap.put(61.0, 0.04);
+
+        distToPivotAngle.put(Units.feetToMeters(3), 59.0);
+        distToPivotAngle.put(Units.feetToMeters(6), 45.0);
+        distToPivotAngle.put(Units.feetToMeters(9), 36.0);
         //Timer.delay(0.2);
     }
 public void setLimits(){
@@ -98,9 +103,7 @@ public void setLimits(){
 
    
 public double getRotations(){
-  
-    //gets position
-    return rotateEncoder.getPosition()-27;
+    return rotateEncoder.getPosition();
 }
 
 public void armMoveVoltage(double volts) {
@@ -116,30 +119,18 @@ public double getAutoBalanceVolts(){
 }
 
 public double calculateDegreesRotation(){
-    return (getRotations()-27);
+    return getRotations() - 27;
 }
 
 public void goToAngle(double angle){
   if((angle<Constants.Pivot.kMaxArmAngle) && (angle>Constants.Pivot.kMinArmAngle)){
-  pivotSetpoint = angle;
+    pivotSetpoint = angle+27;
   }
 }
-// public void runManual(double _power) {
-//     //reset and zero out a bunch of automatic mode stuff so exiting manual mode happens cleanly and passively
-//     pivotSetpoint = pivotEncoder.getPosition();
-//     targetState = new TrapezoidProfile.State(pivotSetpoint, 0.0);
-//    // pivotTrapezoidProfile = new TrapezoidProfile(Constants.PIDConstants.kPivotConstraint, targetState, targetState);
-//     //update the feedforward variable with the newly zero target velocity
-//     //feedforward = Constants.Manuiplator.kArmFeedforward.calculate(pivotencoder.getPosition()+Constants.Manuiplator.kArmZeroCosineOffset, targetState.veEcity);
-//     pivotMotor.set(_power + (feedforward / 12.0));
-//     manualValue = _power;
-//   }
 
 public void runManual(double _power) {
-   
      pivotMotor.set(_power);
-     
-  }
+}
 
   public void runAutomatic(){
     double elapsedTime = pivotTimer.get();
