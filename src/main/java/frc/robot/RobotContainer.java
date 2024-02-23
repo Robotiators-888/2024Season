@@ -115,8 +115,9 @@ public class RobotContainer {
     OperatorC.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain).andThen(
       new InstantCommand(()->SmartDashboard.putBoolean("SPEAKER LOCK?", true))));
 
-    OperatorC.a().whileTrue(new ParallelCommandGroup(
+    OperatorC.a().whileTrue(new SequentialCommandGroup(
       new InstantCommand(()->pivot.goToAngle(59.0)),
+      new InstantCommand(()->pivot.resetTimer()),
       new RunCommand(()->pivot.runAutomatic())
     ));
     
