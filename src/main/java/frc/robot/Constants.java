@@ -169,18 +169,18 @@ public final class Constants {
       public static double khome = 0;
 
       public static final double kAngularEncoderOffsetInDeg = 0;
-      public static final double kMaxArmAngle = .213 *360;
-      public static final double kMinArmAngle = .101*360;
+      public static final double kMaxArmAngle = 106;
+      public static final double kMinArmAngle = 60.8;
       //
       public static final double PID_kP = 0.11425;
       public static final int PID_kI = 0;
       public static final double PID_kD = 0.021;
       public static final double FF_kA = 0;
       public static final double FF_kG = 0; //amount of volts to Overcome gravity on the arm
-      public static final double FF_kS = .11092;
-      public static final double FF_kV = 0.02; 
+      public static final double FF_kS = 0.1;
+      public static final double FF_kV = 0.0204; 
 
-      public static final TrapezoidProfile.Constraints kArmMotionConstraint = new TrapezoidProfile.Constraints(10 , 10);
+      public static final TrapezoidProfile.Constraints kArmMotionConstraint = new TrapezoidProfile.Constraints(30 , 30);
       public static final SimpleMotorFeedforward kArmFeedforward = new SimpleMotorFeedforward(FF_kS, FF_kV);
       public static final PIDGains kArmPositionGains = new PIDGains(0.0, 0.0, 0.0);
       //public static final double kGroundPosition = 0.1;

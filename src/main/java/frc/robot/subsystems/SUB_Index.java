@@ -18,9 +18,19 @@ public class SUB_Index extends SubsystemBase {
   CANSparkMax indexLeft;
   CANSparkMax indexRight;
   DigitalInput dio9 = new DigitalInput(9);
+  Timer currentTimer = new Timer();
 
   public boolean getTopBannerSensor(){
     return !dio9.get();
+  }
+
+  public void starttimer(){
+  currentTimer.reset();
+  currentTimer.start();
+  }
+
+  public boolean CurrentLimitSpike(){
+    return (currentTimer.hasElapsed(.25) && indexLeft.getOutputCurrent() > 20);
   }
 
   /** Creates a new SUB_Index. */
@@ -43,7 +53,6 @@ public class SUB_Index extends SubsystemBase {
     indexRight.setIdleMode(IdleMode.kBrake);
     indexLeft.burnFlash();
     indexRight.burnFlash();
-
     //Timer.delay(0.2);
   }
 
@@ -52,6 +61,10 @@ public class SUB_Index extends SubsystemBase {
     // This method will be called once per scheduler run
     //SmartDashboard.putNumber("Index RPM", indexLeft.getEncoder().getVelocity());
     SmartDashboard.putBoolean("Banner", getTopBannerSensor());
+    SmartDashboard.putNumber("LeftIndexCurrent", indexLeft.getOutputCurrent());
+    SmartDashboard.putNumber("RightIndexCurrent", indexRight.getOutputCurrent());
+    SmartDashboard.putNumber("LeftIndexVelocity", indexLeft.getEncoder().getVelocity());
+    SmartDashboard.putNumber("RightIndexVelocity", indexRight.getEncoder().getVelocity());
   }
 
   public void setMotorSpeed(double speed){

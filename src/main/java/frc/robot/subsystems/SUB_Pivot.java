@@ -13,6 +13,7 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController.ArbFFUnits;
 
@@ -38,6 +39,7 @@ public class SUB_Pivot extends SubsystemBase {
     private TrapezoidProfile.State targetState;
     private TrapezoidProfile.State currentState;
 
+    private TrapezoidProfile.State nextState;
     private double feedforward;
     private double manualValue;
     //Counteract Gravity on Arm, Currently lbsArm is arbitrary (For kG of FF)
@@ -52,10 +54,10 @@ public class SUB_Pivot extends SubsystemBase {
         pivotTrapezoidProfile = new TrapezoidProfile(kArmMotionConstraint);
         pivotMotor.restoreFactoryDefaults();
         pivotMotor.setOpenLoopRampRate(0.6); // motor takes 0.6 secs to reach desired power
-        pivotMotor.setInverted(true);
+        pivotMotor.setInverted(false);
         pivotMotor.setIdleMode(IdleMode.kBrake);
         rotateEncoder.setPositionConversionFactor(360);
-        rotateEncoder.setVelocityConversionFactor(360/60);
+        rotateEncoder.setVelocityConversionFactor(360);
         rotateEncoder.setInverted(true);
         rotateEncoder.setZeroOffset(0); // We are accepting that this is broken
         pivotMotor.setSmartCurrentLimit(50);
@@ -71,19 +73,27 @@ public class SUB_Pivot extends SubsystemBase {
         pivotPID.setOutputRange(-0.2, 0.2);
         pivotSetpoint = khome;
         
+        setPIDF(pivotPID, 0.013, 0, 0.001, 0);
+
         pivotTimer = new Timer();
         pivotTimer.start();
         pivotTimer.reset(); 
         setLimits();
+        targetState = new TrapezoidProfile.State(75, 0.0);
+        currentState = new TrapezoidProfile.State(75, 0.0);
 
-        constantApplicationMap.put(107.0 , 0.04);
-        constantApplicationMap.put(95.0, 0.09);
-        constantApplicationMap.put(61.0, 0.04);
+        constantApplicationMap.put(107.0 , -0.04);
+        constantApplicationMap.put(95.0, -0.08);
+        constantApplicationMap.put(61.0, -0.03);
 
         distToPivotAngle.put(Units.feetToMeters(3), 59.0);
         distToPivotAngle.put(Units.feetToMeters(6), 45.0);
         distToPivotAngle.put(Units.feetToMeters(9), 36.0);
         //Timer.delay(0.2);
+        pivotMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+        pivotMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+        pivotMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+        pivotSetpoint = rotateEncoder.getPosition();
     }
 public void setLimits(){
     //set soft limits and current limits for how far the manip can move
@@ -100,9 +110,21 @@ public void setLimits(){
    }
    
 
+   public void setPivotSetpoint(double newSetpoint){
+      pivotSetpoint = newSetpoint;
+   }
 
+   public void setPIDF(SparkPIDController pid, double P, double I, double D, double F){
+    pid.setP(P);
+    pid.setI(I);
+    pid.setD(D);
+    pid.setFF(F);
+  }
+  
+public void setSetpointToPivot(){
+  pivotSetpoint = rotateEncoder.getPosition();
+}
 
-   
 public double getRotations(){
     return rotateEncoder.getPosition();
 }
@@ -125,9 +147,9 @@ public double calculateDegreesRotation(){
 
 public void goToAngle(double angle){
   if((angle<Constants.Pivot.kMaxArmAngle) && (angle>Constants.Pivot.kMinArmAngle)){
-    pivotSetpoint = angle+27;
+    pivotSetpoint = angle;
     targetState = new TrapezoidProfile.State(pivotSetpoint, 0.0);
-
+    currentState = new TrapezoidProfile.State(rotateEncoder.getPosition(), rotateEncoder.getVelocity());
   }
 }
 
@@ -136,18 +158,13 @@ public void runManual(double _power) {
 }
 
   public void runAutomatic(){
-    double elapsedTime = pivotTimer.get();
-    if(pivotTrapezoidProfile.isFinished(elapsedTime)){
-      targetState = new TrapezoidProfile.State(pivotSetpoint, 0.0);
-    }else{
-      currentState = new TrapezoidProfile.State(rotateEncoder.getPosition()
-    , rotateEncoder.getVelocity());
-        targetState = pivotTrapezoidProfile.calculate(.02, currentState, targetState);
-    }
-    feedforward = kArmFeedforward.calculate(targetState.velocity) + 
-                  12 * constantApplicationMap.get(rotateEncoder.getPosition());
-    pivotPID.setReference(targetState.position, ControlType.kPosition, 0, feedforward, ArbFFUnits.kVoltage);
+    
+    // currentState = pivotTrapezoidProfile.calculate(.02, currentState, targetState);
+    feedforward = 12 * constantApplicationMap.get(rotateEncoder.getPosition());
+    pivotPID.setReference(pivotSetpoint, ControlType.kPosition, 0, feedforward, ArbFFUnits.kVoltage);
+    // pivotMotor.setVoltage(feedforward);
   }
+
 
   public void setHome(){
     khome = pivotSetpoint;
@@ -160,8 +177,9 @@ public void runManual(double _power) {
   public void periodic(){
     SmartDashboard.putNumber("Pivot Setpoint", pivotSetpoint);
     SmartDashboard.putNumber("Pivot Rotations", getRotations());
-    SmartDashboard.putNumber("Current Velocity", currentState.velocity);
-    SmartDashboard.putNumber("TargetVelocity", targetState.velocity);
+    SmartDashboard.putNumber("Current Velocity", rotateEncoder.getVelocity());
+    SmartDashboard.putNumber("TargetVelocity", currentState.velocity);
+    SmartDashboard.putNumber("Next position", currentState.position);
     SmartDashboard.putNumber("Pivot FF", feedforward);
     SmartDashboard.putNumber("Pivot % out", pivotMotor.getAppliedOutput());
   }

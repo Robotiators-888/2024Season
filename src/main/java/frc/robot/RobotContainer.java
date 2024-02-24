@@ -58,8 +58,8 @@ public class RobotContainer {
 
   CommandXboxController DriverC = new CommandXboxController(OIConstants.kDriverControllerPort);
 
-    private final CommandXboxController OperatorC = 
-    new CommandXboxController(OIConstants.kDriver2ControllerPort);   
+  private final CommandXboxController OperatorC = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
+    
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -73,11 +73,22 @@ public class RobotContainer {
                 true, true),
                 drivetrain));
 
+     DriverC.b().whileTrue(
+        new ParallelCommandGroup(
+          new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
+          new SequentialCommandGroup(
+            new WaitUntilCommand(()->shooter.getFlywheelRPM() == 4000),
+            new RunCommand(()->index.setMotorSpeed(0.5), index)
+          )
+        )
+    ); // Spin Shooter OUT
     
+    DriverC.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
+
     shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(0), shooter));
     index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
     intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
-    pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(pivot.calculateConstantApp(()->pivot.getRotations())), pivot));
+    pivot.setDefaultCommand(new RunCommand(()->pivot.runAutomatic(), pivot));
 
     //new Trigger(()->(index.bannersensor())).whileTrue(new RunCommand(()->index.setMotorSpeed(0)));
     
@@ -115,41 +126,52 @@ public class RobotContainer {
     OperatorC.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain).andThen(
       new InstantCommand(()->SmartDashboard.putBoolean("SPEAKER LOCK?", true))));
 
-    OperatorC.a().whileTrue(new SequentialCommandGroup(
-      new InstantCommand(()->pivot.goToAngle(59.0)),
+    DriverC.povUp().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()->pivot.goToAngle(75))
+    ));//Shoot From Bottom Setpoin
+
+    DriverC.povLeft().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()->pivot.goToAngle(65))
+    ));//Shoot From Bottom Setpoin
+
+   DriverC.povDown().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()->pivot.goToAngle(95))
+    ));//Shoot From Bottom Setpoin
+
+    DriverC.povRight().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()->pivot.goToAngle(105))
+    ));//Shoot From Bottom Setpoin
+
+
+    OperatorC.povDown().whileTrue(new SequentialCommandGroup(
       new RunCommand(()->pivot.runAutomatic())
-    ));
+    ));//Intake Setpoint
     
-    DriverC.b().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
+    OperatorC.rightTrigger().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
      
-    DriverC.a().onTrue(
+    OperatorC.a().whileTrue(
     new ParallelCommandGroup(
+      new InstantCommand(()->pivot.goToAngle(75)),
+      new InstantCommand(()->index.starttimer()),
       new RunCommand(()->index.setMotorSpeed(.5), index),
       new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed))).until(
-        ()->index.getTopBannerSensor()
+        ()->index.CurrentLimitSpike()
+    ).andThen(
+      new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
     )).onFalse(new ParallelCommandGroup(
 
       new InstantCommand(()->index.setMotorSpeed(0)),
       new InstantCommand(()->intake.setMotorSpeed(0))
     )); // Suspicious if it will work or not, if it doesn't, just put onTrue();
 
-    DriverC.x().whileTrue((new RunCommand(()->index.setMotorSpeed(-0.25), index))); //Drive Index OUT
+    OperatorC.x().whileTrue((new RunCommand(()->index.setMotorSpeed(-0.25), index))); //Drive Index OUT
 
-    DriverC.b().whileTrue(
-        new ParallelCommandGroup(
-          new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
-          new SequentialCommandGroup(
-            new WaitUntilCommand(()->shooter.getFlywheelRPM() == 4000),
-            new RunCommand(()->index.setMotorSpeed(0.5), index)
-          )
-        )
-    ); // Spin Shooter OUT
-    DriverC.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
-    
-    DriverC.y().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kIndexingSpeed), intake)); // Drive Intake IN
-    DriverC.leftBumper().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
-    DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));    
-    DriverC.povDown().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));
+   
+   
+  
+    OperatorC.leftTrigger().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
+    // OperatorC.povRight().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));    
+    // OperatorC.povLeft().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));
 
   }
 
