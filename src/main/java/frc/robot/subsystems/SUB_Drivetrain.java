@@ -65,6 +65,8 @@ public class SUB_Drivetrain extends SubsystemBase {
     navx.setAngleAdjustment(Constants.Drivetrain.kGyroRotation);
   }
 
+  
+
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
   private double m_currentTranslationDir = 0.0;

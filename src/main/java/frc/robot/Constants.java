@@ -25,7 +25,7 @@ import frc.libs.PIDGains;
 public final class Constants {
   public static final class OIConstants {
     public static final int kDriver1ontrollerPort = 0;
-    public static final double kDriveDeadband = 0.15;
+    public static final double kDriveDeadband = 0.025;
     public static final int kDriver2ControllerPort =1;
   }
 
@@ -153,10 +153,10 @@ public final class Constants {
     public static final class Intake{
       public static final int kINTAKE_MOTOR_CANID = 34;
   
-      public static final double kIntakeSpeed = 0.6;
+      public static final double kIndexSpeed = 0.5;
       public static final double kOutakeSpeed = -0.5;
       public static final double kOutakeRPM = NeoMotorConstants.kFreeSpeedRpm;
-      public static final double kIndexingSpeed = 0.35;
+      public static final double kIntakingSpeed = 0.35;
     }
   
      public static final class Pivot {

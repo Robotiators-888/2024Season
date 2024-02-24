@@ -69,8 +69,8 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
         new RunCommand(
             () -> drivetrain.drive(
-                -MathUtil.applyDeadband(Math.pow(Driver1.getRawAxis(1), 3), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(Math.pow(Driver1.getRawAxis(0), 3), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(Math.copySign(Math.pow(Driver1.getRawAxis(1), 2), Driver1.getRawAxis(1)), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(Math.copySign(Math.pow(Driver1.getRawAxis(0), 2), Driver1.getRawAxis(0)), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(Driver1.getRawAxis(4), OIConstants.kDriveDeadband),
                 true, true),
                 drivetrain));
@@ -85,6 +85,9 @@ public class RobotContainer {
             Driver One 
      \* ================== */ 
 
+
+    Driver1.leftStick().onTrue(new InstantCommand(()->drivetrain.zeroHeading()));
+
     Driver1.povUp().onTrue(new SequentialCommandGroup(
       new InstantCommand(()->pivot.goToAngle(75))
     ));//Shoot From Bottom Setpoin
@@ -94,7 +97,7 @@ public class RobotContainer {
     ));//Shoot From Bottom Setpoin
 
    Driver1.povDown().onTrue(new SequentialCommandGroup(
-      new InstantCommand(()->pivot.goToAngle(95))
+      new InstantCommand(()->pivot.goToAngle(90))
     ));//Shoot From Bottom Setpoin
 
     Driver1.povRight().onTrue(new SequentialCommandGroup(
@@ -106,7 +109,7 @@ public class RobotContainer {
         new ParallelCommandGroup(
           new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
           new SequentialCommandGroup(
-            new WaitUntilCommand(()->shooter.getFlywheelRPM() == 4000),
+            new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500),
             new RunCommand(()->index.setMotorSpeed(0.5), index)
           )
         )
@@ -132,10 +135,6 @@ public class RobotContainer {
 
     Driver2.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain).andThen(
       new InstantCommand(()->SmartDashboard.putBoolean("SPEAKER LOCK?", true))));
-
-    Driver2.povDown().whileTrue(new SequentialCommandGroup(
-      new RunCommand(()->pivot.runAutomatic())
-    ));//Intake Setpoint
     
     Driver2.rightTrigger().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
      
@@ -143,10 +142,9 @@ public class RobotContainer {
     new ParallelCommandGroup(
       new InstantCommand(()->pivot.goToAngle(75)),
       new InstantCommand(()->index.starttimer()),
-      new RunCommand(()->index.setMotorSpeed(.5), index),
-      new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed))).until(
-        ()->index.CurrentLimitSpike()
-    ).andThen(
+      new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
+      new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
+        ()->index.CurrentLimitSpike()).andThen(
       new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
     )).onFalse(new ParallelCommandGroup(
 
@@ -154,10 +152,18 @@ public class RobotContainer {
       new InstantCommand(()->intake.setMotorSpeed(0))
     )); // Suspicious if it will work or not, if it doesn't, just put onTrue();
 
-    Driver2.x().whileTrue((new RunCommand(()->index.setMotorSpeed(-0.25), index))); //Drive Index OUT
+    // Driver2.x().whileTrue((new RunCommand(()->index.setMotorSpeed(-0.25), index))); //Drive Index OUT
+
+  Driver2.x().whileTrue(
+  new ParallelCommandGroup(
+  new RunCommand(()->index.setMotorSpeed(-0.6), index),
+  new RunCommand(()->intake.setMotorSpeed(-0.6), intake)
+  ));
+
+
     Driver2.leftTrigger().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
-    // Driver2.povRight().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));    
-    // Driver2.povLeft().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));
+    Driver2.povRight().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));    
+    Driver2.povLeft().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));
 
   }
 
