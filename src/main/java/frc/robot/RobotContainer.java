@@ -117,7 +117,6 @@ public class RobotContainer {
 
     OperatorC.a().whileTrue(new SequentialCommandGroup(
       new InstantCommand(()->pivot.goToAngle(59.0)),
-      new InstantCommand(()->pivot.resetTimer()),
       new RunCommand(()->pivot.runAutomatic())
     ));
     
