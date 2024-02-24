@@ -42,7 +42,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-
   // The robot's subsystems and commands are defined here...
 
    public static SUB_Drivetrain drivetrain = new SUB_Drivetrain();
@@ -51,9 +50,9 @@ public class RobotContainer {
    public static SUB_Intake intake = new SUB_Intake();
    public static SUB_Pivot pivot = new SUB_Pivot();
    public static SUB_Limelight limelight = new SUB_Limelight();
-   public static AutoGenerator autos = new AutoGenerator(drivetrain);
+   public static AutoGenerator autos = new AutoGenerator(drivetrain, index, intake, shooter, pivot, limelight);
 
-  //public static SUB_Limelight limelight = new SUB_Limelight();
+  
 
 
   CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
@@ -192,7 +191,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
     return autos.getSelectedAuto();
   }
 

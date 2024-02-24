@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7920679454590467,
-      "y": 4.229980979045928
+      "x": 0.6249575857930348,
+      "y": 4.438868928628442
     },
-    "rotation": 0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,19 @@
         {
           "type": "named",
           "data": {
+            "name": "ShootingSequence"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "RunIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BottomStart_to_BottomGP"
           }
         },
         {
@@ -26,13 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Back_to_Podium"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootingSequence"
+            "pathName": "BottomGP_to_5thGP"
           }
         },
         {
@@ -40,10 +46,22 @@
           "data": {
             "name": "StopIntake"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "5thGP_to_Scoring"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootingSequence"
+          }
         }
       ]
     }
   },
-  "folder": "2 Piece",
+  "folder": "3 Piece",
   "choreoAuto": false
 }

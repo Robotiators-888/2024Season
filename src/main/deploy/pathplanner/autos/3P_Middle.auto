@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.309243119380694,
+      "y": 5.492445188825977
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -50,6 +56,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "3 Piece",
   "choreoAuto": false
 }
