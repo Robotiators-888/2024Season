@@ -42,12 +42,12 @@ public class CMD_AimOnDist extends Command {
   public void initialize() {
     switch(DriverStation.getAlliance().get()){
       case Blue: 
-        tagPose = drivetrain.at_field.getTagPose(4).get().toPose2d(); 
-        targetId = 4;
+        tagPose = drivetrain.at_field.getTagPose(7).get().toPose2d(); 
+        targetId = 7;
         break;
       case Red: 
-        tagPose = drivetrain.at_field.getTagPose(7).get().toPose2d();
-        targetId = 7;
+        tagPose = drivetrain.at_field.getTagPose(4).get().toPose2d();
+        targetId = 4;
         break;
     }
     
@@ -82,7 +82,7 @@ public class CMD_AimOnDist extends Command {
   public void execute() {
     SmartDashboard.putBoolean("SPEAKER LOCK?", false);
     currentPose = drivetrain.getPose();
-    pivot.goToAngle(pivot.distToPivotAngle.get(positionError));
+    pivot.goToAngle(pivot.distToPivotAngle.get(positionError) + 27);
     pivot.runAutomatic();
     SmartDashboard.putNumber("Distance error", positionError);
     // drivetrain.drive(0, 0, robotAngleController.calculate(currentPose.getRotation().getRadians()),
