@@ -71,7 +71,7 @@ public class SUB_Pivot extends SubsystemBase {
         pivotTimer.start();
         pivotTimer.reset(); 
         setLimits();
-        updateMotionProfile();
+        resetTimer();
 
         constantApplicationMap.put(107.0 , 0.04);
         constantApplicationMap.put(95.0, 0.09);
@@ -96,7 +96,7 @@ public void setLimits(){
     // pivotMotor.setSoftLimit(SoftLimitDirection.kReverse, (float) .07);
    }
    
-   public void updateMotionProfile() {
+   public void resetTimer() {
     TrapezoidProfile.State state = new TrapezoidProfile.State(rotateEncoder.getPosition(), rotateEncoder.getVelocity());
     TrapezoidProfile.State goal = new TrapezoidProfile.State(pivotSetpoint, 0.0);
     pivotTimer.reset();

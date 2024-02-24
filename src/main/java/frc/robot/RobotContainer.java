@@ -123,7 +123,7 @@ public class RobotContainer {
     
     DriverC.b().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
      
-    DriverC.a().whileTrue(
+    DriverC.a().onTrue(
     new ParallelCommandGroup(
       new RunCommand(()->index.setMotorSpeed(.5), index),
       new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed))).until(
