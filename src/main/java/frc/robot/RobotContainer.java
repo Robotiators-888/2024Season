@@ -114,12 +114,6 @@ public class RobotContainer {
         )
     ); // Spin Shooter OUT
 
-
-
-
-
-
-
     /* ================== *\
            Driver Two
     \* ================== */
@@ -201,16 +195,16 @@ public class RobotContainer {
     SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.calculateDegreesRotation());
 
     Pose2d visionPose = limelight.getPose();
-    // if (!visionPose.equals(new Pose2d())){
-    //   // Check if vision pose is within one meter of the current estiamted pose 
-    //   // to avoid abnormalities with vision (detecting a tag that isn't present) from
-    //   // affecting the accuracy of our pose measurement.
-    //   Transform2d t2d = visionPose.minus(drivetrain.getPose());
-    //   double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
-    //   if (dist <= 1){
-    //   }
-    // }
-    double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
-    drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
+    if (!visionPose.equals(new Pose2d())){
+      // Check if vision pose is within one meter of the current estiamted pose 
+      // to avoid abnormalities with vision (detecting a tag that isn't present) from
+      // affecting the accuracy of our pose measurement.
+      double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
+      drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
+      // Transform2d t2d = visionPose.minus(drivetrain.getPose());
+      // double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
+      // if (dist <= 1){
+      // }
+    }
   }
 }
