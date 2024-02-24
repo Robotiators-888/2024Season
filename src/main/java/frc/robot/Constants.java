@@ -24,7 +24,7 @@ import frc.libs.PIDGains;
  */
 public final class Constants {
   public static final class OIConstants {
-    public static final int kDriverControllerPort = 0;
+    public static final int kDriver1ontrollerPort = 0;
     public static final double kDriveDeadband = 0.15;
     public static final int kDriver2ControllerPort =1;
   }

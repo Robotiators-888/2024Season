@@ -56,24 +56,53 @@ public class RobotContainer {
   //public static SUB_Limelight limelight = new SUB_Limelight();
 
 
-  CommandXboxController DriverC = new CommandXboxController(OIConstants.kDriverControllerPort);
+  CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
 
-  private final CommandXboxController OperatorC = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
+  private final CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
     
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    
+   
     drivetrain.setDefaultCommand(
         new RunCommand(
             () -> drivetrain.drive(
-                -MathUtil.applyDeadband(Math.pow(DriverC.getRawAxis(1), 3), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(Math.pow(DriverC.getRawAxis(0), 3), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(DriverC.getRawAxis(4), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(Math.pow(Driver1.getRawAxis(1), 3), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(Math.pow(Driver1.getRawAxis(0), 3), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(Driver1.getRawAxis(4), OIConstants.kDriveDeadband),
                 true, true),
                 drivetrain));
 
-     DriverC.b().whileTrue(
+    shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(0), shooter));
+    index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
+    intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
+    pivot.setDefaultCommand(new RunCommand(()->pivot.runAutomatic(), pivot));    
+
+
+     /* ================== *\
+            Driver One 
+     \* ================== */ 
+
+    Driver1.povUp().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()->pivot.goToAngle(75))
+    ));//Shoot From Bottom Setpoin
+
+    Driver1.povLeft().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()->pivot.goToAngle(65))
+    ));//Shoot From Bottom Setpoin
+
+   Driver1.povDown().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()->pivot.goToAngle(95))
+    ));//Shoot From Bottom Setpoin
+
+    Driver1.povRight().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()->pivot.goToAngle(105))
+    ));//Shoot From Bottom Setpoin
+    Driver1.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
+
+     Driver1.b().whileTrue(
         new ParallelCommandGroup(
           new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
           new SequentialCommandGroup(
@@ -82,74 +111,35 @@ public class RobotContainer {
           )
         )
     ); // Spin Shooter OUT
-    
-    DriverC.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
 
-    shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(0), shooter));
-    index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
-    intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
-    pivot.setDefaultCommand(new RunCommand(()->pivot.runAutomatic(), pivot));
 
-    //new Trigger(()->(index.bannersensor())).whileTrue(new RunCommand(()->index.setMotorSpeed(0)));
-    
-     /* ================== *\
-            Driver One 
-     \* ================== */
-     
-    OperatorC.leftBumper().onTrue(new InstantCommand(()->
+
+
+
+
+
+    /* ================== *\
+           Driver Two
+    \* ================== */
+    Driver2.leftBumper().onTrue(new InstantCommand(()->
       SUB_Shooter.MANUAL_RPM -= 250
     )); // Decrease manual RPM by 100
 
-    OperatorC.rightBumper().onTrue(
+    Driver2.rightBumper().onTrue(
       new InstantCommand(()->
         SUB_Shooter.MANUAL_RPM += 250
     )); // Increase manual RPM by 100
-    //pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(0.05), pivot));
 
-    //new Trigger(()->(index.bannersensor())).whileTrue(new RunCommand(()->index.setMotorSpeed(0)));
-    
-     /* ================== *\
-            Driver One 
-     \* ================== */ 
-
-    // log = ataLogManager.getLog();
-    // poseEntry = new DoubleArrayLogEntry(log, "odometry/pose");
-    
-   // DriverC.x().whileTrue((new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakeSpeed), intake)));
-    // new Trigger(() -> 
-    //   Math.abs(Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) > Constants.Pivot.kPivotManualDeadband
-    //   ).whileTrue(new RunCommand(
-    //     () ->
-    //     pivot.runManual((Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) * Constants.Pivot.kArmManualScale)
-    //     , pivot));
-
-    OperatorC.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain).andThen(
+    Driver2.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain).andThen(
       new InstantCommand(()->SmartDashboard.putBoolean("SPEAKER LOCK?", true))));
 
-    DriverC.povUp().onTrue(new SequentialCommandGroup(
-      new InstantCommand(()->pivot.goToAngle(75))
-    ));//Shoot From Bottom Setpoin
-
-    DriverC.povLeft().onTrue(new SequentialCommandGroup(
-      new InstantCommand(()->pivot.goToAngle(65))
-    ));//Shoot From Bottom Setpoin
-
-   DriverC.povDown().onTrue(new SequentialCommandGroup(
-      new InstantCommand(()->pivot.goToAngle(95))
-    ));//Shoot From Bottom Setpoin
-
-    DriverC.povRight().onTrue(new SequentialCommandGroup(
-      new InstantCommand(()->pivot.goToAngle(105))
-    ));//Shoot From Bottom Setpoin
-
-
-    OperatorC.povDown().whileTrue(new SequentialCommandGroup(
+    Driver2.povDown().whileTrue(new SequentialCommandGroup(
       new RunCommand(()->pivot.runAutomatic())
     ));//Intake Setpoint
     
-    OperatorC.rightTrigger().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
+    Driver2.rightTrigger().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
      
-    OperatorC.a().whileTrue(
+    Driver2.a().whileTrue(
     new ParallelCommandGroup(
       new InstantCommand(()->pivot.goToAngle(75)),
       new InstantCommand(()->index.starttimer()),
@@ -164,14 +154,10 @@ public class RobotContainer {
       new InstantCommand(()->intake.setMotorSpeed(0))
     )); // Suspicious if it will work or not, if it doesn't, just put onTrue();
 
-    OperatorC.x().whileTrue((new RunCommand(()->index.setMotorSpeed(-0.25), index))); //Drive Index OUT
-
-   
-   
-  
-    OperatorC.leftTrigger().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
-    // OperatorC.povRight().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));    
-    // OperatorC.povLeft().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));
+    Driver2.x().whileTrue((new RunCommand(()->index.setMotorSpeed(-0.25), index))); //Drive Index OUT
+    Driver2.leftTrigger().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
+    // Driver2.povRight().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));    
+    // Driver2.povLeft().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));
 
   }
 
@@ -190,8 +176,8 @@ public class RobotContainer {
     // Pose3d op3d = drivetrain.at_field.getTagPose(4).get();
     // Pose3d op = new Pose3d(new Pose2d(op3d.getX()-3, op3d.getY()-1, Rotation2d.fromDegrees(0)));
     // Optional<Pose3d> p3d = Optional.of(new Pose3d(new Pose2d(0.5, 0.5, Rotation2d.fromDegrees(45))));
-    // OperatorC.start().whileTrue(new CMD_RelativeDriveToTarget(limelight, drivetrain)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
-    // OperatorC.back().whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, Optional.of(op))).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
+    // Driver2.start().whileTrue(new CMD_RelativeDriveToTarget(limelight, drivetrain)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
+    // Driver2.back().whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, Optional.of(op))).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
   } 
 
   /**
