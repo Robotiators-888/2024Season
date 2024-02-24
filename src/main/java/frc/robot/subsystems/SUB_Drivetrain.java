@@ -94,11 +94,12 @@ public class SUB_Drivetrain extends SubsystemBase {
 
   public SUB_Drivetrain() {
     
-    // try {
-    //   at_field = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("2024_at_field.json"));
-    // } catch (IOException e){
-      
-    // }      
+    try {
+      at_field = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("2024_at_field.json"));
+      SmartDashboard.putBoolean("FILE FOUND?", true);   
+    } catch (IOException e){
+      SmartDashboard.putBoolean("FILE FOUND?", false);      
+    }      
   }
 
   @Override
@@ -335,13 +336,13 @@ public class SUB_Drivetrain extends SubsystemBase {
   }
 
 
-  // /**
-  //  * Allows for vision measurements to be added to drive odometry.
-  //  * @param visionPose The pose supplied by getPose() in SUB_Limelight
-  //  */
+  /**
+   * Allows for vision measurements to be added to drive odometry.
+   * @param visionPose The pose supplied by getPose() in SUB_Limelight
+   */
 
-  // public void addVisionMeasurement(Pose2d visionPose, double latency){
-  //   //m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latency);
-  // }
+  public void addVisionMeasurement(Pose2d visionPose, double latency){
+    m_odometry.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latency);
+  }
 
 }

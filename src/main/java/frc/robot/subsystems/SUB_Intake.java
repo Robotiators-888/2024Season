@@ -36,7 +36,7 @@ public class SUB_Intake extends SubsystemBase {
     // intakeMotor.getPIDController().setI(0.0);
     // intakeMotor.getPIDController().setD(0.0);
     // intakeMotor.getPIDController().setFF(1.0/5800.0);
-    Timer.delay(0.2);
+    //Timer.delay(0.2);
     
     intakeMotor.burnFlash();
   }

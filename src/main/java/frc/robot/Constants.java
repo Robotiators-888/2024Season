@@ -7,6 +7,7 @@ package frc.robot;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -166,25 +167,25 @@ public final class Constants {
       public static final int kCurrentLimit = 40; 
       //Setpoints:
       public static double khome = 0;
+
+      public static final double kAngularEncoderOffsetInDeg = 0;
+      public static final double kMaxArmAngle = .213 *360;
+      public static final double kMinArmAngle = .101*360;
       //
       public static final double PID_kP = 0.11425;
       public static final int PID_kI = 0;
       public static final double PID_kD = 0.021;
-      public static final double FF_kA = .1267;
-      public static final double FF_kG = .4847; //amount of volts to Overcome gravity on the arm
+      public static final double FF_kA = 0;
+      public static final double FF_kG = 0; //amount of volts to Overcome gravity on the arm
       public static final double FF_kS = .11092;
-      public static final double FF_kV = 5.9339; 
-      public static final double FF_Velocity = 0.90511;
-      public static final double FF_Accel = 0.68018;
-      public static final TrapezoidProfile.Constraints kArmMotionConstraint = new TrapezoidProfile.Constraints(0.75, 1);
-      public static final ArmFeedforward kArmFeedforward = new ArmFeedforward(FF_kS, FF_kG, FF_kV, FF_kA);
-      public static final PIDGains kArmPositionGains = new PIDGains(0.6, 0.0, 0.0);
+      public static final double FF_kV = 0.02; 
+
+      public static final TrapezoidProfile.Constraints kArmMotionConstraint = new TrapezoidProfile.Constraints(10 , 10);
+      public static final SimpleMotorFeedforward kArmFeedforward = new SimpleMotorFeedforward(FF_kS, FF_kV);
+      public static final PIDGains kArmPositionGains = new PIDGains(0.0, 0.0, 0.0);
       //public static final double kGroundPosition = 0.1;
       public static final double kmaxVelocity = 6.47*Math.PI;
       public static final double kmaxAcceleration = 4.27;
-
-      public static final double kMaxArmAngle = .213 *360;
-      public static final double kMinArmAngle = .101*360;
         
     }
 

@@ -47,6 +47,9 @@ public class SUB_Limelight extends SubsystemBase {
     SmartDashboard.putNumber("ID", LimelightHelpers.getFiducialID(LIMELIGHT_NAME));
   }
 
+  public int getFiducialID(){
+    return (int) LimelightHelpers.getFiducialID(LIMELIGHT_NAME);
+  }
   public boolean getTv() {
     return LimelightHelpers.getTV(LIMELIGHT_NAME);
   }

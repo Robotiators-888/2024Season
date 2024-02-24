@@ -6,7 +6,9 @@ package frc.robot;
 
 import frc.robot.Constants.*;
 import frc.robot.commands.CMD_AbsoluteDriveToTarget;
+import frc.robot.commands.CMD_AimOnDist;
 import frc.robot.commands.CMD_RelativeDriveToTarget;
+import frc.robot.commands.SEQ_StaticAimedShot;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Shooter;
@@ -23,6 +25,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -47,6 +50,7 @@ public class RobotContainer {
    public static SUB_Index index = new SUB_Index();
    public static SUB_Intake intake = new SUB_Intake();
    public static SUB_Pivot pivot = new SUB_Pivot();
+   public static SUB_Limelight limelight = new SUB_Limelight();
    public static AutoGenerator autos = new AutoGenerator(drivetrain);
 
   //public static SUB_Limelight limelight = new SUB_Limelight();
@@ -79,7 +83,45 @@ public class RobotContainer {
     
      /* ================== *\
             Driver One 
+     \* ================== */
+     
+    OperatorC.leftBumper().onTrue(new InstantCommand(()->
+      SUB_Shooter.MANUAL_RPM -= 250
+    )); // Decrease manual RPM by 100
+
+    OperatorC.rightBumper().onTrue(
+      new InstantCommand(()->
+        SUB_Shooter.MANUAL_RPM += 250
+    )); // Increase manual RPM by 100
+    //pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(0.05), pivot));
+
+    //new Trigger(()->(index.bannersensor())).whileTrue(new RunCommand(()->index.setMotorSpeed(0)));
+    
+     /* ================== *\
+            Driver One 
      \* ================== */ 
+
+    // log = ataLogManager.getLog();
+    // poseEntry = new DoubleArrayLogEntry(log, "odometry/pose");
+    
+   // DriverC.x().whileTrue((new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakeSpeed), intake)));
+    // new Trigger(() -> 
+    //   Math.abs(Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) > Constants.Pivot.kPivotManualDeadband
+    //   ).whileTrue(new RunCommand(
+    //     () ->
+    //     pivot.runManual((Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) * Constants.Pivot.kArmManualScale)
+    //     , pivot));
+
+    OperatorC.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain).andThen(
+      new InstantCommand(()->SmartDashboard.putBoolean("SPEAKER LOCK?", true))));
+
+    OperatorC.a().whileTrue(new SequentialCommandGroup(
+      new InstantCommand(()->pivot.goToAngle(59.0)),
+      new InstantCommand(()->pivot.resetTimer()),
+      new RunCommand(()->pivot.runAutomatic())
+    ));
+    
+    DriverC.b().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
      
     DriverC.a().whileTrue(
     new ParallelCommandGroup(
@@ -105,10 +147,10 @@ public class RobotContainer {
     ); // Spin Shooter OUT
     DriverC.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
     
-    DriverC.y().whileTrue(new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed), intake)); // Drive Intake IN
-    DriverC.leftBumper().whileTrue(new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
-    DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));    
-    DriverC.povDown().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));
+    DriverC.y().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kIndexingSpeed), intake)); // Drive Intake IN
+    DriverC.leftBumper().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
+    DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));    
+    DriverC.povDown().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));
 
   }
 
@@ -142,18 +184,22 @@ public class RobotContainer {
   }
 
   public void robotPeriodic(){
-  //   Pose2d visionPose = limelight.getPose();
-  //   if (!visionPose.equals(new Pose2d())){
-  //     // Check if vision pose is within one meter of the current estiamted pose 
-  //     // to avoid abnormalities with vision (detecting a tag that isn't present) from
-  //     // affecting the accuracy of our pose measurement.
 
-  //     Transform2d t2d = visionPose.minus(drivetrain.getPose());
-  //     double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
-  //     if (dist <= 1){
-  //       double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
-  //       drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
-  //     }
-  //   }
+    SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
+    SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
+    SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.calculateDegreesRotation());
+
+    Pose2d visionPose = limelight.getPose();
+    // if (!visionPose.equals(new Pose2d())){
+    //   // Check if vision pose is within one meter of the current estiamted pose 
+    //   // to avoid abnormalities with vision (detecting a tag that isn't present) from
+    //   // affecting the accuracy of our pose measurement.
+    //   Transform2d t2d = visionPose.minus(drivetrain.getPose());
+    //   double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
+    //   if (dist <= 1){
+    //   }
+    // }
+    double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
+    drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
   }
 }

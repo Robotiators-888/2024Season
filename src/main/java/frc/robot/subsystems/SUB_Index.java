@@ -44,7 +44,7 @@ public class SUB_Index extends SubsystemBase {
     indexLeft.burnFlash();
     indexRight.burnFlash();
 
-    Timer.delay(0.2);
+    //Timer.delay(0.2);
   }
 
   @Override
