@@ -51,9 +51,9 @@ public class RobotContainer {
    public static SUB_Intake intake = new SUB_Intake();
    public static SUB_Pivot pivot = new SUB_Pivot();
    public static SUB_Limelight limelight = new SUB_Limelight();
-   public static AutoGenerator autos = new AutoGenerator(drivetrain);
+   public static AutoGenerator autos = new AutoGenerator(drivetrain, index, intake, shooter, pivot, limelight);
 
-  //public static SUB_Limelight limelight = new SUB_Limelight();
+  
 
 
   CommandXboxController DriverC = new CommandXboxController(OIConstants.kDriverControllerPort);

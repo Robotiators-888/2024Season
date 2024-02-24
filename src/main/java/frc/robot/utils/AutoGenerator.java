@@ -11,17 +11,35 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 //import frc.robot.RobotManager;
 import frc.robot.subsystems.SUB_Drivetrain;
+import frc.robot.subsystems.SUB_Index;
+import frc.robot.subsystems.SUB_Intake;
+import frc.robot.subsystems.SUB_Limelight;
+import frc.robot.subsystems.SUB_Pivot;
+import frc.robot.subsystems.SUB_Shooter;
 
 /** This utility class is built for selecting made autos */
 public class AutoGenerator {
   private SUB_Drivetrain drivetrain;
+  SUB_Index index;
+  SUB_Intake intake;
+  SUB_Shooter shooter; 
+  SUB_Pivot pivot;
+  SUB_Limelight limelight;
+
   private SendableChooser<Command> chooser = new SendableChooser<>();
   
-  public AutoGenerator(SUB_Drivetrain drivetrain) {
+  public AutoGenerator(SUB_Drivetrain drivetrain, SUB_Index index, SUB_Intake intake, SUB_Shooter shooter, SUB_Pivot pivot, SUB_Limelight limelight) {
     this.drivetrain = drivetrain;
+    this.index = index;
+    this.intake = intake;
+    this.shooter = shooter;
+    this.pivot = pivot;
+    this.limelight = limelight;
     
     AutoBuilder.configureHolonomic(drivetrain::getPose, drivetrain::resetPose, drivetrain::getChassisSpeeds, drivetrain::driveRobotRelative,
      new HolonomicPathFollowerConfig(4.5, 0.4, new ReplanningConfig())
@@ -49,16 +67,20 @@ public class AutoGenerator {
   //                          Routines
   // ====================================================================
   
-  //TODO: Add Seq once branch is merges
+  //TODO: Test SEQ
     public Command scoringSequence(){
       return new SequentialCommandGroup(
-        
+        new RunCommand(()->pivot.runManual(0.2), pivot).withTimeout(1),
+        new RunCommand(()->shooter.setMotorSpeed(-0.6), shooter),
+        new WaitCommand(0.5),
+        new RunCommand(()->index.setMotorSpeed(0.4), index).withTimeout(1)
+          .andThen(()->{index.setMotorSpeed(0.0); shooter.setMotorSpeed(0);})
       );
     }
 
-    //TODO: Add intake instant when branch is merged
-    public Command runIntake(double Speed){
-      return new InstantCommand();
+    //TODO: Test CMD
+    public Command runIntake(double speed){
+      return new InstantCommand(()->intake.setMotorSpeed(speed));
     }
 
   /**
