@@ -2,15 +2,21 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7920679454590467,
-      "y": 4.229980979045928
+      "x": 0.6249575857930348,
+      "y": 4.438868928628442
     },
-    "rotation": 0
+    "rotation": 119.7159209935219
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Amp Setpoint"
+          }
+        },
         {
           "type": "named",
           "data": {
@@ -27,6 +33,12 @@
           "type": "path",
           "data": {
             "pathName": "Back_to_Podium"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Launch Setpoint"
           }
         },
         {

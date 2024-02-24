@@ -187,6 +187,13 @@ public final class Constants {
       //public static final double kGroundPosition = 0.1;
       public static final double kmaxVelocity = 6.47*Math.PI;
       public static final double kmaxAcceleration = 4.27;
+
+      public static final double kHighAngleSP = 105.0;
+      public static final double kAmpAngleSP = 90.0;
+      public static final double kLowMidAngleSP = 75.0;
+      public static final double kLowAngleSP = 65.0;
+
+
         
     }
 

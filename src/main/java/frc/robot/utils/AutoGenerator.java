@@ -1,5 +1,6 @@
 package frc.robot.utils;
 
+import com.fasterxml.jackson.core.sym.Name;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -96,7 +97,11 @@ public class AutoGenerator {
       return new ParallelCommandGroup(
         new InstantCommand(()->index.setMotorSpeed(0)),
         new InstantCommand(()->intake.setMotorSpeed(0))
-    );
+      );
+    }
+
+    public Command setPivotSetpoint(double setpoint){
+      return new InstantCommand(()->pivot.setPivotSetpoint(setpoint));
     }
 
   /**
@@ -114,6 +119,9 @@ public class AutoGenerator {
     NamedCommands.registerCommand("RunIntake", runIntake());
     NamedCommands.registerCommand("ScoringSequence", scoringSequence());
     NamedCommands.registerCommand("StopIntake", stopIntake());
+    NamedCommands.registerCommand("Amp Setpoint", setPivotSetpoint(Constants.Pivot.kAmpAngleSP));
+    NamedCommands.registerCommand("Launch Setpoint", setPivotSetpoint(Constants.Pivot.kLowMidAngleSP));
+    NamedCommands.registerCommand("LowShot Setpoint", setPivotSetpoint(Constants.Pivot.kLowAngleSP));
   }
 
 }

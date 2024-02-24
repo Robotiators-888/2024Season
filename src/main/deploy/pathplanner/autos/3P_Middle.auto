@@ -5,12 +5,18 @@
       "x": 1.309243119380694,
       "y": 5.492445188825977
     },
-    "rotation": 0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Amp Setpoint"
+          }
+        },
         {
           "type": "named",
           "data": {
@@ -32,6 +38,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Launch Setpoint"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "ShootingSequence"
           }
         },
@@ -39,6 +51,12 @@
           "type": "path",
           "data": {
             "pathName": "3P_Middle_to_TopGP"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Launch Setpoint"
           }
         },
         {

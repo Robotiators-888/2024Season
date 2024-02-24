@@ -14,6 +14,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Amp Setpoint"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "ShootingSequence"
           }
         },
@@ -32,7 +38,19 @@
         {
           "type": "named",
           "data": {
+            "name": "Launch Setpoint"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "ShootingSequence"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Amp Setpoint"
           }
         },
         {
@@ -45,6 +63,12 @@
           "type": "path",
           "data": {
             "pathName": "1st2nd_ReturnToShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LowShot Setpoint"
           }
         },
         {
