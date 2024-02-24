@@ -88,12 +88,13 @@ public class SUB_Drivetrain extends SubsystemBase {
       backRight.getPosition()
   }, new Pose2d());
 
+  
   SwerveDriveOdometry auto_odometry = new SwerveDriveOdometry(Drivetrain.kDriveKinematics, navx.getRotation2d(), getPositions());
 
 
 
   public SUB_Drivetrain() {
-    
+    setGyroRotation();
     try {
       at_field = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("2024_at_field.json"));
       SmartDashboard.putBoolean("FILE FOUND?", true);   
@@ -134,6 +135,7 @@ public class SUB_Drivetrain extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
+    auto_odometry.resetPosition(navx.getRotation2d(), getPositions(), m_odometry.getEstimatedPosition());
     return m_odometry.getEstimatedPosition();
   }
 
@@ -317,11 +319,13 @@ public class SUB_Drivetrain extends SubsystemBase {
   }
 
   public Pose2d getPose2d(){
+    m_odometry.resetPosition(navx.getRotation2d(), getPositions(), auto_odometry.getPoseMeters());
     return auto_odometry.getPoseMeters();
   }
 
   public void resetPose(Pose2d pose){
     auto_odometry.resetPosition(navx.getRotation2d(), getPositions(), pose);
+    m_odometry.resetPosition(navx.getRotation2d(), getPositions(), pose);
   }
 
   public void driveFieldRelative(ChassisSpeeds fieldRelativeSpeeds){

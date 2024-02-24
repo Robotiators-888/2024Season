@@ -117,7 +117,7 @@ public class RobotContainer {
 
     OperatorC.a().whileTrue(new SequentialCommandGroup(
       new InstantCommand(()->pivot.goToAngle(59.0)),
-      new InstantCommand(()->pivot.resetTimer()),
+      new InstantCommand(()->pivot.updateMotionProfile()),
       new RunCommand(()->pivot.runAutomatic())
     ));
     
@@ -179,7 +179,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
     return autos.getSelectedAuto();
   }
 
