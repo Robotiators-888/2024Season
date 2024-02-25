@@ -206,6 +206,9 @@ public class RobotContainer {
     SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
     SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.calculateDegreesRotation());
 
+    SmartDashboard.putNumber("X Pose", drivetrain.getPose().getX());
+    SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
+
   //   Pose2d visionPose = limelight.getPose();
   //   if (!visionPose.equals(new Pose2d())){
   //     // Check if vision pose is within one meter of the current estiamted pose 
