@@ -65,7 +65,7 @@ public class CMD_AimOnDist extends Command {
 
     double xError = tagPose.getX() - currentPose.getX();
     double yError = tagPose.getY() - currentPose.getY();
-    double angle = Math.atan2(yError, xError); // x and y are not flipped???
+    double angle = Math.atan2(xError, yError); // x and y are not flipped???
 
     robotAngleController.setTolerance(0.07);
     robotAngleController.setSetpoint(angle);
@@ -81,10 +81,9 @@ public class CMD_AimOnDist extends Command {
     pivot.runAutomatic();
 
     SmartDashboard.putNumber("Distance error", positionError);
-    drivetrain.drive(-Math.copySign(Math.pow(controller.getRawAxis(1), 2), controller.getRawAxis(1)),
-       -Math.copySign(Math.pow(controller.getRawAxis(0), 2), controller.getRawAxis(0)), 
+    drivetrain.drive(0,0, 
        robotAngleController.calculate(currentPose.getRotation().getRadians()),
-     false, true);
+     true, true);
   }
 
   // Called once the command ends or is interrupted.
