@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Limelight;
 import frc.robot.subsystems.SUB_Pivot;
@@ -20,6 +21,7 @@ public class CMD_AimOnDist extends Command {
   SUB_Pivot pivot;
   SUB_Limelight limelight;
   SUB_Drivetrain drivetrain;
+  CommandXboxController controller;
   
   Pose2d tagPose;
   Integer targetId;
@@ -30,11 +32,12 @@ public class CMD_AimOnDist extends Command {
   private final PIDController robotAngleController = new PIDController( 1, 0, 0); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
-  public CMD_AimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain) {
+  public CMD_AimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain, CommandXboxController controller) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pivot = pivot;
     this.limelight = limelight;
     this.drivetrain = drivetrain;
+    this.controller = controller;
     addRequirements(pivot, limelight, drivetrain);
   }
 
@@ -78,7 +81,9 @@ public class CMD_AimOnDist extends Command {
     pivot.runAutomatic();
 
     SmartDashboard.putNumber("Distance error", positionError);
-    drivetrain.drive(0, 0, robotAngleController.calculate(currentPose.getRotation().getRadians()),
+    drivetrain.drive(-Math.copySign(Math.pow(controller.getRawAxis(1), 2), controller.getRawAxis(1)),
+       -Math.copySign(Math.pow(controller.getRawAxis(0), 2), controller.getRawAxis(0)), 
+       robotAngleController.calculate(currentPose.getRotation().getRadians()),
      false, true);
   }
 

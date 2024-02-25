@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Intake;
@@ -33,12 +34,13 @@ public class SEQ_StaticAimedShot extends SequentialCommandGroup {
     SUB_Intake intake, 
     SUB_Index index, 
     SUB_Pivot pivot,
-    SUB_Limelight limelight) {
+    SUB_Limelight limelight,
+    CommandXboxController controller) {
 
     addCommands(
       new ParallelCommandGroup(
         //new CMD_AbsoluteDriveToTarget(drivetrain, Optional.of(goalPose)),
-        new CMD_AimOnDist(pivot, limelight, drivetrain)));
+        new CMD_AimOnDist(pivot, limelight, drivetrain, controller)));
       // ),
       // new ParallelCommandGroup(
       //   new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
