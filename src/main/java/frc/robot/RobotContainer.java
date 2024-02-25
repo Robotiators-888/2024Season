@@ -97,7 +97,7 @@ public class RobotContainer {
 
    Driver1.povDown().onTrue(new SequentialCommandGroup(
       new InstantCommand(()->pivot.goToAngle(90))
-    ));//Shoot From Bottom Setpoin
+    ));//Shoot From Up Close Setpoint
 
     Driver1.povRight().onTrue(new SequentialCommandGroup(
       new InstantCommand(()->pivot.goToAngle(105))

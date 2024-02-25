@@ -30,7 +30,7 @@ public class SUB_Index extends SubsystemBase {
   }
 
   public boolean CurrentLimitSpike(){
-    return (currentTimer.hasElapsed(.25) && indexLeft.getOutputCurrent() > 20);
+    return (currentTimer.hasElapsed(.1) && indexLeft.getOutputCurrent() > 20);
   }
 
   /** Creates a new SUB_Index. */
