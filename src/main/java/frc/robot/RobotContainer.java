@@ -100,7 +100,7 @@ public class RobotContainer {
     ));//Shoot From Up Close Setpoint
 
     Driver1.povRight().onTrue(new SequentialCommandGroup(
-      new InstantCommand(()->pivot.goToAngle(105))
+      new InstantCommand(()->pivot.goToAngle(50))
     ));//Shoot From Bottom Setpoin
     Driver1.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
 
@@ -126,8 +126,8 @@ public class RobotContainer {
         SUB_Shooter.MANUAL_RPM += 250
     )); // Increase manual RPM by 100
 
-    Driver2.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain).andThen(
-      new InstantCommand(()->SmartDashboard.putBoolean("SPEAKER LOCK?", true))));
+    // Driver2.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain).andThen(
+    //   new InstantCommand(()->SmartDashboard.putBoolean("SPEAKER LOCK?", true))));
     
     Driver2.rightTrigger().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
      

@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SUB_Drivetrain;
@@ -26,7 +27,7 @@ public class CMD_AimOnDist extends Command {
   Pose2d currentPose;
   Double positionError;
 
-  //private final PIDController robotAngleController = new PIDController( 1, 0, 0); // 0.25, 0, 0
+  private final PIDController robotAngleController = new PIDController( 1, 0, 0); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
   public CMD_AimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain) {
@@ -40,40 +41,31 @@ public class CMD_AimOnDist extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    switch(DriverStation.getAlliance().get()){
-      case Blue: 
-        tagPose = drivetrain.at_field.getTagPose(7).get().toPose2d(); 
-        targetId = 7;
-        break;
-      case Red: 
+    var alliance = DriverStation.getAlliance();
+    Alliance allianceColor;
+    if (alliance.isPresent()){
+      if (alliance.get() == DriverStation.Alliance.Red){
         tagPose = drivetrain.at_field.getTagPose(4).get().toPose2d();
         targetId = 4;
-        break;
+      } else {
+        tagPose = drivetrain.at_field.getTagPose(7).get().toPose2d(); 
+        targetId = 7;
+      }
+
+    } else {
+      end(true);
     }
     
     currentPose = drivetrain.getPose(); // Robot's current pose
     positionError = Math.sqrt(Math.pow(tagPose.getX() - currentPose.getX(), 2)
                            + Math.pow(tagPose.getY() - currentPose.getY(), 2));
 
-    double angle = currentPose.getRotation().getRadians();
     double xError = tagPose.getX() - currentPose.getX();
     double yError = tagPose.getY() - currentPose.getY();
+    double angle = Math.atan2(xError, yError); // x and y are flipped
 
-    if (xError > 0){
-      if (yError < 0){
-        angle = Math.atan(yError/xError);
-      } else {
-        angle = -Math.atan(yError/xError);
-      }
-    } else {
-      if (yError < 0){
-        angle = Math.PI - Math.atan(yError/xError);
-      } else {
-        angle = -Math.PI - Math.atan(yError/xError);
-      }
-    }
-    //robotAngleController.setTolerance(0.07);
-    //robotAngleController.setSetpoint(angle);
+    robotAngleController.setTolerance(0.07);
+    robotAngleController.setSetpoint(angle);
 
   }
 
@@ -85,8 +77,8 @@ public class CMD_AimOnDist extends Command {
     pivot.goToAngle(pivot.distToPivotAngle.get(positionError) + 27);
     pivot.runAutomatic();
     SmartDashboard.putNumber("Distance error", positionError);
-    // drivetrain.drive(0, 0, robotAngleController.calculate(currentPose.getRotation().getRadians()),
-    //  false, true);
+    drivetrain.drive(0, 0, robotAngleController.calculate(currentPose.getRotation().getRadians()),
+     false, true);
   }
 
   // Called once the command ends or is interrupted.

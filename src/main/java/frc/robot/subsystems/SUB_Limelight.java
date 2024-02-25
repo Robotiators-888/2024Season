@@ -21,7 +21,13 @@ public class SUB_Limelight extends SubsystemBase {
 
   /** Creates a new SUB_Limelight. */
   public SUB_Limelight() {
+
+    try{
     allianceColor = DriverStation.getAlliance().get();
+    } catch(java.util.NoSuchElementException e){
+    e.printStackTrace();
+
+    }
     SmartDashboard.putString("ALLIANCE", allianceColor.toString());
   }
 
@@ -33,17 +39,16 @@ public class SUB_Limelight extends SubsystemBase {
   public Pose2d getPose(){
     LimelightResults llresults = LimelightHelpers.getLatestResults(LIMELIGHT_NAME);
 
-    // TODO: Limelight shits 
-    switch (allianceColor){
-      case Blue: return llresults.targetingResults.getBotPose2d_wpiRed();
-      case Red: return llresults.targetingResults.getBotPose2d_wpiBlue();
-      default: return null; // Default
-    }
+
+    var alliance = DriverStation.getAlliance();
+    return llresults.targetingResults.getBotPose2d();
+    
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    //SmartDashboard.putBoolean()
     SmartDashboard.putNumber("ID", LimelightHelpers.getFiducialID(LIMELIGHT_NAME));
   }
 
