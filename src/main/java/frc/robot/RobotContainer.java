@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.*;
 import frc.robot.commands.CMD_AbsoluteDriveToTarget;
 import frc.robot.commands.CMD_AimOnDist;
+import frc.robot.commands.CMD_AimOnDistRel;
 import frc.robot.commands.CMD_RelativeDriveToTarget;
 import frc.robot.commands.SEQ_StaticAimedShot;
 import frc.robot.subsystems.SUB_Drivetrain;
@@ -126,8 +127,8 @@ public class RobotContainer {
         SUB_Shooter.MANUAL_RPM += 250
     )); // Increase manual RPM by 100
 
-    // Driver2.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain).andThen(
-    //   new InstantCommand(()->SmartDashboard.putBoolean("SPEAKER LOCK?", true))));
+    Driver2.b().whileTrue(new CMD_AimOnDistRel(pivot, limelight, drivetrain).andThen(
+      new InstantCommand(()->SmartDashboard.putBoolean("SPEAKER LOCK?", true))));
     
     Driver2.rightTrigger().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
      

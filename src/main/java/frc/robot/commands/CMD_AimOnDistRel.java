@@ -16,7 +16,7 @@ import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Limelight;
 import frc.robot.subsystems.SUB_Pivot;
 
-public class CMD_AimOnDist extends Command {
+public class CMD_AimOnDistRel extends Command {
   SUB_Pivot pivot;
   SUB_Limelight limelight;
   SUB_Drivetrain drivetrain;
@@ -30,7 +30,7 @@ public class CMD_AimOnDist extends Command {
   private final PIDController robotAngleController = new PIDController( 1, 0, 0); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
-  public CMD_AimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain) {
+  public CMD_AimOnDistRel(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pivot = pivot;
     this.limelight = limelight;
@@ -41,28 +41,16 @@ public class CMD_AimOnDist extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    var alliance = DriverStation.getAlliance();
-    Alliance allianceColor;
-    if (alliance.isPresent()){
-      if (alliance.get() == DriverStation.Alliance.Red){
-        tagPose = drivetrain.at_field.getTagPose(4).get().toPose2d();
-        targetId = 4;
-      } else {
-        tagPose = drivetrain.at_field.getTagPose(7).get().toPose2d(); 
-        targetId = 7;
-      }
+    
 
-    } else {
-      end(true);
-    }
+    var targetTransform = limelight.getTargetTransform();
+    double xError = targetTransform.getZ();
+    double yError = targetTransform.getX();
     
     currentPose = drivetrain.getPose(); // Robot's current pose
-    positionError = Math.sqrt(Math.pow(tagPose.getX() - currentPose.getX(), 2)
-                           + Math.pow(tagPose.getY() - currentPose.getY(), 2));
+    positionError = Math.sqrt(Math.pow(xError, 2) + Math.pow(yError, 2));
 
-    double xError = tagPose.getX() - currentPose.getX();
-    double yError = tagPose.getY() - currentPose.getY();
-    double angle = Math.atan2(yError, xError); // x and y are not flipped???
+    double angle = -Math.atan2(xError, yError); // x and y are not flipped???
 
     robotAngleController.setTolerance(0.07);
     robotAngleController.setSetpoint(angle);
