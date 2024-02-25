@@ -36,13 +36,12 @@ public class AutoGenerator {
 
   private SendableChooser<Command> chooser = new SendableChooser<>();
   
-  public AutoGenerator(SUB_Drivetrain drivetrain, SUB_Index index, SUB_Intake intake, SUB_Shooter shooter, SUB_Pivot pivot, SUB_Limelight limelight) {
+  public AutoGenerator(SUB_Drivetrain drivetrain, SUB_Index index, SUB_Intake intake, SUB_Shooter shooter, SUB_Pivot pivot) {
     this.drivetrain = drivetrain;
     this.index = index;
     this.intake = intake;
     this.shooter = shooter;
     this.pivot = pivot;
-    this.limelight = limelight;
     
     AutoBuilder.configureHolonomic(drivetrain::getPose, drivetrain::resetPose, drivetrain::getChassisSpeeds, drivetrain::driveRobotRelative,
      new HolonomicPathFollowerConfig(Constants.Drivetrain.kMaxModuleSpeed, Constants.Drivetrain.kTrackRadius, new ReplanningConfig())

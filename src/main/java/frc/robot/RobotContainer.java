@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -51,7 +52,7 @@ public class RobotContainer {
    public static SUB_Intake intake = new SUB_Intake();
    public static SUB_Pivot pivot = new SUB_Pivot();
    public static SUB_Limelight limelight = new SUB_Limelight();
-   public static AutoGenerator autos = new AutoGenerator(drivetrain, index, intake, shooter, pivot, limelight);
+   public static AutoGenerator autos = new AutoGenerator(drivetrain, index, intake, shooter, pivot);
 
   
 
@@ -103,6 +104,16 @@ public class RobotContainer {
     Driver1.povRight().onTrue(new SequentialCommandGroup(
       new InstantCommand(()->pivot.goToAngle(50))
     ));//Shoot From Bottom Setpoin
+
+    Driver1.back().onTrue(new InstantCommand(()->pivot.goToAngle(50)));
+    Driver1.start().whileTrue( new ParallelCommandGroup(
+          new RunCommand(()->shooter.shootFlywheelOnRPM(450), shooter),
+          new SequentialCommandGroup(
+            new WaitCommand(.75),
+            new RunCommand(()->index.setMotorSpeed(0.5), index)
+          )
+        ));
+
     Driver1.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
 
      Driver1.b().whileTrue(

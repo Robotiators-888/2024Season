@@ -31,6 +31,7 @@ public class SUB_Limelight extends SubsystemBase {
     } catch(java.util.NoSuchElementException e){
       e.printStackTrace();
     }
+    // SmartDashboard.putString("ALLIANCE", allianceColor.toString());
   }
 
   /**
@@ -40,10 +41,11 @@ public class SUB_Limelight extends SubsystemBase {
    */
   public Pose2d getPose(){
     LimelightResults llresults = LimelightHelpers.getLatestResults(LIMELIGHT_NAME);
-
-
-    var alliance = DriverStation.getAlliance();
-    return llresults.targetingResults.getBotPose2d();
+    switch (allianceColor.get()){
+      case Blue: return llresults.targetingResults.getBotPose2d_wpiRed();
+      case Red: return llresults.targetingResults.getBotPose2d_wpiBlue();
+      default: return null; // Default
+    }
     
   }
 
