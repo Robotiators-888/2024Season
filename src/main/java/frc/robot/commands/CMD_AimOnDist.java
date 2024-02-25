@@ -29,6 +29,10 @@ public class CMD_AimOnDist extends Command {
   Pose2d currentPose;
   Double positionError;
 
+  double xError;
+  double yError;
+  double angle;
+
   private final PIDController robotAngleController = new PIDController( 1, 0, 0); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
@@ -63,9 +67,9 @@ public class CMD_AimOnDist extends Command {
     positionError = Math.sqrt(Math.pow(tagPose.getX() - currentPose.getX(), 2)
                            + Math.pow(tagPose.getY() - currentPose.getY(), 2));
 
-    double xError = tagPose.getX() - currentPose.getX();
-    double yError = tagPose.getY() - currentPose.getY();
-    double angle = Math.atan2(xError, yError); // x and y are not flipped???
+    xError = tagPose.getX() - currentPose.getX();
+    yError = tagPose.getY() - currentPose.getY();
+    angle = Math.atan2(xError, yError); // x and y are not flipped???
 
     robotAngleController.setTolerance(0.07);
     robotAngleController.setSetpoint(angle);
@@ -79,6 +83,11 @@ public class CMD_AimOnDist extends Command {
     currentPose = drivetrain.getPose();
     pivot.goToAngle(pivot.distToPivotAngle.get(positionError) + 27);
     pivot.runAutomatic();
+
+    SmartDashboard.putNumber("X Error", xError);
+    SmartDashboard.putNumber("Y Error", yError);
+    SmartDashboard.putNumber("Angle", angle);
+    SmartDashboard.putNumber("Cur Rotation Radians", currentPose.getRotation().getRadians());
 
     SmartDashboard.putNumber("Distance error", positionError);
     drivetrain.drive(0,0, 
