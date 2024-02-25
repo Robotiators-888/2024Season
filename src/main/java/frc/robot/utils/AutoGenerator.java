@@ -76,7 +76,7 @@ public class AutoGenerator {
           new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
           new SequentialCommandGroup(
             new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500),
-            new RunCommand(()->index.setMotorSpeed(0.5), index)
+            new RunCommand(()->index.setMotorSpeed(0.5), index).withTimeout(2.0)
           )
         );
     }
