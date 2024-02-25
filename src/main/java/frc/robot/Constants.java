@@ -132,6 +132,9 @@ public final class Constants {
     //31inches by 24inches
     // Distance between centers of right and left wheels on robot
     public static final double kWheelBase = Units.inchesToMeters(31);
+
+    public static final double kTrackRadius = Units.inchesToMeters(19.6);
+    public static final double kMaxModuleSpeed = Units.feetToMeters(15);
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics =
         new SwerveDriveKinematics(

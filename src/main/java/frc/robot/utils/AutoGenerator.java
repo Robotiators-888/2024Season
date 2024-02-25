@@ -45,7 +45,7 @@ public class AutoGenerator {
     this.limelight = limelight;
     
     AutoBuilder.configureHolonomic(drivetrain::getPose, drivetrain::resetPose, drivetrain::getChassisSpeeds, drivetrain::driveRobotRelative,
-     new HolonomicPathFollowerConfig(4.5, 0.4, new ReplanningConfig())
+     new HolonomicPathFollowerConfig(Constants.Drivetrain.kMaxModuleSpeed, Constants.Drivetrain.kTrackRadius, new ReplanningConfig())
     , ()->{
       var alliance = DriverStation.getAlliance();
                     if (alliance.isPresent()) {
