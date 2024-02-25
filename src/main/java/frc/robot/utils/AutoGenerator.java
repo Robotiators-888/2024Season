@@ -104,6 +104,13 @@ public class AutoGenerator {
       return new InstantCommand(()->pivot.setPivotSetpoint(setpoint));
     }
 
+    public Command dumbAuto(){
+      return new SequentialCommandGroup(
+        setPivotSetpoint(Constants.Pivot.kAmpAngleSP), 
+        scoringSequence()
+        );
+    }
+
   /**
    * @return Returns chosen auto on Smartdashboard
    */
@@ -122,6 +129,7 @@ public class AutoGenerator {
     NamedCommands.registerCommand("Amp Setpoint", setPivotSetpoint(Constants.Pivot.kAmpAngleSP));
     NamedCommands.registerCommand("Launch Setpoint", setPivotSetpoint(Constants.Pivot.kLowMidAngleSP));
     NamedCommands.registerCommand("LowShot Setpoint", setPivotSetpoint(Constants.Pivot.kLowAngleSP));
+    NamedCommands.registerCommand("Dumb Auto", dumbAuto());
   }
 
 }
