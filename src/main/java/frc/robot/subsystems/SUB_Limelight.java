@@ -8,11 +8,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static frc.robot.Constants.Limelight.*;
+
+import java.util.Optional;
+
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class SUB_Limelight extends SubsystemBase {
 
-  private DriverStation.Alliance allianceColor;
+  private Optional<DriverStation.Alliance> allianceColor;
   public enum LED_Mode {
     FORCE_OFF,
     FORCE_ON,
@@ -23,12 +26,11 @@ public class SUB_Limelight extends SubsystemBase {
   public SUB_Limelight() {
 
     try{
-    allianceColor = DriverStation.getAlliance().get();
+      allianceColor = DriverStation.getAlliance();
+      SmartDashboard.putString("ALLIANCE", allianceColor.get().toString());
     } catch(java.util.NoSuchElementException e){
-    e.printStackTrace();
-
+      e.printStackTrace();
     }
-    SmartDashboard.putString("ALLIANCE", allianceColor.toString());
   }
 
   /**
