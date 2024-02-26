@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Limelight;
 import frc.robot.subsystems.SUB_Pivot;
@@ -21,7 +20,6 @@ public class CMD_AimOnDist extends Command {
   SUB_Pivot pivot;
   SUB_Limelight limelight;
   SUB_Drivetrain drivetrain;
-  CommandXboxController controller;
   
   Pose2d tagPose;
   Integer targetId;
@@ -36,12 +34,11 @@ public class CMD_AimOnDist extends Command {
   private final PIDController robotAngleController = new PIDController( 1, 0, 0); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
-  public CMD_AimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain, CommandXboxController controller) {
+  public CMD_AimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pivot = pivot;
     this.limelight = limelight;
     this.drivetrain = drivetrain;
-    this.controller = controller;
     addRequirements(pivot, limelight, drivetrain);
   }
 
@@ -49,7 +46,6 @@ public class CMD_AimOnDist extends Command {
   @Override
   public void initialize() {
     var alliance = DriverStation.getAlliance();
-    Alliance allianceColor;
     if (alliance.isPresent()){
       if (alliance.get() == DriverStation.Alliance.Red){
         tagPose = drivetrain.at_field.getTagPose(4).get().toPose2d();
@@ -58,8 +54,8 @@ public class CMD_AimOnDist extends Command {
         tagPose = drivetrain.at_field.getTagPose(7).get().toPose2d(); 
         targetId = 7;
       }
-
     } else {
+      SmartDashboard.putBoolean("Alliance Error", true);
       end(true);
     }
     
@@ -99,6 +95,7 @@ public class CMD_AimOnDist extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    SmartDashboard.putBoolean("SPEAKER LOCK?", true);
 
   }
 
