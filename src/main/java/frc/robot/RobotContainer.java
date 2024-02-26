@@ -6,6 +6,8 @@ package frc.robot;
 
 import frc.robot.Constants.*;
 import frc.robot.commands.CMD_AbsoluteDriveToTarget;
+import frc.robot.commands.CMD_AimOnDist;
+import frc.robot.commands.CMD_AimOnDistRel;
 import frc.robot.commands.CMD_RelativeDriveToTarget;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
@@ -15,6 +17,7 @@ import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.utils.AutoGenerator;
 import frc.robot.subsystems.SUB_Limelight;
 
+import java.sql.Driver;
 import java.util.Optional;
 
 import edu.wpi.first.math.MathUtil;
@@ -22,9 +25,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -35,7 +43,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-
   // The robot's subsystems and commands are defined here...
 
    public static SUB_Drivetrain drivetrain = new SUB_Drivetrain();
@@ -43,56 +50,123 @@ public class RobotContainer {
    public static SUB_Index index = new SUB_Index();
    public static SUB_Intake intake = new SUB_Intake();
    public static SUB_Pivot pivot = new SUB_Pivot();
-   public static AutoGenerator autos = new AutoGenerator(drivetrain);
+   public static SUB_Limelight limelight = new SUB_Limelight();
+   public static AutoGenerator autos = new AutoGenerator(drivetrain, index, intake, shooter, pivot);
 
-  public static SUB_Limelight limelight = new SUB_Limelight();
+  
 
 
-  CommandXboxController DriverC = new CommandXboxController(OIConstants.kDriverControllerPort);
+  CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
 
-    private final CommandXboxController OperatorC = 
-    new CommandXboxController(OIConstants.kDriver2ControllerPort);   
+  private final CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
+    
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    
+   
     drivetrain.setDefaultCommand(
         new RunCommand(
             () -> drivetrain.drive(
-                -MathUtil.applyDeadband(Math.pow(DriverC.getRawAxis(1), 3), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(Math.pow(DriverC.getRawAxis(0), 3), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(DriverC.getRawAxis(4), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(Math.copySign(Math.pow(Driver1.getRawAxis(1), 2), Driver1.getRawAxis(1)), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(Math.copySign(Math.pow(Driver1.getRawAxis(0), 2), Driver1.getRawAxis(0)), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(Driver1.getRawAxis(4), OIConstants.kDriveDeadband),
                 true, true),
                 drivetrain));
 
-    
-    shooter.setDefaultCommand(new RunCommand(()->shooter.setMotorSpeed(0), shooter));
+    shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(0), shooter));
     index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
-    
-    DriverC.a().whileTrue(new RunCommand(()->index.setMotorSpeed(.5), index));
-    DriverC.b().whileTrue((new RunCommand(()->shooter.setMotorSpeed(-0.5), shooter)));
-
-    
-    // log = ataLogManager.getLog();
-    // poseEntry = new DoubleArrayLogEntry(log, "odometry/pose");
     intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
-    DriverC.x().whileTrue((new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakeSpeed), intake)));
-    DriverC.y().whileTrue(new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIndexingSpeed), intake));
-    DriverC.leftBumper().whileTrue(new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kOutakeSpeed), intake));
-    // new Trigger(() -> 
-    //   Math.abs(Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) > Constants.Pivot.kPivotManualDeadband
-    //   ).whileTrue(new RunCommand(
-    //     () ->
-    //     pivot.runManual((Math.pow(DriverC.getRawAxis(3), 2) - Math.pow(DriverC.getRawAxis(2), 3)) * Constants.Pivot.kArmManualScale)
-    //     , pivot));
-
-    pivot.setDefaultCommand(new RunCommand(()->pivot.runManual(0), pivot));
-
-    DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(.2), pivot));    DriverC.povUp().whileTrue(new RunCommand(()->pivot.runManual(.2)));
-    DriverC.povDown().whileTrue(new RunCommand(()->pivot.runManual(-.2), pivot));
+    pivot.setDefaultCommand(new RunCommand(()->pivot.runAutomatic(), pivot));    
 
 
-    //OperatorC.a().onTrue(new InstantCommand(()-> pivot.setHome()));
+     /* ================== *\
+            Driver One 
+     \* ================== */ 
+
+
+    Driver1.leftStick().onTrue(new InstantCommand(()->drivetrain.zeroHeading()));
+
+    Driver1.povUp().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()->pivot.goToAngle(75))
+    ));//Shoot From Bottom Setpoin
+
+    Driver1.povLeft().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()->pivot.goToAngle(65))
+    ));//Shoot From Bottom Setpoin
+
+   Driver1.povDown().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()->pivot.goToAngle(90))
+    ));//Shoot From Up Close Setpoint
+
+    Driver1.povRight().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()->pivot.goToAngle(50))
+    ));//Shoot From Bottom Setpoin
+
+    Driver1.back().onTrue(new InstantCommand(()->pivot.goToAngle(50)));
+    Driver1.start().whileTrue( new ParallelCommandGroup(
+          new RunCommand(()->shooter.shootFlywheelOnRPM(450), shooter),
+          new SequentialCommandGroup(
+            new WaitCommand(.75),
+            new RunCommand(()->index.setMotorSpeed(0.5), index)
+          )
+        ));
+
+    Driver1.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
+
+     Driver1.b().whileTrue(
+        new ParallelCommandGroup(
+          new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
+          new SequentialCommandGroup(
+            new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500),
+            new RunCommand(()->index.setMotorSpeed(0.5), index)
+          )
+        )
+    ); // Spin Shooter OUT
+
+    /* ================== *\
+           Driver Two
+    \* ================== */
+    Driver2.leftBumper().onTrue(new InstantCommand(()->
+      SUB_Shooter.MANUAL_RPM -= 250
+    )); // Decrease manual RPM by 100
+
+    Driver2.rightBumper().onTrue(
+      new InstantCommand(()->
+        SUB_Shooter.MANUAL_RPM += 250
+    )); // Increase manual RPM by 100
+
+    Driver2.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain));
+    
+    Driver2.rightTrigger().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
+     
+    Driver2.a().whileTrue(
+    new ParallelCommandGroup(
+      new InstantCommand(()->pivot.goToAngle(75)),
+      new InstantCommand(()->index.starttimer()),
+      new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
+      new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
+        ()->index.CurrentLimitSpike()).andThen(
+      new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
+    )).onFalse(new ParallelCommandGroup(
+
+      new InstantCommand(()->index.setMotorSpeed(0)),
+      new InstantCommand(()->intake.setMotorSpeed(0))
+    )); // Suspicious if it will work or not, if it doesn't, just put onTrue();
+
+    // Driver2.x().whileTrue((new RunCommand(()->index.setMotorSpeed(-0.25), index))); //Drive Index OUT
+
+  Driver2.x().whileTrue(
+  new ParallelCommandGroup(
+  new RunCommand(()->index.setMotorSpeed(-0.6), index),
+  new RunCommand(()->intake.setMotorSpeed(-0.6), intake)
+  ));
+
+
+    Driver2.leftTrigger().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
+    Driver2.povRight().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));    
+    Driver2.povLeft().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));
 
   }
 
@@ -108,11 +182,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    Pose3d op3d = drivetrain.at_field.getTagPose(4).get();
-    Pose3d op = new Pose3d(new Pose2d(op3d.getX()-3, op3d.getY()-1, Rotation2d.fromDegrees(0)));
-    Optional<Pose3d> p3d = Optional.of(new Pose3d(new Pose2d(0.5, 0.5, Rotation2d.fromDegrees(45))));
-    OperatorC.start().whileTrue(new CMD_RelativeDriveToTarget(limelight, drivetrain)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
-    OperatorC.back().whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, Optional.of(op))).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
+    // Pose3d op3d = drivetrain.at_field.getTagPose(4).get();
+    // Pose3d op = new Pose3d(new Pose2d(op3d.getX()-3, op3d.getY()-1, Rotation2d.fromDegrees(0)));
+    // Optional<Pose3d> p3d = Optional.of(new Pose3d(new Pose2d(0.5, 0.5, Rotation2d.fromDegrees(45))));
+    // Driver2.start().whileTrue(new CMD_RelativeDriveToTarget(limelight, drivetrain)).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
+    // Driver2.back().whileTrue(new CMD_AbsoluteDriveToTarget(drivetrain, Optional.of(op))).onFalse(new InstantCommand(()->drivetrain.drive(0,0,0,true,true)));
   } 
 
   /**
@@ -121,23 +195,30 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
     return autos.getSelectedAuto();
   }
 
   public void robotPeriodic(){
-    Pose2d visionPose = limelight.getPose();
-    if (!visionPose.equals(new Pose2d())){
-      // Check if vision pose is within one meter of the current estiamted pose 
-      // to avoid abnormalities with vision (detecting a tag that isn't present) from
-      // affecting the accuracy of our pose measurement.
 
-      Transform2d t2d = visionPose.minus(drivetrain.getPose());
-      double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
-      if (dist <= 1){
-        double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
-        drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
-      }
-    }
+    SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
+    SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
+    SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.calculateDegreesRotation());
+
+    SmartDashboard.putNumber("X Pose", drivetrain.getPose().getX());
+    SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
+
+  //   Pose2d visionPose = limelight.getPose();
+  //   if (!visionPose.equals(new Pose2d())){
+  //     // Check if vision pose is within one meter of the current estiamted pose 
+  //     // to avoid abnormalities with vision (detecting a tag that isn't present) from
+  //     // affecting the accuracy of our pose measurement.
+  //     double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
+  //     drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
+  //     // Transform2d t2d = visionPose.minus(drivetrain.getPose());
+  //     // double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
+  //     // if (dist <= 1){
+  //     // }
+  //   }
+  // }
   }
 }

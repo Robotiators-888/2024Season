@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.309243119380694,
-      "y": 5.492445188825977
+      "x": 0.7218158264523252,
+      "y": 6.608557045380159
     },
-    "rotation": 180.0
+    "rotation": -120.0
   },
   "command": {
     "type": "sequential",
@@ -20,19 +20,19 @@
         {
           "type": "named",
           "data": {
+            "name": "ShootingSequence"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "RunIntake"
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ShootingSequence"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "3P_Start_BackMiddle"
+            "pathName": "TopStart_to_TopGP"
           }
         },
         {
@@ -50,13 +50,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3P_Middle_to_TopGP"
+            "pathName": "TopGP_to_2ndGP"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "1st2nd_ReturnToShoot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Launch Setpoint"
+            "name": "LowShot Setpoint"
           }
         },
         {

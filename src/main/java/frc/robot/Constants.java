@@ -7,6 +7,7 @@ package frc.robot;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -23,8 +24,8 @@ import frc.libs.PIDGains;
  */
 public final class Constants {
   public static final class OIConstants {
-    public static final int kDriverControllerPort = 0;
-    public static final double kDriveDeadband = 0.05;
+    public static final int kDriver1ontrollerPort = 0;
+    public static final double kDriveDeadband = 0.025;
     public static final int kDriver2ControllerPort =1;
   }
 
@@ -127,9 +128,13 @@ public final class Constants {
     public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
 
     // Chassis configuration
-    public static final double kTrackWidth = Units.inchesToMeters(23);
+    public static final double kTrackWidth = Units.inchesToMeters(24);
+    //31inches by 24inches
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(28);
+    public static final double kWheelBase = Units.inchesToMeters(31);
+
+    public static final double kTrackRadius = Units.inchesToMeters(19.6);
+    public static final double kMaxModuleSpeed = Units.feetToMeters(15);
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics =
         new SwerveDriveKinematics(
@@ -139,22 +144,23 @@ public final class Constants {
             new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
     // Angular offsets of the modules relative to the chassis in radians
-    public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
-    public static final double kFrontRightChassisAngularOffset = 0;
+    public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2.0;
+    public static final double kFrontRightChassisAngularOffset = 0.0;
     public static final double kBackLeftChassisAngularOffset = Math.PI;
-    public static final double kBackRightChassisAngularOffset = Math.PI / 2;
+    public static final double kBackRightChassisAngularOffset = Math.PI / 2.0;
 
     public static final boolean kGyroReversed = true;
 
-    public static final double kGyroRotation = -90;
+    public static final double kGyroRotation = 0;
     }
 
     public static final class Intake{
       public static final int kINTAKE_MOTOR_CANID = 34;
   
-      public static final double kIntakeSpeed = 0.4;
-      public static final double kOutakeSpeed = - 0.4;
-      public static final double kIndexingSpeed = 0.4;
+      public static final double kIndexSpeed = 0.5;
+      public static final double kOutakeSpeed = -0.5;
+      public static final double kOutakeRPM = NeoMotorConstants.kFreeSpeedRpm;
+      public static final double kIntakingSpeed = 0.35;
     }
   
      public static final class Pivot {
@@ -165,22 +171,33 @@ public final class Constants {
       public static final int kCurrentLimit = 40; 
       //Setpoints:
       public static double khome = 0;
+
+      public static final double kAngularEncoderOffsetInDeg = 0;
+      public static final double kMaxArmAngle = 106;
+      public static final double kMinArmAngle = 60.8;
       //
       public static final double PID_kP = 0.11425;
       public static final int PID_kI = 0;
       public static final double PID_kD = 0.021;
-      public static final double FF_kA = .1267;
-      public static final double FF_kG = .4847; //amount of volts to Overcome gravity on the arm
-      public static final double FF_kS = .11092;
-      public static final double FF_kV = 5.9339; 
-      public static final double FF_Velocity = 0.90511;
-      public static final double FF_Accel = 0.68018;
-      public static final TrapezoidProfile.Constraints kArmMotionConstraint = new TrapezoidProfile.Constraints(0.75, 1);
-      public static final ArmFeedforward kArmFeedforward = new ArmFeedforward(FF_kS, FF_kG, FF_kV, FF_kA);
-      public static final PIDGains kArmPositionGains = new PIDGains(0.6, 0.0, 0.0);
+      public static final double FF_kA = 0;
+      public static final double FF_kG = 0; //amount of volts to Overcome gravity on the arm
+      public static final double FF_kS = 0.1;
+      public static final double FF_kV = 0.0204; 
+
+      public static final TrapezoidProfile.Constraints kArmMotionConstraint = new TrapezoidProfile.Constraints(30 , 30);
+      public static final SimpleMotorFeedforward kArmFeedforward = new SimpleMotorFeedforward(FF_kS, FF_kV);
+      public static final PIDGains kArmPositionGains = new PIDGains(0.0, 0.0, 0.0);
       //public static final double kGroundPosition = 0.1;
       public static final double kmaxVelocity = 6.47*Math.PI;
       public static final double kmaxAcceleration = 4.27;
+
+      public static final double kHighAngleSP = 105.0;
+      public static final double kAmpAngleSP = 90.0;
+      public static final double kSideSP = 87;
+      public static final double kLowMidAngleSP = 75.0;
+      public static final double kLowAngleSP = 65.0;
+
+
         
     }
 

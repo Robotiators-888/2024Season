@@ -5,20 +5,39 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.Intake;
 
 public class SUB_Intake extends SubsystemBase {
 
-  CANSparkMax intakeMotor = new CANSparkMax(Intake.kINTAKE_MOTOR_CANID, MotorType.kBrushless);
+  CANSparkMax intakeMotor;
   Boolean intakeBool;
+  
 
   /** Creates a new SUB_Intake. */
   public SUB_Intake() {
+    intakeMotor = new CANSparkMax(Intake.kINTAKE_MOTOR_CANID, MotorType.kBrushless);
+    intakeMotor.restoreFactoryDefaults();
+    intakeMotor.setIdleMode(IdleMode.kCoast);
+    intakeMotor.setInverted(true);
+    intakeMotor.burnFlash();
     intakeBool = false;
+
+    // intakeMotor.setSmartCurrentLimit(60);
+    intakeMotor.setSmartCurrentLimit(60);
+    // intakeMotor.getPIDController().setP(0.0);
+    // intakeMotor.getPIDController().setI(0.0);
+    // intakeMotor.getPIDController().setD(0.0);
+    // intakeMotor.getPIDController().setFF(1.0/5800.0);
+    //Timer.delay(0.2);
+    
     intakeMotor.burnFlash();
   }
 
@@ -28,7 +47,10 @@ public class SUB_Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Intake Speed", intakeMotor.get());
+    SmartDashboard.putNumber("Intake RPM", intakeMotor.getEncoder().getVelocity());
+    //SmartDashboard.putNumber(getName(), 0)
+    SmartDashboard.putNumber("Intake Speed (m/sec)", (((intakeMotor.getEncoder().getVelocity()*2*Math.PI)/8))/60);
+
   }
 
   /**

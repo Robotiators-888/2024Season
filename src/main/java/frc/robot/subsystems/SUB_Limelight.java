@@ -6,14 +6,11 @@ import frc.robot.LimelightHelpers.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static frc.robot.Constants.Limelight.*;
-import edu.wpi.first.wpilibj.DriverStation;
 
 public class SUB_Limelight extends SubsystemBase {
 
-  private DriverStation.Alliance allianceColor;
   public enum LED_Mode {
     FORCE_OFF,
     FORCE_ON,
@@ -22,8 +19,7 @@ public class SUB_Limelight extends SubsystemBase {
 
   /** Creates a new SUB_Limelight. */
   public SUB_Limelight() {
-    allianceColor = DriverStation.getAlliance().get();
-    SmartDashboard.putString("ALLIANCE", allianceColor.toString());
+
   }
 
   /**
@@ -33,21 +29,19 @@ public class SUB_Limelight extends SubsystemBase {
    */
   public Pose2d getPose(){
     LimelightResults llresults = LimelightHelpers.getLatestResults(LIMELIGHT_NAME);
-
-    // TODO: Limelight shits 
-    switch (allianceColor){
-      case Blue: return llresults.targetingResults.getBotPose2d_wpiRed();
-      case Red: return llresults.targetingResults.getBotPose2d_wpiBlue();
-      default: return null; // Default
-    }
+    return llresults.targetingResults.getBotPose2d_wpiBlue();    
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    //SmartDashboard.putBoolean()
     SmartDashboard.putNumber("ID", LimelightHelpers.getFiducialID(LIMELIGHT_NAME));
   }
 
+  public int getFiducialID(){
+    return (int) LimelightHelpers.getFiducialID(LIMELIGHT_NAME);
+  }
   public boolean getTv() {
     return LimelightHelpers.getTV(LIMELIGHT_NAME);
   }

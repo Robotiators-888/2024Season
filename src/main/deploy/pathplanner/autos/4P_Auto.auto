@@ -2,21 +2,15 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6249575857930348,
-      "y": 4.438868928628442
+      "x": 1.3732635157578024,
+      "y": 5.535354916863679
     },
-    "rotation": 119.7159209935219
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "Amp Setpoint"
-          }
-        },
         {
           "type": "named",
           "data": {
@@ -32,13 +26,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Back_to_Podium"
+            "pathName": "4P_Speaker_to_TopGP"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Launch Setpoint"
+            "pathName": "4P_Top_to_MiddleGP"
           }
         },
         {
@@ -46,16 +40,10 @@
           "data": {
             "name": "ShootingSequence"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopIntake"
-          }
         }
       ]
     }
   },
-  "folder": "2 Piece",
+  "folder": null,
   "choreoAuto": false
 }

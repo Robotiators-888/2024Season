@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.309243119380694,
-      "y": 5.492445188825977
+      "x": 0.6249575857930348,
+      "y": 4.438868928628442
     },
-    "rotation": 180.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -20,19 +20,19 @@
         {
           "type": "named",
           "data": {
+            "name": "ShootingSequence"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "RunIntake"
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ShootingSequence"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "3P_Start_BackMiddle"
+            "pathName": "BottomStart_to_BottomGP"
           }
         },
         {
@@ -50,25 +50,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3P_Middle_to_TopGP"
+            "pathName": "BottomGP_to_5thGP"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Launch Setpoint"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootingSequence"
+            "pathName": "5thGP_to_Scoring"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "StopIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Launch Setpoint"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootingSequence"
           }
         }
       ]

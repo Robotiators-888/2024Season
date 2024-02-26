@@ -3,56 +3,51 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.895296810271618,
-        "y": 5.492445188825977
+        "x": 0.7218158264523252,
+        "y": 6.608557045380159
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.895296810271618,
-        "y": 5.991758387810157
+        "x": 1.588271083518912,
+        "y": 6.226729304979183
       },
       "isLocked": false,
-      "linkedName": "MiddleHomeGamePiece"
+      "linkedName": "TopRobotStart"
     },
     {
       "anchor": {
-        "x": 2.895296810271618,
-        "y": 7.0050704681015805
+        "x": 4.775064147623824,
+        "y": 6.608557045380159
       },
       "prevControl": {
-        "x": 2.895296810271618,
-        "y": 7.019756150424644
+        "x": 4.297299992938616,
+        "y": 6.454793869160123
       },
       "nextControl": {
-        "x": 2.895296810271618,
-        "y": 6.990384785778517
+        "x": 6.052718509730401,
+        "y": 7.019756150424644
       },
       "isLocked": false,
-      "linkedName": "TopHomeGamePiece"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.484097705225823,
-        "y": 6.726042503963363
+        "x": 8.284942222836145,
+        "y": 7.445640937793504
       },
       "prevControl": {
-        "x": 2.484097705225828,
-        "y": 6.733385345124894
+        "x": 7.653457882944388,
+        "y": 7.151927291332223
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "GP_1"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": -91.80000000000001,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": -90.0,
+      "rotationDegrees": -172.87498365109832,
       "rotateFast": true
     }
   ],
@@ -66,14 +61,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -151.89669709525646,
+    "rotation": -158.96248897457815,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "3 Piece Path",
+  "folder": "Silly Paths",
   "previewStartingState": {
-    "rotation": 0.0,
-    "velocity": 0
+    "rotation": -116.56505117616162,
+    "velocity": 0.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

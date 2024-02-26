@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.6249575857930348,
-        "y": 4.438868928628442
+        "x": 7.139459001637144,
+        "y": 6.696671139317234
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.2161304638301615,
-        "y": 4.438868928628442
+        "x": 7.110087636991016,
+        "y": 6.667299774671107
       },
       "isLocked": false,
-      "linkedName": "BottomRobotStart"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.891391838763322,
-        "y": 4.094203811817293
+        "x": 5.861804639530567,
+        "y": 6.43232885750208
       },
       "prevControl": {
-        "x": 2.1863261279940547,
-        "y": 4.094203811817293
+        "x": 6.170203968314914,
+        "y": 6.461700222148208
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BottomGP"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -39,14 +39,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 160.0,
+    "rotation": -170.13419305691565,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "2 Piece Path",
+  "folder": "Silly Paths",
   "previewStartingState": {
-    "rotation": 121.13897243697888,
+    "rotation": 180.0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

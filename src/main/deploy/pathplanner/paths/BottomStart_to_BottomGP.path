@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.2161304638301615,
-        "y": 4.438868928628442
+        "x": 1.4291761916857175,
+        "y": 4.1777589916502995
       },
       "isLocked": false,
       "linkedName": "BottomRobotStart"
@@ -20,12 +20,12 @@
         "y": 4.094203811817293
       },
       "prevControl": {
-        "x": 2.1863261279940547,
-        "y": 4.094203811817293
+        "x": 2.358727567327909,
+        "y": 4.135981401733796
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BottomGP"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -39,14 +39,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 160.0,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "2 Piece Path",
+  "folder": "3 Piece Path",
   "previewStartingState": {
-    "rotation": 121.13897243697888,
+    "rotation": 120.0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

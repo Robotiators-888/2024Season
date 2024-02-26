@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7218158264523252,
+      "y": 6.608557045380159
+    },
+    "rotation": -120.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "RunIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SillyAuto_Start_Top_1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SillyAuto_GP_to_Mid"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootingSequence"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Silly Autos",
+  "choreoAuto": false
+}

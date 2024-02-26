@@ -4,12 +4,15 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
+
 import com.revrobotics.CANSparkFlex;
 
 public class MAXSwerveModule {
@@ -18,7 +21,7 @@ public class MAXSwerveModule {
 
   private final RelativeEncoder m_drivingEncoder;
   private final AbsoluteEncoder m_turningEncoder;
-
+ 
   private final SparkPIDController m_drivingPIDController;
   private final SparkPIDController m_turningPIDController;
 
@@ -102,6 +105,16 @@ public class MAXSwerveModule {
     m_chassisAngularOffset = chassisAngularOffset;
     m_desiredState.angle = new Rotation2d(m_turningEncoder.getPosition());
     m_drivingEncoder.setPosition(0);
+
+    // Add delay for MAXSwerveModule initialization
+    //Timer.delay(0.2);
+    m_drivingSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+    m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+    
+    m_drivingSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+    m_turningSparkMax.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+
+    
   }
 
   /**
