@@ -5,7 +5,7 @@
       "x": 0.6249575857930348,
       "y": 4.438868928628442
     },
-    "rotation": 119.7159209935219
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -26,7 +26,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Back_to_Podium"
+            "pathName": "BottomStart_to_BottomGP"
           }
         },
         {
@@ -42,14 +42,38 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "BottomGP_to_5thGP"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "5thGP_to_Scoring"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "StopIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Launch Setpoint"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootingSequence"
           }
         }
       ]
     }
   },
-  "folder": "2 Piece",
+  "folder": "3 Piece",
   "choreoAuto": false
 }

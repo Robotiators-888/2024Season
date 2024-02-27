@@ -99,11 +99,19 @@ public class AutoGenerator {
       );
     }
 
+    public Command stopAll(){
+      return new ParallelCommandGroup(
+        new InstantCommand(()->index.setMotorSpeed(0)),
+        new InstantCommand(()->intake.setMotorSpeed(0)),
+        new InstantCommand(()->shooter.setMotorSpeed(0))
+      );
+    }
+
     public Command setPivotSetpoint(double setpoint){
       return new InstantCommand(()->pivot.setPivotSetpoint(setpoint));
     }
 
-    public Command dumbAuto(){
+    public Command dumpAuto(){
       return new SequentialCommandGroup(
         setPivotSetpoint(Constants.Pivot.kAmpAngleSP), 
         scoringSequence()
@@ -125,10 +133,11 @@ public class AutoGenerator {
     NamedCommands.registerCommand("RunIntake", runIntake());
     NamedCommands.registerCommand("ScoringSequence", scoringSequence());
     NamedCommands.registerCommand("StopIntake", stopIntake());
+    NamedCommands.registerCommand("StopAll", stopAll());
     NamedCommands.registerCommand("Amp Setpoint", setPivotSetpoint(Constants.Pivot.kAmpAngleSP));
     NamedCommands.registerCommand("Launch Setpoint", setPivotSetpoint(Constants.Pivot.kLowMidAngleSP));
     NamedCommands.registerCommand("LowShot Setpoint", setPivotSetpoint(Constants.Pivot.kLowAngleSP));
-    NamedCommands.registerCommand("Dumb Auto", dumbAuto());
+    NamedCommands.registerCommand("DumpAuto", dumpAuto());
   }
 
 }

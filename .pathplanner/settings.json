@@ -5,12 +5,14 @@
   "pathFolders": [
     "2 Piece Path",
     "3 Piece Path",
+    "4 Piece Path",
     "Silly Paths"
   ],
   "autoFolders": [
     "2 Piece",
-    "Silly Autos",
-    "3 Piece"
+    "3 Piece",
+    "4 Piece",
+    "Silly Autos"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
