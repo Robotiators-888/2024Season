@@ -1,5 +1,7 @@
 package frc.robot.utils;
 
+import java.time.Instant;
+
 import com.fasterxml.jackson.core.sym.Name;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -13,9 +15,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import frc.robot.Constants;
 //import frc.robot.RobotManager;
 import frc.robot.subsystems.SUB_Drivetrain;
@@ -71,25 +76,19 @@ public class AutoGenerator {
   
   //TODO: Test SEQ
     public Command scoringSequence(){
-        return new ParallelCommandGroup(
-          new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
-          new SequentialCommandGroup(
-            new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500),
-            new RunCommand(()->index.setMotorSpeed(0.5), index).withTimeout(2.0)
-          )
-        );
+      return new RunCommand(()->shooter.setRPM(4000))
+      .withTimeout(0.75)
+      .andThen(new RunCommand(()->index.setMotorSpeed(0.75)).withTimeout(0.5).andThen(new InstantCommand(()->stopAll())));
     }
 
     //TODO: Test CMD
     public Command runIntake(){
       return new ParallelCommandGroup(
         new InstantCommand(()->pivot.goToAngle(75)),
-        new InstantCommand(()->index.starttimer()),
-        new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
-        new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
-          ()->index.CurrentLimitSpike()).andThen(
-        new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
-      );
+        new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed)),
+        new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(()->index.getTopBannerSensor()).andThen(
+        new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025).finallyDo(()->stopAll())
+      ).finallyDo(()->stopAll());
     }
 
     public Command stopIntake(){
@@ -103,7 +102,7 @@ public class AutoGenerator {
       return new ParallelCommandGroup(
         new InstantCommand(()->index.setMotorSpeed(0)),
         new InstantCommand(()->intake.setMotorSpeed(0)),
-        new InstantCommand(()->shooter.setMotorSpeed(0))
+        new InstantCommand(()->shooter.setMotorSpeed(1500))
       );
     }
 
@@ -112,10 +111,10 @@ public class AutoGenerator {
     }
 
     public Command dumpAuto(){
-      return new SequentialCommandGroup(
+      return new ParallelCommandGroup(
         setPivotSetpoint(Constants.Pivot.kAmpAngleSP), 
         scoringSequence()
-        );
+        ).finallyDo(()->stopAll());
     }
 
   /**

@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.309243119380694,
+        "y": 5.492445188825977
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.3092431193806977,
+        "y": 5.492445188825977
+      },
+      "isLocked": false,
+      "linkedName": "MiddleRobotStart"
+    },
+    {
+      "anchor": {
+        "x": 2.895296810271618,
+        "y": 5.492445188825977
+      },
+      "prevControl": {
+        "x": 1.895296810271618,
+        "y": 5.492445188825977
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "MiddleHomeGamePiece"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -179.2200392585904,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "2 Piece Path",
+  "previewStartingState": {
+    "rotation": 178.31531568210374,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}
