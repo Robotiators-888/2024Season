@@ -137,7 +137,20 @@ public class RobotContainer {
         SUB_Shooter.MANUAL_RPM += 250
     )); // Increase manual RPM by 100
 
-    Driver2.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain));
+    Driver2.b().whileTrue(
+        new ParallelCommandGroup(
+          new ParallelCommandGroup(
+            new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
+            new CMD_AimOnDist(pivot, limelight, drivetrain)
+          ),
+          new SequentialCommandGroup(
+            new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500),
+            new RunCommand(()->index.setMotorSpeed(0.5), index)
+          )
+        )
+    ); // Spin Shooter OUT
+
+    // Driver2.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain));
     
     Driver2.rightTrigger().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
      

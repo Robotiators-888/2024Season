@@ -16,7 +16,11 @@ import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Limelight;
 import frc.robot.subsystems.SUB_Pivot;
 
-public class CMD_AimOnDist extends Command {
+
+/*
+ * ASSUMES THAT THE SHOOTER IS ALREADY REVVED UP (SHOTS ARE INSTANT.)
+ */
+public class CMD_MovingAimingOnDist extends Command {
   SUB_Pivot pivot;
   SUB_Limelight limelight;
   SUB_Drivetrain drivetrain;
@@ -34,7 +38,7 @@ public class CMD_AimOnDist extends Command {
   private final PIDController robotAngleController = new PIDController( 0.5, 0.01, 0); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
-  public CMD_AimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain) {
+  public CMD_MovingAimingOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pivot = pivot;
     this.limelight = limelight;
