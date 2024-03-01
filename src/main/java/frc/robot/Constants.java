@@ -161,6 +161,9 @@ public final class Constants {
       public static final double kOutakeRPM = NeoMotorConstants.kFreeSpeedRpm;
       public static final double kIntakingSpeed = 0.35;
     }
+    public static final class Climber{
+      public static final double kClimberNeutralVoltage = 1.1;
+    }
   
      public static final class Pivot {
       public static final int kPIVOT_ROTATE_MOTOR_CANID = 35;
