@@ -6,6 +6,11 @@ package frc.robot;
 
 import frc.robot.Constants.*;
 import frc.robot.commands.Limelight.CMD_AimOnDist;
+import frc.robot.commands.CMD_AbsoluteDriveToTarget;
+import frc.robot.commands.CMD_AimOnDist;
+import frc.robot.commands.CMD_AimOnDistRel;
+import frc.robot.commands.CMD_RelativeDriveToTarget;
+import frc.robot.subsystems.SUB_Climber;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Shooter;
@@ -196,6 +201,8 @@ public class RobotContainer {
     Driver2.leftTrigger().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
     Driver2.povRight().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));    
     Driver2.povLeft().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));
+    Driver2.povDown().whileTrue(new RunCommand(()->climber.runMotor(0.6), climber));
+    Driver2.povUp().whileTrue(new RunCommand(()->climber.runMotor(-.3), climber));
 
   }
 
