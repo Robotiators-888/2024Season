@@ -31,7 +31,7 @@ public class CMD_AimOnDist extends Command {
   double yError;
   double angle;
 
-  private final PIDController robotAngleController = new PIDController( 1, 0, 0); // 0.25, 0, 0
+  private final PIDController robotAngleController = new PIDController( 0.5, 0.01, 0); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
   public CMD_AimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain) {
