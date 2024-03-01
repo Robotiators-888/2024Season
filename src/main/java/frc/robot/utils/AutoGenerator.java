@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
@@ -22,6 +23,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import frc.robot.Constants;
+import frc.robot.commands.Autos.CMD_Intake;
+import frc.robot.commands.Autos.CMD_Shoot;
+import frc.robot.commands.Autos.CMD_ShootSEQ;
 //import frc.robot.RobotManager;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
@@ -76,9 +80,19 @@ public class AutoGenerator {
   
   //TODO: Test SEQ
     public Command scoringSequence(){
-      return new RunCommand(()->shooter.setRPM(4000))
-      .withTimeout(0.75)
-      .andThen(new RunCommand(()->index.setMotorSpeed(0.75)).withTimeout(0.5).andThen(new InstantCommand(()->stopAll())));
+      return shooter.run(()->shooter.setRPM(4000))
+      .until(()->shooter.getFlywheelRPM() >= 3500)
+      .andThen(index.run(()->{index.setMotorSpeed(0.75);}).withTimeout(0.5));
+    }
+
+    public Command shoot(){
+      Command shooting = Commands.parallel(
+        shooter.run(()->shooter.shootFlywheelOnRPM(4000)),
+        Commands.waitUntil(()->shooter.getFlywheelRPM() >= 3500)
+      );
+      shooting.handleInterrupt(()->index.run(()->index.setMotorSpeed(0.75)).withTimeout(0.5).andThen(()->shooter.shootFlywheelOnRPM(0)));
+
+      return shooting;
     }
 
     //TODO: Test CMD
@@ -87,8 +101,8 @@ public class AutoGenerator {
         new InstantCommand(()->pivot.goToAngle(75)),
         new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed)),
         new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(()->index.getTopBannerSensor()).andThen(
-        new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025).finallyDo(()->stopAll())
-      ).finallyDo(()->stopAll());
+        new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
+      );
     }
 
     public Command stopIntake(){
@@ -113,9 +127,15 @@ public class AutoGenerator {
     public Command dumpAuto(){
       return new ParallelCommandGroup(
         setPivotSetpoint(Constants.Pivot.kAmpAngleSP), 
-        scoringSequence()
-        ).finallyDo(()->stopAll());
+        new CMD_Shoot(shooter, index)
+        );
     }
+
+  // public Command shootWhenReady(){
+  //   return shooter.runOnce(()->shooter.setRPM(4000)).until(()->(shooter.getFlywheelRPM() >= 3500)).andThen(index.runOnce(()->index.setMotorSpeed(.5)));
+  // }
+
+  
 
   /**
    * @return Returns chosen auto on Smartdashboard
@@ -129,14 +149,14 @@ public class AutoGenerator {
   // ====================================================================
 
   public void registerAllCommands(){
-    NamedCommands.registerCommand("RunIntake", runIntake());
-    NamedCommands.registerCommand("ScoringSequence", scoringSequence());
+    NamedCommands.registerCommand("RunIntake", new CMD_Intake(intake, index));
+    NamedCommands.registerCommand("ScoringSequence", new CMD_Shoot(shooter, index));
     NamedCommands.registerCommand("StopIntake", stopIntake());
     NamedCommands.registerCommand("StopAll", stopAll());
     NamedCommands.registerCommand("Amp Setpoint", setPivotSetpoint(Constants.Pivot.kAmpAngleSP));
     NamedCommands.registerCommand("Launch Setpoint", setPivotSetpoint(Constants.Pivot.kLowMidAngleSP));
     NamedCommands.registerCommand("LowShot Setpoint", setPivotSetpoint(Constants.Pivot.kLowAngleSP));
-    NamedCommands.registerCommand("DumpAuto", dumpAuto());
+    NamedCommands.registerCommand("DumpAuto", new CMD_ShootSEQ(shooter, index, pivot));
   }
 
 }

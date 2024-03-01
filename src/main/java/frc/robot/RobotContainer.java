@@ -75,7 +75,7 @@ public class RobotContainer {
                 true, true),
                 drivetrain));
 
-    shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(0), shooter));
+    //shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(0), shooter));
     index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
     intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
     pivot.setDefaultCommand(new RunCommand(()->pivot.runAutomatic(), pivot));    
@@ -88,7 +88,7 @@ public class RobotContainer {
 
     Driver1.leftStick().onTrue(new InstantCommand(()->drivetrain.zeroHeading()));
 
-    Driver1.povUp().onTrue(new SequentialCommandGroup(
+    Driver1.povRight().onTrue(new SequentialCommandGroup(
       new InstantCommand(()->pivot.goToAngle(75))
     ));//Shoot From Bottom Setpoin
 
@@ -96,11 +96,11 @@ public class RobotContainer {
       new InstantCommand(()->pivot.goToAngle(65))
     ));//Shoot From Bottom Setpoin
 
-   Driver1.povDown().onTrue(new SequentialCommandGroup(
+   Driver1.povUp().onTrue(new SequentialCommandGroup(
       new InstantCommand(()->pivot.goToAngle(90))
     ));//Shoot From Up Close Setpoint
 
-    Driver1.povRight().onTrue(new SequentialCommandGroup(
+    Driver1.povDown().onTrue(new SequentialCommandGroup(
       new InstantCommand(()->pivot.goToAngle(50))
     ));//Shoot From Bottom Setpoin
 
@@ -141,14 +141,24 @@ public class RobotContainer {
     
     Driver2.rightTrigger().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
      
+    // Driver2.a().whileTrue(
+    // new ParallelCommandGroup(
+    //   new InstantCommand(()->pivot.goToAngle(75)),
+    //   new InstantCommand(()->index.starttimer()),
+    //   new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
+    //   new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
+    //     ()->index.CurrentLimitSpike()).andThen(
+    //   new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
+    // ))
     Driver2.a().whileTrue(
-    new ParallelCommandGroup(
-      new InstantCommand(()->pivot.goToAngle(75)),
-      new InstantCommand(()->index.starttimer()),
-      new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
-      new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
-        ()->index.CurrentLimitSpike()).andThen(
-      new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
+      new ParallelCommandGroup(
+        new InstantCommand(()->pivot.goToAngle(Pivot.kLowMidAngleSP)),
+        new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
+        new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))
+        .until(()->index.getTopBannerSensor())
+        .andThen(new ParallelCommandGroup(
+          new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.1)
+        ))
     )).onFalse(new ParallelCommandGroup(
 
       new InstantCommand(()->index.setMotorSpeed(0)),

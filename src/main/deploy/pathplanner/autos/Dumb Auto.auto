@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.309243119380694,
+      "y": 5.53650223579517
+    },
+    "rotation": 176.0995062576182
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -12,15 +18,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopAll"
+            "pathName": "New Path"
           }
         }
       ]
