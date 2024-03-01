@@ -163,6 +163,7 @@ public final class Constants {
     }
     public static final class Climber{
       public static final double kClimberNeutralVoltage = 1.1;
+      public static final double kClimberHomePos = 1.1;
     }
   
      public static final class Pivot {

@@ -201,8 +201,8 @@ public class RobotContainer {
     Driver2.leftTrigger().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
     Driver2.povRight().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));    
     Driver2.povLeft().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));
-    Driver2.povDown().whileTrue(new RunCommand(()->climber.runMotor(0.6), climber));
-    Driver2.povUp().whileTrue(new RunCommand(()->climber.runMotor(-.3), climber));
+    Driver2.povDown().whileTrue(new RunCommand(()->climber.runMotor(0.6, 1), climber));
+    Driver2.povUp().whileTrue(new RunCommand(()->climber.runMotor(-.3, 1), climber));
 
   }
 

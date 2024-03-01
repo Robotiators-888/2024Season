@@ -2,12 +2,16 @@ package frc.robot.subsystems;
 
 
 import com.revrobotics.CANSparkMax;
+
+import frc.robot.Constants;
 import frc.robot.Constants.Climber;
 
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -21,6 +25,9 @@ public class SUB_Climber extends SubsystemBase {
   CANSparkMax climberRight;
   CANSparkMax climberLeft;
   Boolean climberUp;
+  private TrapezoidProfile.State targetState;
+  private TrapezoidProfile.State currentState;
+  private double homepos = Constants.Climber.kClimberHomePos;
   
 
   public SUB_Climber(){
@@ -37,10 +44,15 @@ public class SUB_Climber extends SubsystemBase {
     climberRight.burnFlash();
 
   }
+  public void goHomeG(){
+    targetState = new TrapezoidProfile.State(homepos, 0.0);
+    currentState = new TrapezoidProfile.State(climberLeft.getEncoder().getPosition(), climberLeft.getEncoder().getVelocity());
+  }
 
 
 
   public void runMotor(double pwr, int flag) {
+    //gods most evil robot code, but dont want the default command running while the climber is down.
     switch(flag){
         case 0:
         if(climberLeft.getEncoder().getPosition() > 10){
