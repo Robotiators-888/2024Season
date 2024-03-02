@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 
+import frc.libs.PIDGains;
 import frc.robot.Constants;
 import frc.robot.Constants.Climber;
 
@@ -11,6 +12,8 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -28,11 +31,14 @@ public class SUB_Climber extends SubsystemBase {
   private TrapezoidProfile.State targetState;
   private TrapezoidProfile.State currentState;
   private double homepos = Constants.Climber.kClimberHomePos;
+  private SparkPIDController climberPID;
+
   
 
   public SUB_Climber(){
     climberRight = new CANSparkMax(36, MotorType.kBrushless);
     climberLeft = new CANSparkMax(37, MotorType.kBrushless);
+    
     
     climberLeft.restoreFactoryDefaults();
     climberRight.restoreFactoryDefaults();
@@ -43,6 +49,18 @@ public class SUB_Climber extends SubsystemBase {
     climberLeft.burnFlash();
     climberRight.burnFlash();
 
+ 
+    climberPID = climberLeft.getPIDController();
+    climberPID.setOutputRange(-0.8, 0.8);
+    setPIDF(climberPID, 1.3, 0, 0.7, 1.1);
+
+  }
+
+  public void setPIDF(SparkPIDController pid, double P, double I, double D, double F){
+    pid.setP(P);
+    pid.setI(I);
+    pid.setD(D);
+    pid.setFF(F);
   }
   
   public void goHomeG(){
@@ -58,9 +76,7 @@ public class SUB_Climber extends SubsystemBase {
 
 
   public void runMotor(double pwr ) {
-    //gods most evil robot code, but dont want the default command running while the climber is down.
    climberLeft.setVoltage(pwr);
-    
   }
 
 
