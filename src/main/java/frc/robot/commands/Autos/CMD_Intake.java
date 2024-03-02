@@ -36,6 +36,9 @@ public class CMD_Intake extends Command {
       index.setMotorSpeed(0.1);
       Timer.delay(0.1);
       end(true);
+    }else{
+      index.setMotorSpeed(Constants.Intake.kIndexSpeed);
+      intake.setMotorSpeed(Constants.Intake.kIntakingSpeed);
     }
   }
 

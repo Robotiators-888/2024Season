@@ -149,7 +149,7 @@ public class AutoGenerator {
   // ====================================================================
 
   public void registerAllCommands(){
-    NamedCommands.registerCommand("RunIntake", new CMD_Intake(intake, index));
+    NamedCommands.registerCommand("RunIntake", runIntake());
     NamedCommands.registerCommand("ScoringSequence", new CMD_Shoot(shooter, index));
     NamedCommands.registerCommand("StopIntake", stopIntake());
     NamedCommands.registerCommand("StopAll", stopAll());

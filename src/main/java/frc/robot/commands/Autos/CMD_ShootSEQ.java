@@ -4,33 +4,56 @@
 
 package frc.robot.commands.Autos;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.*;
-import frc.robot.subsystems.*;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.Pivot;
+import frc.robot.subsystems.SUB_Index;
+import frc.robot.subsystems.SUB_Pivot;
+import frc.robot.subsystems.SUB_Shooter;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class CMD_ShootSEQ extends SequentialCommandGroup {
-
-
+public class CMD_ShootSEQ extends Command {
   SUB_Shooter shooter;
   SUB_Index index;
   SUB_Pivot pivot;
-  CMD_Shoot CMD_shoot;
-    /** Creates a new CMD_ShootSEQ. */
-  public CMD_ShootSEQ(SUB_Shooter shooter, SUB_Index index, SUB_Pivot pivot) {
+  
 
+  /** Creates a new CMD_Shoot. */
+  public CMD_ShootSEQ(SUB_Shooter shooter, SUB_Index index, SUB_Pivot pivot) {
     this.shooter = shooter;
     this.index = index;
     this.pivot = pivot;
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-
-    addCommands(new InstantCommand(()->pivot.setPivotSetpoint(Pivot.kAmpAngleSP)), new CMD_Shoot(shooter, index));
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(shooter, index, pivot);
   }
 
- 
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+    pivot.setPivotSetpoint(Pivot.kAmpAngleSP);
+    shooter.shootFlywheelOnRPM(4000);
+    
+  }
 
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+    if(shooter.getFlywheelRPM() >= 3500){
+      index.setMotorSpeed(0.75);
+      Timer.delay(0.5);
+      end(false);
+    }
+  }
+
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
+    shooter.setMotorSpeed(0);
+    index.setMotorSpeed(0);
+  }
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
 }

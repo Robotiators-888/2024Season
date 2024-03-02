@@ -75,9 +75,9 @@ public class RobotContainer {
                 true, true),
                 drivetrain));
 
-    //shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(0), shooter));
-    index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
-    intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
+    shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(2500), shooter));
+    //index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
+    //intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
     pivot.setDefaultCommand(new RunCommand(()->pivot.runAutomatic(), pivot));    
 
 
@@ -153,6 +153,7 @@ public class RobotContainer {
     Driver2.a().whileTrue(
       new ParallelCommandGroup(
         new InstantCommand(()->pivot.goToAngle(Pivot.kLowMidAngleSP)),
+        new RunCommand(()->shooter.setMotorSpeed(0), shooter),
         new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
         new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))
         .until(()->index.getTopBannerSensor())
@@ -171,7 +172,11 @@ public class RobotContainer {
   new ParallelCommandGroup(
   new RunCommand(()->index.setMotorSpeed(-0.6), index),
   new RunCommand(()->intake.setMotorSpeed(-0.6), intake)
-  ));
+  )).onFalse(
+    new ParallelCommandGroup(
+      new InstantCommand(()->index.setMotorSpeed(0)),
+      new InstantCommand(()->intake.setMotorSpeed(0))
+    ));
 
 
     Driver2.leftTrigger().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT

@@ -14,7 +14,19 @@
         {
           "type": "named",
           "data": {
-            "name": "DumpAuto"
+            "name": "Amp Setpoint"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootingSequence"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {
@@ -46,6 +58,12 @@
           "type": "named",
           "data": {
             "name": "ShootingSequence"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         }
       ]

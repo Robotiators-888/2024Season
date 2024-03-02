@@ -27,14 +27,16 @@ public class CMD_Shoot extends Command {
   @Override
   public void initialize() {
     shooter.shootFlywheelOnRPM(4000);
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     SmartDashboard.putBoolean("cmd END", false);
-    //shooter.shootFlywheelOnRPM(4000);
-    if(shooter.getFlywheelRPM() >= 3500){
+    if(!(shooter.getFlywheelRPM() >= 3500)){
+      shooter.shootFlywheelOnRPM(4000);
+    }else{
       index.setMotorSpeed(0.75);
       Timer.delay(0.5);
       
