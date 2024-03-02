@@ -2,6 +2,7 @@ package frc.robot.utils;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SUB_Drivetrain;
 
@@ -21,17 +22,17 @@ public class PathPlannerBase {
   public Command followPathCommand(String pathName){
     PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
 
-    return new FollowPathHolonomic(path, ()->drivetrain.getPose(), ()->drivetrain.getChassisSpeeds(), drivetrain::driveRobotRelative, 
-      new HolonomicPathFollowerConfig(4.5,
-      0,
-        new ReplanningConfig())
-      , ()->{
-        var alliance = DriverStation.getAlliance();
-                    if (alliance.isPresent()) {
-                        return alliance.get() == DriverStation.Alliance.Red;
-                    }
-                    return false;
-      }, drivetrain);
+    return AutoBuilder.followPath(path);
+    //drivetrain::getPose, drivetrain::resetPose, drivetrain::getChassisSpeeds, drivetrain::driveRobotRelative,
+    // return new FollowPathHolonomic(path, drivetrain::getPose, drivetrain::getChassisSpeeds, drivetrain::driveRobotRelative, 
+    //   new HolonomicPathFollowerConfig(Constants.Drivetrain.kMaxModuleSpeed, Constants.Drivetrain.kTrackRadius, new ReplanningConfig())
+    //   , ()->{
+    //     var alliance = DriverStation.getAlliance();
+    //                 if (alliance.isPresent()) {
+    //                     return alliance.get() == DriverStation.Alliance.Red;
+    //                 }
+    //                 return false;
+    //   }, drivetrain);
   }
 
   public static Command followTrajectory(String PathName){

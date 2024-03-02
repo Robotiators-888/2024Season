@@ -58,7 +58,6 @@ public class AutoGenerator {
   // ====================================================================
   //                          Paths
   // ====================================================================
-    String driveBack_Left = Filesystem.getDeployDirectory().toPath().resolve("Back_to_Podium").toString();
 
 
   // ====================================================================

@@ -18,6 +18,7 @@ import com.revrobotics.SparkPIDController.ArbFFUnits;
 
 import frc.libs.PIDGains;
 import frc.robot.Constants;
+import frc.robot.Constants.Pivot;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -58,7 +59,7 @@ public class SUB_Pivot extends SubsystemBase {
         rotateEncoder.setPositionConversionFactor(360);
         rotateEncoder.setVelocityConversionFactor(360);
         rotateEncoder.setInverted(true);
-        rotateEncoder.setZeroOffset(0); // We are accepting that this is broken
+        rotateEncoder.setZeroOffset(Pivot.kPivotOffset); // We are accepting that this is broken
         pivotMotor.setSmartCurrentLimit(50);
         // pivotEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
         // pivotEncoder.setVelocityConversionFactor(1.0/4.0 * 2 * Math.PI);
@@ -181,6 +182,7 @@ public void runManual(double _power) {
     SmartDashboard.putNumber("Next position", currentState.position);
     SmartDashboard.putNumber("Pivot FF", feedforward);
     SmartDashboard.putNumber("Pivot % out", pivotMotor.getAppliedOutput());
+
   }
 }
 

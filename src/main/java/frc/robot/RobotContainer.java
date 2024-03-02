@@ -113,6 +113,10 @@ public class RobotContainer {
             new RunCommand(()->index.setMotorSpeed(0.5), index)
           )
         )
+    ).onFalse(
+      new ParallelCommandGroup(
+        new InstantCommand(()->intake.setMotorSpeed(0))
+    )
     ); // Spin Shooter OUT
 
     /* ================== *\
