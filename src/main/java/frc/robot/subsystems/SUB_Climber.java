@@ -44,25 +44,23 @@ public class SUB_Climber extends SubsystemBase {
     climberRight.burnFlash();
 
   }
+  
   public void goHomeG(){
     targetState = new TrapezoidProfile.State(homepos, 0.0);
     currentState = new TrapezoidProfile.State(climberLeft.getEncoder().getPosition(), climberLeft.getEncoder().getVelocity());
   }
 
+  public void setTargetState(){
+    homepos = climberLeft.getEncoder().getPosition();
+  }
 
 
-  public void runMotor(double pwr, int flag) {
+
+
+  public void runMotor(double pwr ) {
     //gods most evil robot code, but dont want the default command running while the climber is down.
-    switch(flag){
-        case 0:
-        if(climberLeft.getEncoder().getPosition() > 10){
-            climberLeft.setVoltage(pwr);
-        }
-        break;
-        case 1:
-        climberLeft.setVoltage(pwr);
-        break;
-    }
+   climberLeft.setVoltage(pwr);
+    
   }
 
 
