@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7071301441350655,
-      "y": 6.579185680732721
+      "x": 0.765872873427322,
+      "y": 6.520442951440464
     },
     "rotation": -122.2756443145777
   },
@@ -14,115 +14,130 @@
         {
           "type": "named",
           "data": {
-            "name": "DumpAuto"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "RunIntake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Top_to_topGP"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Launch Setpoint"
+            "name": "Amp Setpoint"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "ShootingSequence"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "RunIntake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "TopGP_to_MiddleGP"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Launch Setpoint"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootingSequence"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "RunIntake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "MiddleGP_to_BottomGP"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Launch Setpoint"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootingSequence"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "RunIntake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BottomGP_to_GP5"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.7
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "GP5_to_HomeLine"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunIntake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Top_to_TopGP"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "LowShot Setpoint"
+            "name": "Launch Setpoint"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "ShootingSequence"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.7
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunIntake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "TopGP_to_MiddleGP"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Launch Setpoint"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootingSequence"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.8
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunIntake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "MiddleGP_to_BottomGP"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Launch Setpoint"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootingSequence"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.8
           }
         }
       ]

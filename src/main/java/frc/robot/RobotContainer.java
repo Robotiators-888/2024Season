@@ -5,26 +5,16 @@
 package frc.robot;
 
 import frc.robot.Constants.*;
-import frc.robot.commands.CMD_AbsoluteDriveToTarget;
 import frc.robot.commands.CMD_AimOnDist;
-import frc.robot.commands.CMD_AimOnDistRel;
-import frc.robot.commands.CMD_RelativeDriveToTarget;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Shooter;
 import frc.robot.subsystems.SUB_Intake;
 import frc.robot.subsystems.SUB_Pivot;
-import frc.robot.utils.AutoGenerator;
+import frc.robot.utils.AutoSelector;
 import frc.robot.subsystems.SUB_Limelight;
 
-import java.sql.Driver;
-import java.util.Optional;
-
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -51,7 +41,7 @@ public class RobotContainer {
    public static SUB_Intake intake = new SUB_Intake();
    public static SUB_Pivot pivot = new SUB_Pivot();
    public static SUB_Limelight limelight = new SUB_Limelight();
-   public static AutoGenerator autos = new AutoGenerator(drivetrain, index, intake, shooter, pivot);
+   public static AutoSelector autoSelector = new AutoSelector(drivetrain, index, intake, shooter, pivot);
 
   
 
@@ -210,7 +200,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autos.getSelectedAuto();
+    return autoSelector.getSelected();
   }
 
   public void robotPeriodic(){

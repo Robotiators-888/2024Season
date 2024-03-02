@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SUB_Drivetrain;
+
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -32,8 +34,9 @@ public class PathPlannerBase {
       }, drivetrain);
   }
 
-  public PathPlannerPath getPath(String pathName){
-    return PathPlannerPath.fromPathFile(pathName);
+  public static Command followTrajectory(String PathName){
+    PathPlannerPath path = PathPlannerPath.fromPathFile(PathName);
+    return AutoBuilder.followPath(path);
   }
 
   

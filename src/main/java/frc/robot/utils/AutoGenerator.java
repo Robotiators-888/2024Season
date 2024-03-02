@@ -1,31 +1,20 @@
 package frc.robot.utils;
 
-import java.time.Instant;
-
-import com.fasterxml.jackson.core.sym.Name;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import frc.robot.Constants;
-import frc.robot.commands.Autos.CMD_Intake;
-import frc.robot.commands.Autos.CMD_Shoot;
-import frc.robot.commands.Autos.CMD_ShootSEQ;
+import frc.robot.commands.CMD_Shoot;
+import frc.robot.commands.CMD_ShootSEQ;
 //import frc.robot.RobotManager;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
@@ -43,7 +32,6 @@ public class AutoGenerator {
   SUB_Pivot pivot;
   SUB_Limelight limelight;
 
-  private SendableChooser<Command> chooser = new SendableChooser<>();
   
   public AutoGenerator(SUB_Drivetrain drivetrain, SUB_Index index, SUB_Intake intake, SUB_Shooter shooter, SUB_Pivot pivot) {
     this.drivetrain = drivetrain;
@@ -64,8 +52,7 @@ public class AutoGenerator {
 
     registerAllCommands();
    
-    chooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Selector", chooser);
+    
   }
 
   // ====================================================================
@@ -78,22 +65,21 @@ public class AutoGenerator {
   //                          Routines
   // ====================================================================
   
+    public Command resetOdometry(Pose2d pose){
+      return new InstantCommand(
+        () -> drivetrain.resetOdometry(pose)
+      );
+    }
+
+
   //TODO: Test SEQ
     public Command scoringSequence(){
-      return shooter.run(()->shooter.setRPM(4000))
+      return new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter)
       .until(()->shooter.getFlywheelRPM() >= 3500)
-      .andThen(index.run(()->{index.setMotorSpeed(0.75);}).withTimeout(0.5));
+      .andThen(new RunCommand(()->index.setMotorSpeed(0.5)).withTimeout(0.1))
+      .andThen(new InstantCommand(()->index.setMotorSpeed(0)));
     }
 
-    public Command shoot(){
-      Command shooting = Commands.parallel(
-        shooter.run(()->shooter.shootFlywheelOnRPM(4000)),
-        Commands.waitUntil(()->shooter.getFlywheelRPM() >= 3500)
-      );
-      shooting.handleInterrupt(()->index.run(()->index.setMotorSpeed(0.75)).withTimeout(0.5).andThen(()->shooter.shootFlywheelOnRPM(0)));
-
-      return shooting;
-    }
 
     //TODO: Test CMD
     public Command runIntake(){
@@ -127,7 +113,7 @@ public class AutoGenerator {
     public Command dumpAuto(){
       return new ParallelCommandGroup(
         setPivotSetpoint(Constants.Pivot.kAmpAngleSP), 
-        new CMD_Shoot(shooter, index)
+        new CMD_Shoot(shooter, index, drivetrain, intake, pivot)
         );
     }
 
@@ -137,12 +123,7 @@ public class AutoGenerator {
 
   
 
-  /**
-   * @return Returns chosen auto on Smartdashboard
-   */
-    public Command getSelectedAuto() {
-      return chooser.getSelected();
-    }
+  
 
   // ====================================================================
   //                          Helpers
@@ -150,12 +131,12 @@ public class AutoGenerator {
 
   public void registerAllCommands(){
     NamedCommands.registerCommand("RunIntake", runIntake());
-    NamedCommands.registerCommand("ScoringSequence", new CMD_Shoot(shooter, index));
+    NamedCommands.registerCommand("ScoringSequence", new CMD_Shoot(shooter, index, drivetrain, intake, pivot));
     NamedCommands.registerCommand("StopIntake", stopIntake());
     NamedCommands.registerCommand("StopAll", stopAll());
-    NamedCommands.registerCommand("Amp Setpoint", setPivotSetpoint(Constants.Pivot.kAmpAngleSP));
+    NamedCommands.registerCommand("Amp Setpoint", setPivotSetpoint(Constants.Pivot.kAmpAngleSP+5));
     NamedCommands.registerCommand("Launch Setpoint", setPivotSetpoint(Constants.Pivot.kLowMidAngleSP));
-    NamedCommands.registerCommand("LowShot Setpoint", setPivotSetpoint(Constants.Pivot.kLowAngleSP));
+    NamedCommands.registerCommand("LowShot Setpoint", setPivotSetpoint(Constants.Pivot.kLowAngleSP-10));
     NamedCommands.registerCommand("DumpAuto", new CMD_ShootSEQ(shooter, index, pivot));
   }
 

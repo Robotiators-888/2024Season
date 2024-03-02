@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7511871911042578,
-      "y": 6.505757269117401
+      "x": 0.765872873427322,
+      "y": 6.535128633763529
     },
-    "rotation": -122.2756443145777
+    "rotation": -120.65066795705285
   },
   "command": {
     "type": "sequential",
@@ -26,7 +26,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.7
+            "waitTime": 0.45
           }
         },
         {
@@ -65,47 +65,10 @@
           "data": {
             "waitTime": 1.5
           }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "RunIntake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "TopGP_to_MiddleGP"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Launch Setpoint"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootingSequence"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.7
-          }
         }
       ]
     }
   },
-  "folder": "3 Piece",
+  "folder": "2 Piece",
   "choreoAuto": false
 }

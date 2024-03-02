@@ -2,53 +2,51 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Autos;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.Pivot;
+import frc.robot.Constants;
 import frc.robot.subsystems.SUB_Index;
-import frc.robot.subsystems.SUB_Pivot;
-import frc.robot.subsystems.SUB_Shooter;
+import frc.robot.subsystems.SUB_Intake;
 
-public class CMD_ShootSEQ extends Command {
-  SUB_Shooter shooter;
-  SUB_Index index;
-  SUB_Pivot pivot;
-  
+public class CMD_Intake extends Command {
+  private SUB_Intake intake;
+  private SUB_Index index;
 
-  /** Creates a new CMD_Shoot. */
-  public CMD_ShootSEQ(SUB_Shooter shooter, SUB_Index index, SUB_Pivot pivot) {
-    this.shooter = shooter;
+  /** Creates a new CMD_Intake. */
+  public CMD_Intake(SUB_Intake intake, SUB_Index index) {
+    this.intake = intake;
     this.index = index;
-    this.pivot = pivot;
+    addRequirements(intake, index);
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter, index, pivot);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    pivot.setPivotSetpoint(Pivot.kAmpAngleSP);
-    shooter.shootFlywheelOnRPM(4000);
-    
+    index.setMotorSpeed(Constants.Intake.kIndexSpeed);
+    intake.setMotorSpeed(Constants.Intake.kIntakingSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(shooter.getFlywheelRPM() >= 3500){
-      index.setMotorSpeed(0.75);
-      Timer.delay(0.5);
-      end(false);
+    if(index.getTopBannerSensor()){
+      index.setMotorSpeed(0.1);
+      Timer.delay(0.1);
+      end(true);
+    }else{
+      index.setMotorSpeed(Constants.Intake.kIndexSpeed);
+      intake.setMotorSpeed(Constants.Intake.kIntakingSpeed);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.setMotorSpeed(0);
     index.setMotorSpeed(0);
+    intake.setMotorSpeed(0);
   }
 
   // Returns true when the command should end.

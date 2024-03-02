@@ -72,7 +72,7 @@ public class SUB_Pivot extends SubsystemBase {
         pivotPID.setOutputRange(-0.2, 0.2);
         pivotSetpoint = khome;
         
-        setPIDF(pivotPID, 0.013, 0, 0.001, 0);
+        setPIDF(pivotPID, 0.010, 0, 0.012, 0);
 
         pivotTimer = new Timer();
         pivotTimer.start();

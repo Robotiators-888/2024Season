@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2798717547345657,
-      "y": 5.507130871149041
+      "x": 1.2211290254423093,
+      "y": 5.565873600441298
     },
     "rotation": 180.0
   },
@@ -18,40 +18,9 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ShootingSequence"
-          }
-        },
-        {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "RunIntake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "2P_Middle"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Launch Setpoint"
+            "waitTime": 0.35
           }
         },
         {
@@ -64,6 +33,31 @@
           "type": "wait",
           "data": {
             "waitTime": 1.0
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "2P_Middle"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootingSequence"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.25
           }
         }
       ]
