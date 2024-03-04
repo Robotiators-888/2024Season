@@ -149,6 +149,8 @@ public class SUB_Drivetrain extends SubsystemBase {
           backRight.getPosition()
         },
         pose);
+
+        this.pose = pose;
   }
 
   /**
@@ -318,7 +320,6 @@ public Rotation2d getRotation2d(){
   }
 
   public Pose2d getPose2d(){
-    m_poseEstimator.resetPosition(navx.getRotation2d(), getPositions(), auto_odometry.getPoseMeters());
     return auto_odometry.getPoseMeters();
   }
 
