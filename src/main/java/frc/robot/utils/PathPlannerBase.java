@@ -17,7 +17,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 public class PathPlannerBase {
 
   static final SUB_Drivetrain drivetrain = RobotContainer.drivetrain;
-  static final PathConstraints constraints = new PathConstraints(1, 1, 1, 1);
+  static final PathConstraints constraints = new PathConstraints(.5, 1, 1, 1);
 
   public Command followPathCommand(String pathName){
     PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);

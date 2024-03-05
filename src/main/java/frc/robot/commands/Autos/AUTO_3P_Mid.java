@@ -15,7 +15,7 @@ import frc.robot.utils.AutoGenerator;
 import frc.robot.utils.PathPlannerBase;
 
 /** Add your docs here. */
-public class AUTO_2P_Mid extends AutoPaths{
+public class AUTO_3P_Mid extends AutoPaths{
 
     @Override
     public Command load(AutoGenerator autos) {
