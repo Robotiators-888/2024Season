@@ -137,14 +137,16 @@ public class RobotContainer {
         SUB_Shooter.MANUAL_RPM += 250
     )); // Increase manual RPM by 100
 
+
+    CMD_AimOnDist aimCommand = new CMD_AimOnDist(pivot, limelight, drivetrain);
     Driver2.b().whileTrue(
         new ParallelCommandGroup(
           new ParallelCommandGroup(
             new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
-            new CMD_AimOnDist(pivot, limelight, drivetrain)
+            aimCommand
           ),
           new SequentialCommandGroup(
-            new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500),
+            new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500 && aimCommand.isFinished()),
             new RunCommand(()->index.setMotorSpeed(0.5), index)
           )
         )

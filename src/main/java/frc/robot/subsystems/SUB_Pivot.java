@@ -94,13 +94,13 @@ public class SUB_Pivot extends SubsystemBase {
         distToPivotAngle.put(Units.inchesToMeters(9*12 +13), 33.0);
 
         // Extrapolated from lin reg on previous ^ data
-        distToPivotAngle.put(Units.inchesToMeters(10*12 +13), 26.47);
-        distToPivotAngle.put(Units.inchesToMeters(11*12 +13), 21.86);
-        distToPivotAngle.put(Units.inchesToMeters(12*12 +13), 17.25);
-        distToPivotAngle.put(Units.inchesToMeters(13*12 +13), -4.61*13 +72.57);
-        distToPivotAngle.put(Units.inchesToMeters(14*12 +13), -4.61*14 +72.57);
-        distToPivotAngle.put(Units.inchesToMeters(15*12 +13), -4.61*15 +72.57);
-        distToPivotAngle.put(Units.inchesToMeters(16*12 +13), -4.61*16 +72.57);
+        distToPivotAngle.put(Units.inchesToMeters(10*12 +13), 29.5);
+        distToPivotAngle.put(Units.inchesToMeters(11*12 +13), 26.0);
+        distToPivotAngle.put(Units.inchesToMeters(12*12 +13), 23.5);
+        // distToPivotAngle.put(Units.inchesToMeters(13*12 +13), -4.61*13 +72.57);
+        // distToPivotAngle.put(Units.inchesToMeters(14*12 +13), -4.61*14 +72.57);
+        // distToPivotAngle.put(Units.inchesToMeters(15*12 +13), -4.61*15 +72.57);
+        // distToPivotAngle.put(Units.inchesToMeters(16*12 +13), -4.61*16 +72.57);
       
         //Timer.delay(0.2);
         pivotMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);

@@ -67,7 +67,7 @@ public class CMD_AimOnDist extends Command {
     yError = tagPose.getY() - currentPose.getY();
     angle = Math.atan2(yError, xError); // x and y are not flipped???
 
-    robotAngleController.setTolerance(0.05);
+    robotAngleController.setTolerance(0.07);
     robotAngleController.setSetpoint(angle);
 
   }
