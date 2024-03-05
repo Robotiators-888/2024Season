@@ -1,0 +1,58 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.086210680471451,
+        "y": 5.53650223579517
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.138229004809137,
+        "y": 5.66762813240929
+      },
+      "isLocked": false,
+      "linkedName": "MiddleHomeGamePiece"
+    },
+    {
+      "anchor": {
+        "x": 2.891391838763322,
+        "y": 4.094203811817293
+      },
+      "prevControl": {
+        "x": 2.8363450321206702,
+        "y": 4.5574741683291204
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "BottomGP_Sideways"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 90.10796569970258,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 92.03724966215539,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "3 Piece Path",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.891391838763322,
+        "y": 4.094203811817293
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.592890215436422,
+        "y": 4.031611764291145
+      },
+      "isLocked": false,
+      "linkedName": "BottomGP_Sideways"
+    },
+    {
+      "anchor": {
+        "x": 2.5052464814300928,
+        "y": 4.5087832049922705
+      },
+      "prevControl": {
+        "x": 2.6123666007711623,
+        "y": 3.973182608286926
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 154.9831065219,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "3 Piece Path",
+  "previewStartingState": {
+    "rotation": 90.75431261471942,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}
