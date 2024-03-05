@@ -115,7 +115,7 @@ public class RobotContainer {
         )
     ).onFalse(
       new ParallelCommandGroup(
-        new InstantCommand(()->intake.setMotorSpeed(0))
+        new InstantCommand(()->index.setMotorSpeed(0))
     )
     ); // Spin Shooter OUT
 
