@@ -9,6 +9,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.*;
 import frc.robot.utils.AutoGenerator;
 import frc.robot.utils.PathPlannerBase;
@@ -31,6 +32,7 @@ public class AUTO_2P_Mid extends AutoPaths{
                 PathPlannerBase.followTrajectory(p1Name)
             ),
             autos.setPivotSetpoint(Pivot.kLowAngleSP),
+            new WaitCommand(1.5),
             autos.scoringSequence()
         );
     }

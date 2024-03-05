@@ -17,12 +17,13 @@ import com.pathplanner.lib.util.ReplanningConfig;
 public class PathPlannerBase {
 
   static final SUB_Drivetrain drivetrain = RobotContainer.drivetrain;
-  static final PathConstraints constraints = new PathConstraints(2, 2, 2, 2);
+  static final PathConstraints constraints = new PathConstraints(1, 1, 1, 1);
 
   public Command followPathCommand(String pathName){
     PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
 
-    return AutoBuilder.followPath(path);
+
+    return AutoBuilder.pathfindThenFollowPath(path, constraints);
     //drivetrain::getPose, drivetrain::resetPose, drivetrain::getChassisSpeeds, drivetrain::driveRobotRelative,
     // return new FollowPathHolonomic(path, drivetrain::getPose, drivetrain::getChassisSpeeds, drivetrain::driveRobotRelative, 
     //   new HolonomicPathFollowerConfig(Constants.Drivetrain.kMaxModuleSpeed, Constants.Drivetrain.kTrackRadius, new ReplanningConfig())
@@ -37,7 +38,7 @@ public class PathPlannerBase {
 
   public static Command followTrajectory(String PathName){
     PathPlannerPath path = PathPlannerPath.fromPathFile(PathName);
-    return AutoBuilder.followPath(path);
+    return AutoBuilder.pathfindThenFollowPath(path, constraints);
   }
 
   

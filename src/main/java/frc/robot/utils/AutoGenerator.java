@@ -2,6 +2,7 @@ package frc.robot.utils;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
@@ -50,6 +51,7 @@ public class AutoGenerator {
                     return false;
     }, drivetrain);
 
+
     registerAllCommands();
    
     
@@ -84,9 +86,13 @@ public class AutoGenerator {
     public Command runIntake(){
       return new ParallelCommandGroup(
         new InstantCommand(()->pivot.goToAngle(75)),
-        new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed)),
-        new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(()->index.getTopBannerSensor()).andThen(
-        new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
+        new InstantCommand(()->index.starttimer()),
+        new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
+        new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
+          ()->index.CurrentLimitSpike()).andThen(
+        new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025).andThen(new ParallelCommandGroup(
+          new InstantCommand(()->index.setMotorSpeed(0)),
+          new InstantCommand(()->intake.setMotorSpeed(0))))
       );
     }
 

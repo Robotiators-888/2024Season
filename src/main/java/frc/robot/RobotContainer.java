@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.*;
 import frc.robot.commands.CMD_AimOnDist;
+import frc.robot.commands.CMD_Intake;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Shooter;
@@ -135,30 +136,37 @@ public class RobotContainer {
     
     Driver2.rightTrigger().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
      
-    // Driver2.a().whileTrue(
-    // new ParallelCommandGroup(
-    //   new InstantCommand(()->pivot.goToAngle(75)),
-    //   new InstantCommand(()->index.starttimer()),
-    //   new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
-    //   new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
-    //     ()->index.CurrentLimitSpike()).andThen(
-    //   new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
-    // ))
     Driver2.a().whileTrue(
+    new ParallelCommandGroup(
+      new InstantCommand(()->pivot.goToAngle(75)),
+      new InstantCommand(()->index.starttimer()),
+      new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
+      new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
+        ()->index.CurrentLimitSpike()).andThen(
+      new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
+    )).onFalse(
       new ParallelCommandGroup(
-        new InstantCommand(()->pivot.goToAngle(Pivot.kLowMidAngleSP)),
-        new RunCommand(()->shooter.setMotorSpeed(0), shooter),
-        new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
-        new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))
-        .until(()->index.getTopBannerSensor())
-        .andThen(new ParallelCommandGroup(
-          new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.1)
-        ))
-    )).onFalse(new ParallelCommandGroup(
+        new InstantCommand(()->index.setMotorSpeed(0)),
+        new InstantCommand(()->intake.setMotorSpeed(0))
+    ));
 
-      new InstantCommand(()->index.setMotorSpeed(0)),
-      new InstantCommand(()->intake.setMotorSpeed(0))
-    )); // Suspicious if it will work or not, if it doesn't, just put onTrue();
+    // Driver2.a().whileTrue(
+    //   new ParallelCommandGroup(
+    //     new InstantCommand(()->pivot.goToAngle(Pivot.kLowMidAngleSP)),
+    //     new RunCommand(()->shooter.setMotorSpeed(0), shooter),
+    //     new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
+    //     new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))
+    //     .until(()->index.getTopBannerSensor())
+    //     .andThen(new ParallelCommandGroup(
+    //       new RunCommand(()->index.setMotorSpeed(0.0))
+    //     ))
+    // )).onFalse(new ParallelCommandGroup(
+
+    //   new InstantCommand(()->index.setMotorSpeed(0)),
+    //   new InstantCommand(()->intake.setMotorSpeed(0))
+    // )); // Suspicious if it will work or not, if it doesn't, just put onTrue();
+
+    
 
     // Driver2.x().whileTrue((new RunCommand(()->index.setMotorSpeed(-0.25), index))); //Drive Index OUT
 
