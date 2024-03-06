@@ -24,11 +24,15 @@ public class AutoSelector {
         autos = new AutoGenerator(drivetrain, index, intake, shooter, pivot);
 
         chooser.setDefaultOption("1P_Stay", new AUTO_JustShoot());
-        chooser.addOption("2P_Middle", new AUTO_2P_Mid());
         chooser.addOption("2P_Top", new AUTO_2P_Top());
+        chooser.addOption("2P_Middle", new AUTO_2P_Mid());
+
         chooser.addOption("3P_Top", new AUTO_3P_Top());
-        chooser.addOption("4P_Top", new AUTO_4P_Top());
         chooser.addOption("3P_Middle", new AUTO_3P_Mid());
+        chooser.addOption("3P_Bottom", new AUTO_3P_Bottom());
+        
+        chooser.addOption("4P_Top", new AUTO_4P_Top());
+        
 
 
         SmartDashboard.putData("Auto Selector", chooser);
