@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.commands.AutoActions.CMD_Shoot;
 import frc.robot.commands.AutoActions.CMD_ShootSEQ;
@@ -82,16 +83,10 @@ public class AutoGenerator {
       .andThen(new InstantCommand(()->index.setMotorSpeed(0)));
     }
 
-    public Command scoringSequenceClose(){
-      return new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter)
-      .until(()->shooter.getFlywheelRPM() >= 2000)
-      .andThen(new RunCommand(()->index.setMotorSpeed(0.5)).withTimeout(0.25))
-      .andThen(new InstantCommand(()->index.setMotorSpeed(0)));
-    }
-
     public Command scoringSequence(double setpoint, int rpm){
       return new SequentialCommandGroup(
         new InstantCommand(()->pivot.goToAngle(setpoint)),
+        new WaitCommand(.25),
         new RunCommand(()->shooter.shootFlywheelOnRPM(rpm), shooter)
       .until(()->shooter.getFlywheelRPM() >= rpm - 500)
       .andThen(new RunCommand(()->index.setMotorSpeed(0.5)).withTimeout(0.25))
@@ -142,7 +137,7 @@ public class AutoGenerator {
 
     public Command dumpAuto(){
       return new ParallelCommandGroup(
-        setPivotSetpoint(Constants.Pivot.kAmpAngleSP), 
+        setPivotSetpoint(Constants.Pivot.kSpeakerAngleSP), 
         new CMD_Shoot(shooter, index, drivetrain, intake, pivot)
         );
     }
@@ -164,7 +159,7 @@ public class AutoGenerator {
     NamedCommands.registerCommand("ScoringSequence", new CMD_Shoot(shooter, index, drivetrain, intake, pivot));
     NamedCommands.registerCommand("StopIntake", stopIntake());
     NamedCommands.registerCommand("StopAll", stopAll());
-    NamedCommands.registerCommand("Amp Setpoint", setPivotSetpoint(Constants.Pivot.kAmpAngleSP+5));
+    NamedCommands.registerCommand("Amp Setpoint", setPivotSetpoint(Constants.Pivot.kSpeakerAngleSP+5));
     NamedCommands.registerCommand("Launch Setpoint", setPivotSetpoint(Constants.Pivot.kLowMidAngleSP));
     NamedCommands.registerCommand("LowShot Setpoint", setPivotSetpoint(Constants.Pivot.kLowAngleSP-10));
     NamedCommands.registerCommand("DumpAuto", new CMD_ShootSEQ(shooter, index, pivot));

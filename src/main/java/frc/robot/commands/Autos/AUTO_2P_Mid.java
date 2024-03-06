@@ -8,11 +8,8 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.*;
 import frc.robot.utils.AutoGenerator;
-import frc.robot.utils.PathPlannerBase;
 
 /** Add your docs here. */
 public class AUTO_2P_Mid extends AutoPaths{
@@ -24,16 +21,10 @@ public class AUTO_2P_Mid extends AutoPaths{
 
         // TODO Auto-generated method stub
         return Commands.sequence(
-            autos.setPivotSetpoint(Pivot.kAmpAngleSP),
-            autos.scoringSequence(),
+            autos.scoringSequence(Pivot.kSpeakerAngleSP, 2500),
             autos.resetOdometry(p1.getPreviewStartingHolonomicPose()),
-            new ParallelCommandGroup(
-                autos.runIntake(),
-                PathPlannerBase.followTrajectory(p1Name)
-            ),
-            autos.setPivotSetpoint(55),
-            new WaitCommand(.75),
-            autos.scoringSequence()
+            autos.pathIntake(p1Name),
+            autos.scoringSequence(Pivot.kSpeakerAngleSP, 4000)
         );
     }
     

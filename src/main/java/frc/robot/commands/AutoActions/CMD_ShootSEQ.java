@@ -29,7 +29,7 @@ public class CMD_ShootSEQ extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    pivot.setPivotSetpoint(Pivot.kAmpAngleSP);
+    pivot.setPivotSetpoint(Pivot.kSpeakerAngleSP);
     shooter.shootFlywheelOnRPM(4000);
     
   }

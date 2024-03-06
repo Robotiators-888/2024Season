@@ -15,8 +15,7 @@ public class AUTO_JustShoot extends AutoPaths {
     @Override
     public Command load(AutoGenerator autos) {
         return Commands.sequence(
-            autos.setPivotSetpoint(Pivot.kAmpAngleSP),
-            autos.scoringSequence()
+            autos.scoringSequence(Pivot.kSpeakerAngleSP, 2500)
         );
 
     }

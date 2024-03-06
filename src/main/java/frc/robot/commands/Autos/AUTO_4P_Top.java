@@ -8,10 +8,8 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants.*;
 import frc.robot.utils.AutoGenerator;
-import frc.robot.utils.PathPlannerBase;
 
 /** Add your docs here. */
 public class AUTO_4P_Top extends AutoPaths{
@@ -24,27 +22,17 @@ public class AUTO_4P_Top extends AutoPaths{
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
 
         return Commands.sequence(
-            autos.setPivotSetpoint(Pivot.kAmpAngleSP),
-            autos.scoringSequenceClose(),
+            autos.scoringSequence(Pivot.kSpeakerAngleSP,2500),
             autos.resetOdometry(p1.getPreviewStartingHolonomicPose()),
-            new ParallelCommandGroup(
-                autos.runIntake(),
-                PathPlannerBase.followTrajectory(p1Name)
-            ),
-            autos.setPivotSetpoint(Pivot.kLowAngleSP),
-            autos.scoringSequence(),
-            new ParallelCommandGroup(
-                autos.runIntake(),
-                PathPlannerBase.followTrajectory(p2Name)
-            ),
-            autos.setPivotSetpoint(Pivot.kLowAngleSP),
-            autos.scoringSequence(),
-            new ParallelCommandGroup(
-                autos.runIntake(),
-                PathPlannerBase.followTrajectory(p3Name)
-            ),
-            autos.setPivotSetpoint(Pivot.kLowAngleSP),
-            autos.scoringSequence()
+
+            autos.pathIntake(p1Name),
+            autos.scoringSequence(Pivot.kLowAngleSP,4000),
+
+            autos.pathIntake(p2Name),
+            autos.scoringSequence(Pivot.kLowAngleSP, 4000),
+
+            autos.pathIntake(p3Name),
+            autos.scoringSequence(Pivot.kLowAngleSP, 4000)
         );
     }
     

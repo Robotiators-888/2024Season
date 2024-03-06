@@ -23,7 +23,7 @@ public class AUTO_Silly_BelineSecond extends AutoPaths{
 
         // TODO Auto-generated method stub
         return new SequentialCommandGroup(
-            autos.scoringSequence(Pivot.kAmpAngleSP, 2500),
+            autos.scoringSequence(Pivot.kSpeakerAngleSP, 2500),
             autos.resetOdometry(p1.getPreviewStartingHolonomicPose()),
             autos.pathIntake(p1Name),
             autos.pathIntake(p2Name),

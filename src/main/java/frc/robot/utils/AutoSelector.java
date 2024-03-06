@@ -29,7 +29,7 @@ public class AutoSelector {
 
         chooser.addOption("3P_Top", new AUTO_3P_Top());
         chooser.addOption("3P_Middle", new AUTO_3P_Mid());
-        chooser.addOption("3P_Bottom", new AUTO_3P_Bottom());
+        // chooser.addOption("3P_Bottom", new AUTO_3P_Bottom());
         
         chooser.addOption("4P_Top", new AUTO_4P_Top());
         
