@@ -4,6 +4,8 @@
 
 package frc.robot.commands.Autos;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.Pivot;
@@ -11,6 +13,7 @@ import frc.robot.utils.AutoGenerator;
 
 /** Add your docs here. */
 public class AUTO_JustShoot extends AutoPaths {
+    
 
     @Override
     public Command load(AutoGenerator autos) {

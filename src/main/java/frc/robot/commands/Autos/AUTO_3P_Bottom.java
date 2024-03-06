@@ -5,6 +5,9 @@
 package frc.robot.commands.Autos;
 
 import com.pathplanner.lib.path.PathPlannerPath;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.*;
@@ -19,10 +22,20 @@ public class AUTO_3P_Bottom extends AutoPaths{
         String p2Name = "BottomScore_to_MiddleGP";
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
 
+        var alliance = DriverStation.getAlliance();
+    
+        Pose2d startingPose = null;
+        if (alliance.isPresent()) {
+            if (alliance.get() == DriverStation.Alliance.Red){
+                startingPose = p1.flipPath().getPreviewStartingHolonomicPose();
+            } else {
+                startingPose = p1.getPreviewStartingHolonomicPose();
+            }
+        } 
         return Commands.sequence(
             autos.scoringSequence(Pivot.kSpeakerAngleSP,2500),
 
-            autos.resetOdometry(p1.getPreviewStartingHolonomicPose()),
+            autos.resetOdometry(startingPose),
             autos.pathIntake(p1Name),
             autos.scoringSequence(Pivot.kLowAngleSP,4000),
 
