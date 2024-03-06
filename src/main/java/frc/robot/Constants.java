@@ -49,7 +49,7 @@ public final class Constants {
 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-    public static final double kWheelDiameterMeters = 0.0762;
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(2.88);
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
     // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the
     // bevel pinion
@@ -133,7 +133,7 @@ public final class Constants {
     // Distance between centers of right and left wheels on robot
     public static final double kWheelBase = Units.inchesToMeters(31);
 
-    public static final double kTrackRadius = Units.inchesToMeters(19.6);
+    public static final double kTrackRadius = Units.inchesToMeters(19.6 * Math.sqrt(2)/2);
     public static final double kMaxModuleSpeed = Units.feetToMeters(15);
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics =
@@ -156,8 +156,8 @@ public final class Constants {
 
     public static final class Intake{
       public static final int kINTAKE_MOTOR_CANID = 34;
-  
-      public static final double kIndexSpeed = 0.5;
+
+      public static final double kIndexSpeed = 0.3;
       public static final double kOutakeSpeed = -0.5;
       public static final double kOutakeRPM = NeoMotorConstants.kFreeSpeedRpm;
       public static final double kIntakingSpeed = 0.35;
@@ -172,9 +172,11 @@ public final class Constants {
       //Setpoints:
       public static double khome = 0;
 
+      public static final double kPivotOffset = 301.86600029468536;
+
       public static final double kAngularEncoderOffsetInDeg = 0;
       public static final double kMaxArmAngle = 106;
-      public static final double kMinArmAngle = 51.8;
+      public static final double kMinArmAngle = 49.8;
       //
       public static final double PID_kP = 0.11425;
       public static final int PID_kI = 0;
@@ -192,10 +194,11 @@ public final class Constants {
       public static final double kmaxAcceleration = 4.27;
 
       public static final double kHighAngleSP = 105.0;
-      public static final double kAmpAngleSP = 90.0;
+      public static final double kSpeakerAngleSP = 90.0;
       public static final double kSideSP = 87;
       public static final double kLowMidAngleSP = 75.0;
-      public static final double kLowAngleSP = 65.0;
+      public static final double kLowAngleSP = 55;
+
 
 
         

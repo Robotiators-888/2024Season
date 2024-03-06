@@ -21,7 +21,7 @@ public class SUB_Index extends SubsystemBase {
   Timer currentTimer = new Timer();
 
   public boolean getTopBannerSensor(){
-    return !dio9.get();
+    return dio9.get();
   }
 
   public void starttimer(){
@@ -68,6 +68,7 @@ public class SUB_Index extends SubsystemBase {
   }
 
   public void setMotorSpeed(double speed){
+    
     indexLeft.set(speed);
   }
 }

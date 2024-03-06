@@ -66,6 +66,10 @@ public class SUB_Drivetrain extends SubsystemBase {
     navx.setAngleAdjustment(Constants.Drivetrain.kGyroRotation);
   }
 
+  public double getAngle(){
+    return -navx.getAngle();
+  }
+
   
 
   // Slew rate filter variables for controlling lateral acceleration
@@ -83,7 +87,7 @@ public class SUB_Drivetrain extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
           Constants.Drivetrain.kDriveKinematics,
-          Rotation2d.fromDegrees(-navx.getAngle()),
+          Rotation2d.fromDegrees(getAngle()),
           new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
@@ -108,7 +112,7 @@ public class SUB_Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     m_poseEstimator.update(
-        Rotation2d.fromDegrees(-navx.getAngle()),
+        Rotation2d.fromDegrees(getAngle()),
         new SwerveModulePosition[] {
           frontLeft.getPosition(),
           frontRight.getPosition(),
@@ -153,7 +157,7 @@ public class SUB_Drivetrain extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     m_poseEstimator.resetPosition(
-        Rotation2d.fromDegrees(navx.getAngle()),
+        Rotation2d.fromDegrees(getAngle()),
         new SwerveModulePosition[] {
           frontLeft.getPosition(),
           frontRight.getPosition(),
@@ -161,6 +165,8 @@ public class SUB_Drivetrain extends SubsystemBase {
           backRight.getPosition()
         },
         pose);
+
+        this.pose = pose;
   }
 
   /**
@@ -241,7 +247,7 @@ public class SUB_Drivetrain extends SubsystemBase {
                     xSpeedDelivered,
                     ySpeedDelivered,
                     rotDelivered,
-                    Rotation2d.fromDegrees(-navx.getAngle()))
+                    Rotation2d.fromDegrees(getAngle()))
                 : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, Constants.Drivetrain.kMaxSpeedMetersPerSecond);
@@ -292,11 +298,11 @@ public class SUB_Drivetrain extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    return Rotation2d.fromDegrees(-navx.getAngle()).getDegrees();
+    return Rotation2d.fromDegrees(getAngle()).getDegrees();
   }
 
 public Rotation2d getRotation2d(){
-  return Rotation2d.fromDegrees(-navx.getAngle());
+  return Rotation2d.fromDegrees(getAngle());
 }
 
   /**
@@ -330,7 +336,6 @@ public Rotation2d getRotation2d(){
   }
 
   public Pose2d getPose2d(){
-    m_poseEstimator.resetPosition(navx.getRotation2d(), getPositions(), auto_odometry.getPoseMeters());
     return auto_odometry.getPoseMeters();
   }
 

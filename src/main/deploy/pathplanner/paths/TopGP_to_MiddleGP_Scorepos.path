@@ -3,57 +3,57 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.6249575857930348,
-        "y": 4.438868928628442
+        "x": 2.9122806337215734,
+        "y": 6.997746311014251
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4291761916857175,
-        "y": 4.1777589916502995
+        "x": 2.9119816885343353,
+        "y": 6.641515752271834
       },
       "isLocked": false,
-      "linkedName": "BottomRobotStart"
+      "linkedName": "TopHomeGamePiece"
     },
     {
       "anchor": {
-        "x": 2.891391838763322,
-        "y": 4.094203811817293
+        "x": 2.9122806337215734,
+        "y": 5.453387893727152
       },
       "prevControl": {
-        "x": 2.9443724298048326,
-        "y": 4.002133197830431
+        "x": 2.922725031200699,
+        "y": 5.641387048351416
       },
       "nextControl": {
-        "x": 2.747457368394055,
-        "y": 4.3443356959706625
+        "x": 2.894283416129153,
+        "y": 5.129437977063588
       },
       "isLocked": false,
-      "linkedName": "BottomGP"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.767431325616909,
-        "y": 4.683892968759174
+        "x": 2.9122806337215734,
+        "y": 5.453387893727152
       },
       "prevControl": {
-        "x": 2.7886025132914165,
-        "y": 4.498446006696998
+        "x": 2.9142505734596296,
+        "y": 5.45677024308872
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BottomGP_Scorepose"
+      "linkedName": "ScorePosMiddle"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": -178.95700825399635,
-      "rotateFast": false
+      "rotationDegrees": 90.00000000059681,
+      "rotateFast": true
     },
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 178.06518042264284,
-      "rotateFast": false
+      "waypointRelativePos": 0.25,
+      "rotationDegrees": 91.2616231312735,
+      "rotateFast": true
     }
   ],
   "constraintZones": [],
@@ -66,13 +66,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 165.9637565320737,
-    "rotateFast": false
+    "rotation": 180.0,
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "3 Piece Path",
   "previewStartingState": {
-    "rotation": 120.0,
+    "rotation": 37.155813241131746,
     "velocity": 0
   },
   "useDefaultConstraints": true
