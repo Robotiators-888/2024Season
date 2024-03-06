@@ -51,7 +51,12 @@ public class SUB_Drivetrain extends SubsystemBase {
   
     private MAXSwerveModule[] modules = new MAXSwerveModule[]{frontLeft, frontRight, backLeft, backRight};
     private SwerveModuleState[] moduleStates = getModuleStates();
+
   public AprilTagFieldLayout at_field;
+
+  private FieldRelativeSpeed m_fieldRelVel = new FieldRelativeSpeed();
+  private FieldRelativeSpeed m_lastFieldRelVel = new FieldRelativeSpeed();
+  private FieldRelativeAccel m_fieldRelAccel = new FieldRelativeAccel();;
 
 
   AHRS navx = new AHRS();
@@ -114,6 +119,13 @@ public class SUB_Drivetrain extends SubsystemBase {
     modules = new MAXSwerveModule[]{frontLeft, frontRight, backLeft, backRight};
 
     m_field.setRobotPose(getPose());
+
+    m_fieldRelVel = new FieldRelativeSpeed(Constants.Drivetrain.kDriveKinematics.toChassisSpeeds(
+      frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState()
+    ), navx.getRotation2d());
+    m_fieldRelAccel = new FieldRelativeAccel(m_fieldRelVel, m_lastFieldRelVel, 0.02);
+    m_lastFieldRelVel = m_fieldRelVel;
+
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("rotation", getPose().getRotation().getDegrees());
     //SmartDashboard.putNumber("Speed", m_poseEstimator);
@@ -345,6 +357,14 @@ public Rotation2d getRotation2d(){
    */
   public void addVisionMeasurement(Pose2d visionPose, double latency){
     m_poseEstimator.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latency);
+  }
+
+  public FieldRelativeSpeed getFieldRelativeSpeed() {
+    return m_fieldRelVel;
+  }
+
+  public FieldRelativeAccel getFieldRelativeAccel() {
+    return m_fieldRelAccel;
   }
 
 }

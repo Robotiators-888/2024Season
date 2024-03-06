@@ -83,12 +83,12 @@ public class AutoGenerator {
     //TODO: Test CMD
     public Command runIntake(){
       return new ParallelCommandGroup(
-        new InstantCommand(()->pivot.goToAngle(75)),
-        new InstantCommand(()->index.starttimer()),
-        new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
-        new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
-          ()->index.CurrentLimitSpike()).andThen(
-        new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
+        // new InstantCommand(()->pivot.goToAngle(75)),
+        // new InstantCommand(()->index.starttimer()),
+        // new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
+        // new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
+        //   ()->index.CurrentLimitSpike()).andThen(
+        // new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
       );
     }
 
