@@ -8,7 +8,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.*;
@@ -36,7 +35,7 @@ public class AUTO_2P_Mid extends AutoPaths{
             autos.scoringSequence(Pivot.kSpeakerAngleSP, 2500),
             autos.resetOdometry(startingPose),
             autos.pathIntake(p1Name),
-            autos.scoringSequence(Pivot.kSpeakerAngleSP, 4000)
+            autos.scoringSequence(Pivot.kLowAngleSP, 4000)
         );
     }
     
