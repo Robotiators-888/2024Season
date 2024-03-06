@@ -1,0 +1,95 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.076728835386292,
+        "y": 5.566863856374023
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.076728835386292,
+        "y": 5.566863856374023
+      },
+      "isLocked": false,
+      "linkedName": "ScorePosMiddle"
+    },
+    {
+      "anchor": {
+        "x": 2.076728835386292,
+        "y": 4.094203811817293
+      },
+      "prevControl": {
+        "x": 1.4327235264499207,
+        "y": 4.094203811817293
+      },
+      "nextControl": {
+        "x": 2.191617207661897,
+        "y": 4.094203811817293
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.891391838763322,
+        "y": 4.094203811817293
+      },
+      "prevControl": {
+        "x": 2.630368874149331,
+        "y": 4.0817741468356745
+      },
+      "nextControl": {
+        "x": 3.110724185824963,
+        "y": 4.1046482092964185
+      },
+      "isLocked": false,
+      "linkedName": "BottomGP"
+    },
+    {
+      "anchor": {
+        "x": 2.3691719648070344,
+        "y": 4.407535736191065
+      },
+      "prevControl": {
+        "x": 2.6093931068269263,
+        "y": 4.261314171483304
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 2,
+      "rotationDegrees": -178.02506598911822,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 157.06789956241008,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "4 Piece Path",
+  "previewStartingState": {
+    "rotation": -177.75425743408306,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

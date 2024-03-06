@@ -18,14 +18,11 @@ public class AUTO_4P_Top extends AutoPaths{
 
     @Override
     public Command load(AutoGenerator autos) {
-        String p1Name = "Top_to_TopGP";
-        String p2Name = "TopGP_to_MiddleGP";
-        String p3Name = "MiddleGP_to_BottomGP";
+        String p1Name = "TopStart_to_TopGP";
+        String p2Name = "TopGP_to_MiddleGP_Scorepos";
+        String p3Name = "4P_MiddleScorePose_to_BottomGP+Score";
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
-        PathPlannerPath p2 = PathPlannerPath.fromPathFile(p2Name);
-        PathPlannerPath p3 = PathPlannerPath.fromPathFile(p3Name);
 
-        // TODO Auto-generated method stub
         return Commands.sequence(
             autos.setPivotSetpoint(Pivot.kAmpAngleSP),
             autos.scoringSequence(),
