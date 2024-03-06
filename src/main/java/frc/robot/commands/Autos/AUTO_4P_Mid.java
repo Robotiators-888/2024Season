@@ -12,11 +12,11 @@ import frc.robot.Constants.*;
 import frc.robot.utils.AutoGenerator;
 
 /** Add your docs here. */
-public class AUTO_4P_Top extends AutoPaths{
+public class AUTO_4P_Mid extends AutoPaths{
 
     @Override
     public Command load(AutoGenerator autos) {
-        String p1Name = "TopStart_to_TopGP";
+        String p1Name = "MiddleStart_to_TopGP";
         String p2Name = "TopGP_to_MiddleGP_Scorepos";
         String p3Name = "4P_MiddleScorePose_to_BottomGP";
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);

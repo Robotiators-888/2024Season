@@ -20,7 +20,6 @@ public class AUTO_3P_Bottom extends AutoPaths{
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
 
         return Commands.sequence(
-            autos.setPivotSetpoint(Pivot.kSpeakerAngleSP),
             autos.scoringSequence(Pivot.kSpeakerAngleSP,2500),
 
             autos.resetOdometry(p1.getPreviewStartingHolonomicPose()),
@@ -28,8 +27,7 @@ public class AUTO_3P_Bottom extends AutoPaths{
             autos.scoringSequence(Pivot.kLowAngleSP,4000),
 
             autos.pathIntake(p2Name),
-            autos.setPivotSetpoint(Pivot.kLowAngleSP),
-            autos.scoringSequence(Pivot.kSpeakerAngleSP,4000)
+            autos.scoringSequence(Pivot.kLowAngleSP,4000)
         );
     }
     

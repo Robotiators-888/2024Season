@@ -32,7 +32,7 @@ public class AutoSelector {
         // chooser.addOption("3P_Bottom", new AUTO_3P_Bottom());
         
         chooser.addOption("4P_Top", new AUTO_4P_Top());
-        
+        chooser.addOption("4P_Middle", new AUTO_4P_Mid());
 
 
         SmartDashboard.putData("Auto Selector", chooser);
