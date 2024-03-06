@@ -34,7 +34,6 @@ public class AUTO_3P_Top extends AutoPaths{
         } 
 
         return Commands.sequence(
-            autos.setPivotSetpoint(Pivot.kSpeakerAngleSP),
             autos.scoringSequence(Pivot.kSpeakerAngleSP, 2500),
             autos.resetOdometry(startingPose),
 
