@@ -182,7 +182,7 @@ public class RobotContainer {
       new InstantCommand(()->intake.setMotorSpeed(0))
     ));
 
-
+    // Driver2.a().whileTrue(new RunCommand(()->drivetrain.;, null) );
     Driver2.leftTrigger().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
     Driver2.povRight().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));    
     Driver2.povLeft().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));

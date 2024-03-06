@@ -34,7 +34,7 @@ public class AUTO_2P_Mid extends AutoPaths{
         return Commands.sequence(
             autos.scoringSequence(Pivot.kSpeakerAngleSP, 2500),
             autos.resetOdometry(startingPose),
-            autos.pathIntake(p1Name),
+            autos.pathIntake(p1Name).withTimeout(3),
             autos.scoringSequence(Pivot.kLowAngleSP, 4000)
         );
     }
