@@ -16,6 +16,7 @@ import frc.robot.utils.AutoSelector;
 import frc.robot.subsystems.SUB_Limelight;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -132,7 +133,22 @@ public class RobotContainer {
         SUB_Shooter.MANUAL_RPM += 250
     )); // Increase manual RPM by 100
 
-    Driver2.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain));
+
+    CMD_AimOnDist aimCommand = new CMD_AimOnDist(pivot, limelight, drivetrain);
+    Driver2.b().whileTrue(
+        new ParallelCommandGroup(
+          new ParallelCommandGroup(
+            new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
+            aimCommand
+          ),
+          new SequentialCommandGroup(
+            new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500 && aimCommand.isFinished()),
+            new RunCommand(()->index.setMotorSpeed(0.5), index)
+          )
+        )
+    ); // Spin Shooter OUT
+
+    // Driver2.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain));
     
     Driver2.rightTrigger().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
      
@@ -224,18 +240,17 @@ public class RobotContainer {
     SmartDashboard.putNumber("X Pose", drivetrain.getPose().getX());
     SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
 
-  //   Pose2d visionPose = limelight.getPose();
-  //   if (!visionPose.equals(new Pose2d())){
-  //     // Check if vision pose is within one meter of the current estiamted pose 
-  //     // to avoid abnormalities with vision (detecting a tag that isn't present) from
-  //     // affecting the accuracy of our pose measurement.
-  //     double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
-  //     drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
-  //     // Transform2d t2d = visionPose.minus(drivetrain.getPose());
-  //     // double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
-  //     // if (dist <= 1){
-  //     // }
-  //   }
-  // }
+    Pose2d visionPose = limelight.getPose();
+    if (!visionPose.equals(new Pose2d())){
+      // Check if vision pose is within one meter of the current estiamted pose 
+      // to avoid abnormalities with vision (detecting a tag that isn't present) from
+      // affecting the accuracy of our pose measurement.
+      double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
+      drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
+      // Transform2d t2d = visionPose.minus(drivetrain.getPose());
+      // double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
+      // if (dist <= 1){
+      // }
+    }
   }
 }

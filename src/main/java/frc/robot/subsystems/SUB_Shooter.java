@@ -14,9 +14,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 
 public class SUB_Shooter extends SubsystemBase {
-
-  
-
+  public InterpolatingDoubleTreeMap distToTimeMap = new InterpolatingDoubleTreeMap();
   private SparkPIDController PIDController;
   public static int MANUAL_RPM = 1000;
   
