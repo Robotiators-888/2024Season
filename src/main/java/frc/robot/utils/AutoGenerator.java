@@ -81,6 +81,13 @@ public class AutoGenerator {
       .andThen(new InstantCommand(()->index.setMotorSpeed(0)));
     }
 
+    public Command scoringSequenceClose(){
+      return new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter)
+      .until(()->shooter.getFlywheelRPM() >= 2000)
+      .andThen(new RunCommand(()->index.setMotorSpeed(0.5)).withTimeout(0.25))
+      .andThen(new InstantCommand(()->index.setMotorSpeed(0)));
+    }
+
 
     //TODO: Test CMD
     public Command runIntake(){

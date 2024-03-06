@@ -198,6 +198,7 @@ public final class Constants {
       public static final double kSideSP = 87;
       public static final double kLowMidAngleSP = 75.0;
       public static final double kLowAngleSP = 65.0;
+      public static final double kAutoShootingLowAngleSP = 55;
 
 
         

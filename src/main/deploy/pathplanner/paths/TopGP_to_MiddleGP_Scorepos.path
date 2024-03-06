@@ -8,43 +8,54 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1486251529222393,
-        "y": 6.615918570614584
+        "x": 2.9119816885343353,
+        "y": 6.641515752271834
       },
       "isLocked": false,
       "linkedName": "TopHomeGamePiece"
     },
     {
       "anchor": {
-        "x": 1.749813589072617,
-        "y": 5.698044741348875
+        "x": 2.9122806337215734,
+        "y": 5.566863856374023
       },
       "prevControl": {
-        "x": 1.7938706360418095,
-        "y": 6.2707863519483755
+        "x": 2.922725031200699,
+        "y": 5.754863010998287
       },
       "nextControl": {
-        "x": 1.7306658019681047,
-        "y": 5.449123508990216
+        "x": 2.894283416129153,
+        "y": 5.2429139397104585
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.891391838763322,
+        "x": 2.076728835386292,
         "y": 5.566863856374023
       },
       "prevControl": {
-        "x": 2.1717934049331804,
-        "y": 5.6256065856662785
+        "x": 2.494504734551321,
+        "y": 5.45197548410364
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "MiddleHomeGamePiece"
+      "linkedName": "ScorePosMiddle"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 90.00000000059681,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 91.2616231312735,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -55,13 +66,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -178.49256424122504,
-    "rotateFast": false
+    "rotation": -176.72951207681658,
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "3 Piece Path",
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": 37.155813241131746,
     "velocity": 0
   },
   "useDefaultConstraints": true
