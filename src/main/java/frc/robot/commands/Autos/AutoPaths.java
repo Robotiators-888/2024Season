@@ -9,7 +9,5 @@ import frc.robot.utils.AutoGenerator;
 
 /** Add your docs here. */
 public abstract class AutoPaths {
-
     public abstract Command load(AutoGenerator autos);
-
 }

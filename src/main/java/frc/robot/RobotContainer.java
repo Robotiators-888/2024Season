@@ -5,8 +5,8 @@
 package frc.robot;
 
 import frc.robot.Constants.*;
-import frc.robot.commands.CMD_AimOnDist;
-import frc.robot.commands.CMD_Intake;
+import frc.robot.commands.AutoActions.CMD_Intake;
+import frc.robot.commands.Limelight.CMD_AimOnDist;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Shooter;

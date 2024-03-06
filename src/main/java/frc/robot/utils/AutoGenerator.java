@@ -13,9 +13,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
-import frc.robot.commands.CMD_Shoot;
-import frc.robot.commands.CMD_ShootSEQ;
+import frc.robot.commands.AutoActions.CMD_Shoot;
+import frc.robot.commands.AutoActions.CMD_ShootSEQ;
 //import frc.robot.RobotManager;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
@@ -86,6 +87,23 @@ public class AutoGenerator {
       .until(()->shooter.getFlywheelRPM() >= 2000)
       .andThen(new RunCommand(()->index.setMotorSpeed(0.5)).withTimeout(0.25))
       .andThen(new InstantCommand(()->index.setMotorSpeed(0)));
+    }
+
+    public Command scoringSequence(double setpoint, int rpm){
+      return new SequentialCommandGroup(
+        new InstantCommand(()->pivot.goToAngle(setpoint)),
+        new RunCommand(()->shooter.shootFlywheelOnRPM(rpm), shooter)
+      .until(()->shooter.getFlywheelRPM() >= rpm - 500)
+      .andThen(new RunCommand(()->index.setMotorSpeed(0.5)).withTimeout(0.25))
+      .andThen(new InstantCommand(()->index.setMotorSpeed(0)))
+      );
+    }
+
+    public Command pathIntake(String path){
+      return new ParallelCommandGroup(
+        runIntake(),
+        PathPlannerBase.followTrajectory(path)
+      );
     }
 
 
