@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7218158264523252,
-        "y": 6.608557045380159
+        "x": 1.1623862961500528,
+        "y": 5.551187918118234
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9407274592608417,
-        "y": 6.828842280227432
+        "x": 1.9209549213878978,
+        "y": 5.589722591070332
       },
       "isLocked": false,
-      "linkedName": "TopRobotStart"
+      "linkedName": "MiddleRobotStart"
     },
     {
       "anchor": {
@@ -20,15 +20,21 @@
         "y": 6.997746311014251
       },
       "prevControl": {
-        "x": 1.611791384320931,
-        "y": 6.649281266871992
+        "x": 2.4156328076857077,
+        "y": 6.832197035668964
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "TopHomeGamePiece"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -136.19293803852796,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -39,14 +45,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -152.44718842328223,
-    "rotateFast": true
+    "rotation": -152.30052719194506,
+    "rotateFast": false
   },
   "reversed": false,
   "folder": "3 Piece Path",
   "previewStartingState": {
-    "rotation": -120.0,
+    "rotation": -178.24837220831998,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

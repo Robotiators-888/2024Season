@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Limelight;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -31,7 +31,7 @@ public class CMD_AimOnDist extends Command {
   double yError;
   double angle;
 
-  private final PIDController robotAngleController = new PIDController( 1, 0, 0); // 0.25, 0, 0
+  private final PIDController robotAngleController = new PIDController( 0.5, 0.01, 0); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
   public CMD_AimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain) {

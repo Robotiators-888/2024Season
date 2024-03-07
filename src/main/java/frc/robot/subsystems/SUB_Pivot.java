@@ -18,6 +18,7 @@ import com.revrobotics.SparkPIDController.ArbFFUnits;
 
 import frc.libs.PIDGains;
 import frc.robot.Constants;
+import frc.robot.Constants.Pivot;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -58,7 +59,7 @@ public class SUB_Pivot extends SubsystemBase {
         rotateEncoder.setPositionConversionFactor(360);
         rotateEncoder.setVelocityConversionFactor(360);
         rotateEncoder.setInverted(true);
-        rotateEncoder.setZeroOffset(0); // We are accepting that this is broken
+        rotateEncoder.setZeroOffset(Pivot.kPivotOffset); // We are accepting that this is broken
         pivotMotor.setSmartCurrentLimit(50);
         // pivotEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
         // pivotEncoder.setVelocityConversionFactor(1.0/4.0 * 2 * Math.PI);
@@ -72,7 +73,7 @@ public class SUB_Pivot extends SubsystemBase {
         pivotPID.setOutputRange(-0.2, 0.2);
         pivotSetpoint = khome;
         
-        setPIDF(pivotPID, 0.013, 0, 0.001, 0);
+        setPIDF(pivotPID, 0.010, 0, 0.012, 0);
 
         pivotTimer = new Timer();
         pivotTimer.start();
@@ -85,9 +86,23 @@ public class SUB_Pivot extends SubsystemBase {
         constantApplicationMap.put(95.0, -0.08);
         constantApplicationMap.put(61.0, -0.03);
 
-        distToPivotAngle.put(Units.feetToMeters(3), 59.0);
-        distToPivotAngle.put(Units.feetToMeters(6), 45.0);
-        distToPivotAngle.put(Units.feetToMeters(9), 36.0);
+        distToPivotAngle.put(Units.inchesToMeters(3*12 +13), 61.0);
+        distToPivotAngle.put(Units.inchesToMeters(4*12 +13), 55.0);
+        distToPivotAngle.put(Units.inchesToMeters(5*12 +13), 47.0);
+        distToPivotAngle.put(Units.inchesToMeters(6*12 +13), 43.0);
+        distToPivotAngle.put(Units.inchesToMeters(7*12 +13), 39.0);
+        distToPivotAngle.put(Units.inchesToMeters(8*12 +13), 36.5);
+        distToPivotAngle.put(Units.inchesToMeters(9*12 +13), 33.0);
+
+        // Extrapolated from lin reg on previous ^ data
+        distToPivotAngle.put(Units.inchesToMeters(10*12 +13), 29.5);
+        distToPivotAngle.put(Units.inchesToMeters(11*12 +13), 26.0);
+        distToPivotAngle.put(Units.inchesToMeters(12*12 +13), 23.5);
+        // distToPivotAngle.put(Units.inchesToMeters(13*12 +13), -4.61*13 +72.57);
+        // distToPivotAngle.put(Units.inchesToMeters(14*12 +13), -4.61*14 +72.57);
+        // distToPivotAngle.put(Units.inchesToMeters(15*12 +13), -4.61*15 +72.57);
+        // distToPivotAngle.put(Units.inchesToMeters(16*12 +13), -4.61*16 +72.57);
+      
         //Timer.delay(0.2);
         pivotMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
         pivotMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
@@ -145,11 +160,9 @@ public double calculateDegreesRotation(){
 }
 
 public void goToAngle(double angle){
-  if((angle<Constants.Pivot.kMaxArmAngle) && (angle>Constants.Pivot.kMinArmAngle)){
-    pivotSetpoint = angle;
+    pivotSetpoint = Math.min(kMaxArmAngle, Math.max(kMinArmAngle, angle));
     targetState = new TrapezoidProfile.State(pivotSetpoint, 0.0);
     currentState = new TrapezoidProfile.State(rotateEncoder.getPosition(), rotateEncoder.getVelocity());
-  }
 }
 
 public void runManual(double _power) {
@@ -181,6 +194,7 @@ public void runManual(double _power) {
     SmartDashboard.putNumber("Next position", currentState.position);
     SmartDashboard.putNumber("Pivot FF", feedforward);
     SmartDashboard.putNumber("Pivot % out", pivotMotor.getAppliedOutput());
+
   }
 }
 

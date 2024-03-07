@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3732635157578024,
-      "y": 5.535354916863679
+      "x": 1.2064433431192452,
+      "y": 5.419016777210657
     },
     "rotation": 180.0
   },
@@ -14,7 +14,13 @@
         {
           "type": "named",
           "data": {
-            "name": "RunIntake"
+            "name": "Amp Setpoint"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.35
           }
         },
         {
@@ -24,26 +30,39 @@
           }
         },
         {
-          "type": "path",
+          "type": "wait",
           "data": {
-            "pathName": "4P_Speaker_to_TopGP"
+            "waitTime": 1.0
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "4P_Top_to_MiddleGP"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "2P_Middle"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
             "name": "ShootingSequence"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.25
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "2 Piece",
   "choreoAuto": false
 }

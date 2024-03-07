@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.309243119380694,
+      "y": 5.53650223579517
+    },
+    "rotation": 178.09084756700355
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -8,7 +14,25 @@
         {
           "type": "named",
           "data": {
-            "name": "Dumb Auto"
+            "name": "Amp Setpoint"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootingSequence"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "New Path"
           }
         }
       ]

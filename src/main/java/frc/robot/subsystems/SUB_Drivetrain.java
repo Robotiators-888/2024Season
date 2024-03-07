@@ -51,7 +51,12 @@ public class SUB_Drivetrain extends SubsystemBase {
   
     private MAXSwerveModule[] modules = new MAXSwerveModule[]{frontLeft, frontRight, backLeft, backRight};
     private SwerveModuleState[] moduleStates = getModuleStates();
+
   public AprilTagFieldLayout at_field;
+
+  private FieldRelativeSpeed m_fieldRelVel = new FieldRelativeSpeed();
+  private FieldRelativeSpeed m_lastFieldRelVel = new FieldRelativeSpeed();
+  private FieldRelativeAccel m_fieldRelAccel = new FieldRelativeAccel();;
 
 
   AHRS navx = new AHRS();
@@ -59,6 +64,10 @@ public class SUB_Drivetrain extends SubsystemBase {
 
   private void setGyroRotation(){
     navx.setAngleAdjustment(Constants.Drivetrain.kGyroRotation);
+  }
+
+  public double getAngle(){
+    return -navx.getAngle();
   }
 
   
@@ -78,7 +87,7 @@ public class SUB_Drivetrain extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
           Constants.Drivetrain.kDriveKinematics,
-          Rotation2d.fromDegrees(-navx.getAngle()),
+          Rotation2d.fromDegrees(getAngle()),
           new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
@@ -103,7 +112,7 @@ public class SUB_Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     m_poseEstimator.update(
-        Rotation2d.fromDegrees(-navx.getAngle()),
+        Rotation2d.fromDegrees(getAngle()),
         new SwerveModulePosition[] {
           frontLeft.getPosition(),
           frontRight.getPosition(),
@@ -114,6 +123,13 @@ public class SUB_Drivetrain extends SubsystemBase {
     modules = new MAXSwerveModule[]{frontLeft, frontRight, backLeft, backRight};
 
     m_field.setRobotPose(getPose());
+
+    m_fieldRelVel = new FieldRelativeSpeed(Constants.Drivetrain.kDriveKinematics.toChassisSpeeds(
+      frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState()
+    ), navx.getRotation2d());
+    m_fieldRelAccel = new FieldRelativeAccel(m_fieldRelVel, m_lastFieldRelVel, 0.02);
+    m_lastFieldRelVel = m_fieldRelVel;
+
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("rotation", getPose().getRotation().getDegrees());
     //SmartDashboard.putNumber("Speed", m_poseEstimator);
@@ -141,7 +157,7 @@ public class SUB_Drivetrain extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     m_poseEstimator.resetPosition(
-        Rotation2d.fromDegrees(navx.getAngle()),
+        Rotation2d.fromDegrees(getAngle()),
         new SwerveModulePosition[] {
           frontLeft.getPosition(),
           frontRight.getPosition(),
@@ -149,6 +165,8 @@ public class SUB_Drivetrain extends SubsystemBase {
           backRight.getPosition()
         },
         pose);
+
+        this.pose = pose;
   }
 
   /**
@@ -229,7 +247,7 @@ public class SUB_Drivetrain extends SubsystemBase {
                     xSpeedDelivered,
                     ySpeedDelivered,
                     rotDelivered,
-                    Rotation2d.fromDegrees(-navx.getAngle()))
+                    Rotation2d.fromDegrees(getAngle()))
                 : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, Constants.Drivetrain.kMaxSpeedMetersPerSecond);
@@ -280,11 +298,11 @@ public class SUB_Drivetrain extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    return Rotation2d.fromDegrees(-navx.getAngle()).getDegrees();
+    return Rotation2d.fromDegrees(getAngle()).getDegrees();
   }
 
 public Rotation2d getRotation2d(){
-  return Rotation2d.fromDegrees(-navx.getAngle());
+  return Rotation2d.fromDegrees(getAngle());
 }
 
   /**
@@ -318,7 +336,6 @@ public Rotation2d getRotation2d(){
   }
 
   public Pose2d getPose2d(){
-    m_poseEstimator.resetPosition(navx.getRotation2d(), getPositions(), auto_odometry.getPoseMeters());
     return auto_odometry.getPoseMeters();
   }
 
@@ -345,6 +362,14 @@ public Rotation2d getRotation2d(){
    */
   public void addVisionMeasurement(Pose2d visionPose, double latency){
     m_poseEstimator.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latency);
+  }
+
+  public FieldRelativeSpeed getFieldRelativeSpeed() {
+    return m_fieldRelVel;
+  }
+
+  public FieldRelativeAccel getFieldRelativeAccel() {
+    return m_fieldRelAccel;
   }
 
 }

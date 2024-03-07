@@ -14,12 +14,11 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 
 public class SUB_Shooter extends SubsystemBase {
-
-  
-
+  public InterpolatingDoubleTreeMap distToTimeMap = new InterpolatingDoubleTreeMap();
   private SparkPIDController PIDController;
   public static int MANUAL_RPM = 1000;
   
+  public static int SetpointRPM;
   CANSparkMax shooterLeft;
   CANSparkMax shooterRight;
 
@@ -37,6 +36,8 @@ public class SUB_Shooter extends SubsystemBase {
     setPIDF(PIDController, 0, 0, 0, 1.0/5800.0 * (3000.0/2600.0));
     shooterLeft.burnFlash();
     shooterRight.burnFlash();  
+
+    SetpointRPM = 1000;
 
   }
 
@@ -63,6 +64,10 @@ public class SUB_Shooter extends SubsystemBase {
 
   public void shootFlywheelOnRPM(double rpm) {
     PIDController.setReference(rpm, ControlType.kVelocity);
+  }
+
+  public void setRPM(int rpm){
+    SetpointRPM = rpm;
   }
 
 
