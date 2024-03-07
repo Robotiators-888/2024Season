@@ -5,7 +5,6 @@
 package frc.robot;
 
 import frc.robot.Constants.*;
-import frc.robot.commands.AutoActions.CMD_Intake;
 import frc.robot.commands.Limelight.CMD_AimOnDist;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
@@ -14,8 +13,6 @@ import frc.robot.subsystems.SUB_Intake;
 import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.utils.AutoSelector;
 import frc.robot.subsystems.SUB_Limelight;
-
-import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -47,11 +44,8 @@ public class RobotContainer {
    public static AutoSelector autoSelector = new AutoSelector(drivetrain, index, intake, shooter, pivot);
 
   
-
-
   CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
-
-  private final CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
+  CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
     
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -127,12 +121,12 @@ public class RobotContainer {
     \* ================== */
     Driver2.leftBumper().onTrue(new InstantCommand(()->
       SUB_Shooter.MANUAL_RPM -= 250
-    )); // Decrease manual RPM by 100
+    )); // Decrease manual RPM by 250
 
     Driver2.rightBumper().onTrue(
       new InstantCommand(()->
         SUB_Shooter.MANUAL_RPM += 250
-    )); // Increase manual RPM by 100
+    )); // Increase manual RPM by 250
 
     Driver2.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain));
     
