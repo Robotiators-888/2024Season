@@ -169,18 +169,15 @@ public class RobotContainer {
     // )); // Suspicious if it will work or not, if it doesn't, just put onTrue();
 
     
-
-    // Driver2.x().whileTrue((new RunCommand(()->index.setMotorSpeed(-0.25), index))); //Drive Index OUT
-
-  Driver2.x().whileTrue(
-  new ParallelCommandGroup(
-  new RunCommand(()->index.setMotorSpeed(-0.6), index),
-  new RunCommand(()->intake.setMotorSpeed(-0.6), intake)
-  )).onFalse(
+    Driver2.x().whileTrue(
     new ParallelCommandGroup(
-      new InstantCommand(()->index.setMotorSpeed(0)),
-      new InstantCommand(()->intake.setMotorSpeed(0))
-    ));
+    new RunCommand(()->index.setMotorSpeed(-0.6), index),
+    new RunCommand(()->intake.setMotorSpeed(-0.6), intake)
+    )).onFalse(
+      new ParallelCommandGroup(
+        new InstantCommand(()->index.setMotorSpeed(0)),
+        new InstantCommand(()->intake.setMotorSpeed(0))
+      ));
 
     // Driver2.a().whileTrue(new RunCommand(()->drivetrain.;, null) );
     Driver2.leftTrigger().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
