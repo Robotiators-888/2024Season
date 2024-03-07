@@ -98,12 +98,15 @@ public class RobotContainer {
 
     Driver1.back().onTrue(new InstantCommand(()->pivot.goToAngle(50)));
     Driver1.start().whileTrue( new ParallelCommandGroup(
-          new RunCommand(()->shooter.shootFlywheelOnRPM(450), shooter),
+          new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)),
+          new RunCommand(()->shooter.shootFlywheelOnRPM(500), shooter),
           new SequentialCommandGroup(
             new WaitCommand(.75),
-            new RunCommand(()->index.setMotorSpeed(0.5), index)
+            new RunCommand(()->index.setMotorSpeed(0.45), index)
           )
-        ));
+        )).onFalse(
+          new InstantCommand(()->index.setMotorSpeed(0))
+        );
 
     Driver1.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
 
