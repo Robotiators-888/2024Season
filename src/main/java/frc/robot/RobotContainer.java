@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.*;
 import frc.robot.commands.AutoActions.CMD_Intake;
 import frc.robot.commands.Limelight.CMD_AimOnDist;
+import frc.robot.commands.Limelight.CMD_AlignSource;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Shooter;
@@ -67,7 +68,7 @@ public class RobotContainer {
                 true, true),
                 drivetrain));
 
-    shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(2500), shooter));
+    shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(0), shooter));
     //index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
     //intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
     pivot.setDefaultCommand(new RunCommand(()->pivot.runAutomatic(), pivot));    
@@ -168,6 +169,23 @@ public class RobotContainer {
         new InstantCommand(()->index.setMotorSpeed(0)),
         new InstantCommand(()->intake.setMotorSpeed(0))
     ));
+
+    Driver2.y().whileTrue(new ParallelCommandGroup(
+        new CMD_AlignSource(pivot, limelight, drivetrain, Driver1),
+
+        new ParallelCommandGroup(
+        new InstantCommand(()->pivot.goToAngle(75)),
+        new InstantCommand(()->index.starttimer()),
+        new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
+        new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
+          ()->index.CurrentLimitSpike()).andThen(
+        new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)).andThen(
+          new ParallelCommandGroup(
+            new InstantCommand(()->index.setMotorSpeed(0)),
+            new InstantCommand(()->shooter.setMotorSpeed(0))
+          )
+        )
+      ));
 
     // Driver2.a().whileTrue(
     //   new ParallelCommandGroup(
