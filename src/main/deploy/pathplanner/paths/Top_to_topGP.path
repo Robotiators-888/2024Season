@@ -28,7 +28,13 @@
       "linkedName": "TopHomeGamePiece"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.95,
+      "rotationDegrees": -168.74112672650855,
+      "rotateFast": true
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -39,7 +45,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -161.56505117707803,
+    "rotation": -152.52242986166257,
     "rotateFast": true
   },
   "reversed": false,

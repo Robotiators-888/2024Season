@@ -41,7 +41,7 @@
       },
       "nextControl": {
         "x": 3.110724185824963,
-        "y": 4.1046482092964185
+        "y": 4.104648209296418
       },
       "isLocked": false,
       "linkedName": "BottomGP"
@@ -86,7 +86,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "4 Piece Path",
+  "folder": null,
   "previewStartingState": {
     "rotation": -177.75425743408306,
     "velocity": 0

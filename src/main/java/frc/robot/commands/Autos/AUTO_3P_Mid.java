@@ -20,7 +20,7 @@ public class AUTO_3P_Mid extends AutoPaths{
     @Override
     public Command load(AutoGenerator autos) {
         String p1Name = "2P_Middle";
-        String p2Name = "3P_Middle_to_BottomStraight";
+        String p2Name = "3P_Middle_to_Bottom";
         String p3Name = "3P_BottomGP_Out_Score";
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
 
