@@ -67,7 +67,7 @@ public class RobotContainer {
                 true, true),
                 drivetrain));
 
-    shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(1000), shooter));
+    //shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(1000), shooter));
     //index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
     //intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
     pivot.setDefaultCommand(new RunCommand(()->pivot.runAutomatic(), pivot));    
@@ -105,7 +105,10 @@ public class RobotContainer {
             new RunCommand(()->index.setMotorSpeed(0.45), index)
           )
         )).onFalse(
-          new InstantCommand(()->index.setMotorSpeed(0))
+           new ParallelCommandGroup(
+        new InstantCommand(()->shooter.setMotorSpeed(0)),
+        new InstantCommand(()->index.setMotorSpeed(0))
+        )
         );
 
     Driver1.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
@@ -120,6 +123,7 @@ public class RobotContainer {
         )
     ).onFalse(
       new ParallelCommandGroup(
+        new InstantCommand(()->shooter.setMotorSpeed(0)),
         new InstantCommand(()->index.setMotorSpeed(0))
     )
     ); // Spin Shooter OUT
@@ -149,6 +153,11 @@ public class RobotContainer {
             new RunCommand(()->index.setMotorSpeed(0.5), index)
           )
         )
+    ).onFalse(
+       new ParallelCommandGroup(
+        new InstantCommand(()->shooter.setMotorSpeed(0)),
+        new InstantCommand(()->index.setMotorSpeed(0))
+    )
     ); // Spin Shooter OUT
 
     // Driver2.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain));
@@ -166,6 +175,7 @@ public class RobotContainer {
       new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
     )).onFalse(
       new ParallelCommandGroup(
+        new RunCommand(()->shooter.shootFlywheelOnRPM(2500), shooter),
         new InstantCommand(()->index.setMotorSpeed(0)),
         new InstantCommand(()->intake.setMotorSpeed(0))
     ));
