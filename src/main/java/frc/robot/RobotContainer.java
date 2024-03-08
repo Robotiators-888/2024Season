@@ -67,7 +67,7 @@ public class RobotContainer {
                 true, true),
                 drivetrain));
 
-    shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(2500), shooter));
+    shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(1000), shooter));
     //index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
     //intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
     pivot.setDefaultCommand(new RunCommand(()->pivot.runAutomatic(), pivot));    
@@ -141,11 +141,11 @@ public class RobotContainer {
     Driver2.b().whileTrue(
         new ParallelCommandGroup(
           new ParallelCommandGroup(
-            new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
+            new RunCommand(()->shooter.shootFlywheelOnRPM(2500), shooter),
             aimCommand
           ),
           new SequentialCommandGroup(
-            new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500 && aimCommand.isFinished()),
+            new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 2250 && aimCommand.isFinished()),
             new RunCommand(()->index.setMotorSpeed(0.5), index)
           )
         )
@@ -154,7 +154,8 @@ public class RobotContainer {
     // Driver2.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain));
     
     Driver2.rightTrigger().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
-     
+    Driver2.leftTrigger().whileTrue(new RunCommand(()->index.setMotorSpeed(0.3), index)).onFalse(new InstantCommand(()->index.setMotorSpeed(0)));
+    
     Driver2.a().whileTrue(
     new ParallelCommandGroup(
       new InstantCommand(()->pivot.goToAngle(75)),
@@ -191,8 +192,8 @@ public class RobotContainer {
 
   Driver2.x().whileTrue(
   new ParallelCommandGroup(
-  new RunCommand(()->index.setMotorSpeed(-0.6), index),
-  new RunCommand(()->intake.setMotorSpeed(-0.6), intake)
+  new RunCommand(()->index.setMotorSpeed(-0.5), index),
+  new RunCommand(()->intake.setMotorSpeed(-0.5), intake)
   )).onFalse(
     new ParallelCommandGroup(
       new InstantCommand(()->index.setMotorSpeed(0)),
