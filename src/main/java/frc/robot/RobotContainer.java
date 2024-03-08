@@ -5,7 +5,6 @@
 package frc.robot;
 
 import frc.robot.Constants.*;
-import frc.robot.commands.AutoActions.CMD_Intake;
 import frc.robot.commands.Limelight.CMD_AimOnDist;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
@@ -46,11 +45,8 @@ public class RobotContainer {
    public static AutoSelector autoSelector = new AutoSelector(drivetrain, index, intake, shooter, pivot);
 
   
-
-
   CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
-
-  private final CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
+  CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
     
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -129,12 +125,12 @@ public class RobotContainer {
     \* ================== */
     Driver2.leftBumper().onTrue(new InstantCommand(()->
       SUB_Shooter.MANUAL_RPM -= 250
-    )); // Decrease manual RPM by 100
+    )); // Decrease manual RPM by 250
 
     Driver2.rightBumper().onTrue(
       new InstantCommand(()->
         SUB_Shooter.MANUAL_RPM += 250
-    )); // Increase manual RPM by 100
+    )); // Increase manual RPM by 250
 
 
     CMD_AimOnDist aimCommand = new CMD_AimOnDist(pivot, limelight, drivetrain);
@@ -186,20 +182,17 @@ public class RobotContainer {
     // )); // Suspicious if it will work or not, if it doesn't, just put onTrue();
 
     
-
-    // Driver2.x().whileTrue((new RunCommand(()->index.setMotorSpeed(-0.25), index))); //Drive Index OUT
-
-  Driver2.x().whileTrue(
-  new ParallelCommandGroup(
-  new RunCommand(()->index.setMotorSpeed(-0.6), index),
-  new RunCommand(()->intake.setMotorSpeed(-0.6), intake)
-  )).onFalse(
+    Driver2.x().whileTrue(
     new ParallelCommandGroup(
-      new InstantCommand(()->index.setMotorSpeed(0)),
-      new InstantCommand(()->intake.setMotorSpeed(0))
-    ));
+    new RunCommand(()->index.setMotorSpeed(-0.6), index),
+    new RunCommand(()->intake.setMotorSpeed(-0.6), intake)
+    )).onFalse(
+      new ParallelCommandGroup(
+        new InstantCommand(()->index.setMotorSpeed(0)),
+        new InstantCommand(()->intake.setMotorSpeed(0))
+      ));
 
-
+    // Driver2.a().whileTrue(new RunCommand(()->drivetrain.;, null) );
     Driver2.leftTrigger().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
     Driver2.povRight().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));    
     Driver2.povLeft().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));
@@ -231,6 +224,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    
     return autoSelector.getSelected();
   }
 
