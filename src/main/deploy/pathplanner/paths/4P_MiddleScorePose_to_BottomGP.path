@@ -41,7 +41,7 @@
       },
       "nextControl": {
         "x": 3.110724185824963,
-        "y": 4.104648209296418
+        "y": 4.1046482092964185
       },
       "isLocked": false,
       "linkedName": "BottomGP"
@@ -52,8 +52,8 @@
         "y": 4.407535736191065
       },
       "prevControl": {
-        "x": 2.6093931068269263,
-        "y": 4.261314171483304
+        "x": 2.291006242747955,
+        "y": 3.905015259615335
       },
       "nextControl": null,
       "isLocked": false,
@@ -82,11 +82,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 165.43,
+    "rotation": 159.42581585781528,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "4 Piece Path",
   "previewStartingState": {
     "rotation": -177.75425743408306,
     "velocity": 0

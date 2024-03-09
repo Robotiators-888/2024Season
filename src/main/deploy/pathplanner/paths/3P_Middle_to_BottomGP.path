@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.891391838763322,
-        "y": 5.566863856374023
+        "x": 2.9122806337215734,
+        "y": 5.453387893727152
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5200511662306835,
-        "y": 5.324949028273469
+        "x": 2.4078645547563937,
+        "y": 4.833525912377046
       },
       "isLocked": false,
-      "linkedName": "MiddleHomeGamePiece"
+      "linkedName": "ScorePosMiddle"
     },
     {
       "anchor": {
-        "x": 1.6763851774572966,
-        "y": 4.420390379242297
+        "x": 2.076728835386292,
+        "y": 4.094203811817293
       },
       "prevControl": {
-        "x": 1.5506572142896593,
-        "y": 4.796925022412459
+        "x": 1.4327235264499207,
+        "y": 4.094203811817293
       },
       "nextControl": {
-        "x": 1.7679386411111953,
-        "y": 4.1462027609958385
+        "x": 2.191617207661897,
+        "y": 4.094203811817293
       },
       "isLocked": false,
       "linkedName": null
@@ -36,24 +36,24 @@
         "y": 4.094203811817293
       },
       "prevControl": {
-        "x": 1.9260417769493865,
-        "y": 4.156048097427144
+        "x": 2.630368874149331,
+        "y": 4.0817741468356745
       },
       "nextControl": {
-        "x": 2.8991690063904847,
-        "y": 4.093705574550838
+        "x": 3.110724185824963,
+        "y": 4.1046482092964185
       },
       "isLocked": false,
       "linkedName": "BottomGP"
     },
     {
       "anchor": {
-        "x": 2.4905424125512585,
-        "y": 4.443284140805373
+        "x": 2.3691719648070344,
+        "y": 4.407535736191065
       },
       "prevControl": {
-        "x": 2.93935385724081,
-        "y": 4.141362415104079
+        "x": 2.291006242747955,
+        "y": 3.905015259615335
       },
       "nextControl": null,
       "isLocked": false,
@@ -62,14 +62,14 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.55,
+      "waypointRelativePos": 1,
       "rotationDegrees": 180.0,
-      "rotateFast": true
+      "rotateFast": false
     },
     {
       "waypointRelativePos": 2,
-      "rotationDegrees": 179.64596261435977,
-      "rotateFast": true
+      "rotationDegrees": -178.02506598911822,
+      "rotateFast": false
     }
   ],
   "constraintZones": [],
@@ -82,13 +82,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 163.983843471406,
+    "rotation": 159.42581585781528,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "3 Piece Path",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -177.75425743408306,
     "velocity": 0
   },
   "useDefaultConstraints": true
