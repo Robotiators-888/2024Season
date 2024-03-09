@@ -36,13 +36,13 @@ public class AUTO_4P_Top extends AutoPaths{
             autos.scoringSequence(Pivot.kSpeakerAngleSP,2500),
             autos.resetOdometry(startingPose),
 
-            autos.pathIntake(p1Name),
+            autos.pathIntake(p1Name).withTimeout(4),
             autos.scoringSequence(Pivot.kLowAngleSP, 4000),
 
-            autos.pathIntake(p2Name),
+            autos.pathIntake(p2Name).withTimeout(4),
             autos.scoringSequence(Pivot.kLowAngleSP, 4000),
 
-            autos.pathIntake(p3Name),
+            autos.pathIntake(p3Name).withTimeout(4),
             autos.scoringSequence(Pivot.kLowAngleSP, 4000)
         );
     }
