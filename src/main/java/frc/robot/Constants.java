@@ -162,17 +162,8 @@ public final class Constants {
       public static final double kIntakingSpeed = 0.35;
     }
     public static final class Climber{
-      public static final double kClimberNeutralVoltage = 1.1;
-      public static final double kClimberHomePos = 1.1;
-      private static double kDt = 0.02;
-      private static double kMaxVelocity = 1.75;
-      private static double kMaxAcceleration = 0.75;
-      private static double kP = 1.3;
-      private static double kI = 0.0;
-      private static double kD = 0.7;
-      private static double kS = 1.1;
-      private static double kG = 1.2;
-      private static double kV = 1.3;
+      public static final double kUpSpeed = .4;
+      public static final double kDownSpeed = -.2;
     }
   
      public static final class Pivot {
