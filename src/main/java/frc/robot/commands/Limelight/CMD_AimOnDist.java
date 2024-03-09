@@ -58,14 +58,7 @@ public class CMD_AimOnDist extends Command {
       SmartDashboard.putBoolean("Alliance Error", true);
       end(true);
     }
-    
-    currentPose = drivetrain.getPose(); // Robot's current pose
-    positionError = Math.sqrt(Math.pow(tagPose.getX() - currentPose.getX(), 2)
-                           + Math.pow(tagPose.getY() - currentPose.getY(), 2));
-
-    xError = tagPose.getX() - currentPose.getX();
-    yError = tagPose.getY() - currentPose.getY();
-    angle = Math.atan2(yError, xError); // x and y are not flipped???
+  
 
     robotAngleController.setTolerance(0.07);
     robotAngleController.setSetpoint(angle);
@@ -77,6 +70,13 @@ public class CMD_AimOnDist extends Command {
   public void execute() {
     SmartDashboard.putBoolean("SPEAKER LOCK?", false);
     currentPose = drivetrain.getPose();
+    positionError = Math.sqrt(Math.pow(tagPose.getX() - currentPose.getX(), 2)
+                           + Math.pow(tagPose.getY() - currentPose.getY(), 2));
+
+    xError = tagPose.getX() - currentPose.getX();
+    yError = tagPose.getY() - currentPose.getY();
+    angle = Math.atan2(yError, xError); // x and y are not flipped???
+
     pivot.goToAngle(pivot.distToPivotAngle.get(positionError) + 27);
     pivot.runAutomatic();
 
@@ -88,7 +88,7 @@ public class CMD_AimOnDist extends Command {
 
 
     drivetrain.drive(0,0, 
-       robotAngleController.calculate(currentPose.getRotation().getRadians()),
+       robotAngleController.calculate(currentPose.getRotation().getRadians(), angle),
      true, true);
   }
 
@@ -102,6 +102,7 @@ public class CMD_AimOnDist extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(pivot.calculateDegreesRotation()-pivot.distToPivotAngle.get(positionError)) < 5 && robotAngleController.atSetpoint();
+    return Math.abs(pivot.calculateDegreesRotation()-pivot.distToPivotAngle.get(positionError)) < 5 
+    && (currentPose.getRotation().getRadians()-angle <= 0.07);
   }
 }
