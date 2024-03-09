@@ -82,7 +82,7 @@ public class SUB_Climber extends SubsystemBase {
    * Runs the left climber motor at a specified power.
    * @param pwr The power to set the motor to, as a voltage.
    */
-  public void runMotor(double pwr ) {
+  public void runMotor(double pwr) {
    climberLeft.setVoltage(pwr);
   }
 }
