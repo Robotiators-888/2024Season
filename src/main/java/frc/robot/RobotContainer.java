@@ -145,6 +145,8 @@ public class RobotContainer {
             new RunCommand(()->index.setMotorSpeed(0.5), index)
           )
         )
+    ).onFalse(
+      new InstantCommand(()->index.setMotorSpeed(0), index)
     ); // Spin Shooter OUT
 
     // Driver2.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain));
@@ -156,31 +158,20 @@ public class RobotContainer {
       new InstantCommand(()->pivot.goToAngle(75)),
       new InstantCommand(()->index.starttimer()),
       new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
-      new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
-        ()->index.CurrentLimitSpike()).andThen(
-      new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
-    )).onFalse(
+      new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))
+      ).until(
+        ()->index.CurrentLimitSpike()
+      ).andThen(
+        new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
+    ).andThen(
+      new ParallelCommandGroup(
+        new InstantCommand(()->index.setMotorSpeed(0)),
+        new InstantCommand(()->intake.setMotorSpeed(0))
+    ))).onFalse(
       new ParallelCommandGroup(
         new InstantCommand(()->index.setMotorSpeed(0)),
         new InstantCommand(()->intake.setMotorSpeed(0))
     ));
-
-    // Driver2.a().whileTrue(
-    //   new ParallelCommandGroup(
-    //     new InstantCommand(()->pivot.goToAngle(Pivot.kLowMidAngleSP)),
-    //     new RunCommand(()->shooter.setMotorSpeed(0), shooter),
-    //     new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
-    //     new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))
-    //     .until(()->index.getTopBannerSensor())
-    //     .andThen(new ParallelCommandGroup(
-    //       new RunCommand(()->index.setMotorSpeed(0.0))
-    //     ))
-    // )).onFalse(new ParallelCommandGroup(
-
-    //   new InstantCommand(()->index.setMotorSpeed(0)),
-    //   new InstantCommand(()->intake.setMotorSpeed(0))
-    // )); // Suspicious if it will work or not, if it doesn't, just put onTrue();
-
     
     Driver2.x().whileTrue(
     new ParallelCommandGroup(
