@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.891391838763322,
-        "y": 5.566863856374023
+        "x": 2.9122806337215734,
+        "y": 5.453387893727152
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8913918387633224,
-        "y": 6.066177055358203
+        "x": 2.912280633721574,
+        "y": 5.952701092711332
       },
       "isLocked": false,
-      "linkedName": "MiddleHomeGamePiece"
+      "linkedName": "ScorePosMiddle"
     },
     {
       "anchor": {
@@ -70,9 +70,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "3 Piece Path",
+  "folder": null,
   "previewStartingState": {
-    "rotation": -179.9118588801521,
+    "rotation": 179.15846067117047,
     "velocity": 0
   },
   "useDefaultConstraints": false
