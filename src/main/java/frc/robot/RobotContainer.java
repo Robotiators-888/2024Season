@@ -120,6 +120,16 @@ public class RobotContainer {
     )
     ); // Spin Shooter OUT
 
+    Driver1.povLeft().whileTrue(
+       new RunCommand(
+            () -> drivetrain.drive(
+                -MathUtil.applyDeadband(Math.copySign(Math.pow(Driver1.getRawAxis(1), 2), Driver1.getRawAxis(1)), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(Math.copySign(Math.pow(Driver1.getRawAxis(0), 2), Driver1.getRawAxis(0)), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(Driver1.getRawAxis(4), OIConstants.kDriveDeadband),
+                false, true),
+                drivetrain)
+    );
+
     /* ================== *\
            Driver Two
     \* ================== */
@@ -131,6 +141,7 @@ public class RobotContainer {
       new InstantCommand(()->
         SUB_Shooter.MANUAL_RPM += 250
     )); // Increase manual RPM by 250
+
 
 
     CMD_AimOnDist aimCommand = new CMD_AimOnDist(pivot, limelight, drivetrain);
@@ -148,8 +159,6 @@ public class RobotContainer {
     ).onFalse(
       new InstantCommand(()->index.setMotorSpeed(0), index)
     ); // Spin Shooter OUT
-
-    // Driver2.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain));
     
     Driver2.rightTrigger().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
      
