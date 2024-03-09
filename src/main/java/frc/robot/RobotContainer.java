@@ -178,12 +178,11 @@ public class RobotContainer {
         new CMD_AlignSource(pivot, limelight, drivetrain, Driver1),
 
         new ParallelCommandGroup(
-        new InstantCommand(()->pivot.goToAngle(75)),
         new InstantCommand(()->index.starttimer()),
-        new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
-        new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
+        new RunCommand(()->index.setMotorSpeed(-Constants.Intake.kIndexSpeed), index),
+        new RunCommand(()->shooter.setMotorSpeed(-0.2))).until(
           ()->index.CurrentLimitSpike()).andThen(
-        new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)).andThen(
+        new RunCommand(()->index.setMotorSpeed(-0.1)).withTimeout(0.025)).andThen(
           new ParallelCommandGroup(
             new InstantCommand(()->index.setMotorSpeed(0)),
             new InstantCommand(()->shooter.setMotorSpeed(0))
