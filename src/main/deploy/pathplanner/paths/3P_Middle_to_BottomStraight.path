@@ -8,11 +8,27 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.943410163101008,
-        "y": 5.697989752988144
+        "x": 2.5200511662306835,
+        "y": 5.324949028273469
       },
       "isLocked": false,
       "linkedName": "MiddleHomeGamePiece"
+    },
+    {
+      "anchor": {
+        "x": 2.068909651335041,
+        "y": 4.094203811817293
+      },
+      "prevControl": {
+        "x": 1.9431816881674038,
+        "y": 4.470738454987455
+      },
+      "nextControl": {
+        "x": 2.1604631149889393,
+        "y": 3.820016193570834
+      },
+      "isLocked": false,
+      "linkedName": null
     },
     {
       "anchor": {
@@ -20,19 +36,40 @@
         "y": 4.094203811817293
       },
       "prevControl": {
-        "x": 2.8363450321206702,
-        "y": 4.5574741683291204
+        "x": 2.411682655944583,
+        "y": 3.995923375565064
+      },
+      "nextControl": {
+        "x": 2.8990263714380595,
+        "y": 4.095767936976303
+      },
+      "isLocked": false,
+      "linkedName": "BottomGP"
+    },
+    {
+      "anchor": {
+        "x": 2.4905424125512585,
+        "y": 4.443284140805373
+      },
+      "prevControl": {
+        "x": 2.2161875147914665,
+        "y": 3.9250582228146547
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BottomGP_Sideways"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 90.10796569970258,
-      "rotateFast": false
+      "waypointRelativePos": 0.55,
+      "rotationDegrees": 180.0,
+      "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 2,
+      "rotationDegrees": 179.64596261435977,
+      "rotateFast": true
     }
   ],
   "constraintZones": [],
@@ -45,7 +82,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 92.03724966215539,
+    "rotation": 154.798876354525,
     "rotateFast": false
   },
   "reversed": false,

@@ -6,7 +6,6 @@ package frc.robot;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -195,7 +194,7 @@ public final class Constants {
 
       public static final double kHighAngleSP = 105.0;
       public static final double kSpeakerAngleSP = 90.0;
-      public static final double kSideSP = 80;
+      public static final double kSideSP = 87;
       public static final double kLowMidAngleSP = 75.0;
       public static final double kLowAngleSP = 55;
       public static final double kSourceAngle = 45.0;
