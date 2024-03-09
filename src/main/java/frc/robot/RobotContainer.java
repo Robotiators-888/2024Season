@@ -158,7 +158,7 @@ public class RobotContainer {
       new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
       new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
         ()->index.CurrentLimitSpike()).andThen(
-      new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
+      new RunCommand(()->index.setMotorSpeed(0.0)).withTimeout(0.0)
     )).onFalse(
       new ParallelCommandGroup(
         new InstantCommand(()->index.setMotorSpeed(0)),

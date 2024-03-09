@@ -37,7 +37,7 @@ public class AUTO_4P_Top extends AutoPaths{
             autos.resetOdometry(startingPose),
 
             autos.pathIntake(p1Name),
-            autos.scoringSequence(Pivot.kLowAngleSP,4000),
+            autos.scoringSequence(Pivot.kLowAngleSP, 4000),
 
             autos.pathIntake(p2Name),
             autos.scoringSequence(Pivot.kLowAngleSP, 4000),
