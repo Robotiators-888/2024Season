@@ -3,59 +3,48 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.056839315825323,
-        "y": 7.0050704681015805
+        "x": 2.6456402107795283,
+        "y": 6.7994709155786826
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0565403706380847,
-        "y": 6.648839909359164
+        "x": 2.322555199672118,
+        "y": 6.549814316086593
       },
       "isLocked": false,
       "linkedName": "TopHomeGamePiece"
     },
     {
       "anchor": {
-        "x": 2.9122806337215734,
-        "y": 5.453387893727152
+        "x": 2.3225551996721174,
+        "y": 5.9770727054870925
       },
       "prevControl": {
-        "x": 2.922725031200699,
-        "y": 5.641387048351416
+        "x": 2.4498018493119393,
+        "y": 6.460609974118415
       },
       "nextControl": {
-        "x": 2.894283416129153,
-        "y": 5.129437977063588
+        "x": 2.1756983764414763,
+        "y": 5.419016777210657
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ScorePosMiddle"
     },
     {
       "anchor": {
-        "x": 2.9122806337215734,
-        "y": 5.453387893727152
+        "x": 2.93935385724081,
+        "y": 5.580559282764361
       },
       "prevControl": {
-        "x": 2.9142505734596296,
-        "y": 5.45677024308872
+        "x": 2.572211799164207,
+        "y": 5.595244965087425
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ScorePosMiddle"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1,
-      "rotationDegrees": 90.00000000059681,
-      "rotateFast": true
-    },
-    {
-      "waypointRelativePos": 0.25,
-      "rotationDegrees": 91.2616231312735,
-      "rotateFast": true
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {

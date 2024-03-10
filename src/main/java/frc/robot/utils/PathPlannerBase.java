@@ -1,7 +1,6 @@
 package frc.robot.utils;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SUB_Drivetrain;
 
@@ -13,7 +12,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 public class PathPlannerBase {
 
   static final SUB_Drivetrain drivetrain = RobotContainer.drivetrain;
-  static final PathConstraints constraints = new PathConstraints(.5, 1, 1, 1);
+  static final PathConstraints constraints = new PathConstraints(.5, 0.5, 1, 0.5);
 
   public Command followPathCommand(String pathName){
     PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);

@@ -10,19 +10,20 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.Pivot;
 import frc.robot.commands.Autos.AutoPaths;
 import frc.robot.utils.AutoGenerator;
+import frc.robot.utils.PathPlannerBase;
 
 /** Add your docs here. */
-public class AUTO_MidLine_ThreeP extends AutoPaths {
+public class AUTO_MidLine_ThreeP_Two extends AutoPaths {
 
     @Override
     public Command load(AutoGenerator autos) {
-        String p1Name = "TopStart_to_TopGP";
-        String p2Name = "";
-        String p3Name = "";
-        String p4Name = "";
-        String p5Name = "";
+        String p1Name = "2P_Middle";
+        String p2Name = "3P_Middle_to_TopGP";
+        String p3Name = "TopGP_to_2ndGP";
+        String p4Name = "1st2nd_ReturnToShoot";
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
         var alliance = DriverStation.getAlliance();
         
@@ -36,7 +37,19 @@ public class AUTO_MidLine_ThreeP extends AutoPaths {
         }
 
         return new SequentialCommandGroup(
-                
+            autos.scoringSequence(Pivot.kSpeakerAngleSP,2500),
+            autos.resetOdometry(startingPose),
+
+            autos.pathIntake(p1Name).withTimeout(4),
+            autos.scoringSequence(Pivot.kLowAngleSP, 4000),
+
+            autos.pathIntake(p2Name).withTimeout(4),
+            autos.scoringSequence(Pivot.kLowAngleSP, 4000),
+
+            autos.pathIntake(p3Name).withTimeout(4),
+            PathPlannerBase.followTrajectory(p4Name),
+
+            autos.scoringSequence(Pivot.kLowAngleSP, 4000)
         );
     }
     

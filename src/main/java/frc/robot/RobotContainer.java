@@ -228,15 +228,7 @@ public class RobotContainer {
     return autoSelector.getSelected();
   }
 
-  public void robotPeriodic(){
-
-    SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
-    SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
-    SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.calculateDegreesRotation());
-
-    SmartDashboard.putNumber("X Pose", drivetrain.getPose().getX());
-    SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
-
+  public void teleopPeriodic(){
     Pose2d visionPose = limelight.getPose();
     if (!visionPose.equals(new Pose2d())){
       // Check if vision pose is within one meter of the current estiamted pose 
@@ -249,5 +241,16 @@ public class RobotContainer {
       // if (dist <= 1){
       // }
     }
+  }
+
+  public void robotPeriodic(){
+
+    SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
+    SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
+    SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.calculateDegreesRotation());
+
+    SmartDashboard.putNumber("X Pose", drivetrain.getPose().getX());
+    SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
+
   }
 }

@@ -8,33 +8,27 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9209549213878978,
-        "y": 5.589722591070332
+        "x": 1.441414260288271,
+        "y": 5.727416105995004
       },
       "isLocked": false,
       "linkedName": "MiddleRobotStart"
     },
     {
       "anchor": {
-        "x": 3.056839315825323,
-        "y": 7.0050704681015805
+        "x": 2.6456402107795283,
+        "y": 6.7994709155786826
       },
       "prevControl": {
-        "x": 2.0141558708877714,
-        "y": 6.828842280224811
+        "x": 1.4414142602882714,
+        "y": 6.226729304979183
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "TopHomeGamePiece"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": -136.19293803852796,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
