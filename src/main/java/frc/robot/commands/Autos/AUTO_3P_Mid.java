@@ -20,7 +20,7 @@ public class AUTO_3P_Mid extends AutoPaths{
     @Override
     public Command load(AutoGenerator autos) {
         String p1Name = "2P_Middle";
-        String p2Name = "3P_Middle_to_BottomGP";
+        String p2Name = "3P_Middle_to_TopGP";
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
 
         var alliance = DriverStation.getAlliance();
@@ -38,11 +38,11 @@ public class AUTO_3P_Mid extends AutoPaths{
             autos.scoringSequence(Pivot.kSpeakerAngleSP,2500),
             autos.resetOdometry(startingPose),
 
-            autos.pathIntake(p1Name).withTimeout(3),
-            autos.scoringSequence(Pivot.kLowAngleSP,4000),
+            autos.pathIntake(p1Name).withTimeout(4),
+            autos.scoringSequence(Pivot.kLowAngleSP, 4000),
 
             autos.pathIntake(p2Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP, 4000)
+            autos.scoringSequence(Pivot.kLowAngleSP-7, 4500)
         );
     }
     
