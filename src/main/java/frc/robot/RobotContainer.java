@@ -66,18 +66,23 @@ public class RobotContainer {
                 true, true),
                 drivetrain));
 
-    shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(2500), shooter));
+
+    shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(0), shooter));
     //index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
     //intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
     pivot.setDefaultCommand(new RunCommand(()->pivot.runAutomatic(), pivot));    
-    climber.setDefaultCommand(new RunCommand(()->climber.runMotor(0), climber));
+    climber.setDefaultCommand(new RunCommand(()->{climber.runLeft(0);climber.runRight(0);}, climber));
 
 
      /* ================== *\
             Driver One 
      \* ================== */ 
-    Driver1.rightTrigger().whileTrue(new RunCommand(()->climber.runMotor(Climber.kUpSpeed), climber));
-    Driver1.leftTrigger().whileTrue(new RunCommand(()->climber.runMotor(Climber.kDownSpeed), climber));
+    Driver1.rightTrigger().whileTrue(new RunCommand(()->climber.runRight(Climber.kDownSpeed), climber));
+    Driver1.rightBumper().whileTrue(new RunCommand(()->climber.runRight(Climber.kUpSpeed), climber));
+
+    Driver1.leftTrigger().whileTrue(new RunCommand(()->climber.runLeft(Climber.kDownSpeed), climber));
+    Driver1.leftBumper().whileTrue(new RunCommand(()->climber.runLeft(Climber.kUpSpeed), climber));
+
 
     Driver1.leftStick().onTrue(new InstantCommand(()->drivetrain.zeroHeading()));
 

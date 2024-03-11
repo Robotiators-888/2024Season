@@ -162,8 +162,8 @@ public final class Constants {
       public static final double kIntakingSpeed = 0.35;
     }
     public static final class Climber{
-      public static final double kUpSpeed = .4;
-      public static final double kDownSpeed = -.2;
+      public static final double kUpSpeed = 1;
+      public static final double kDownSpeed = -1;
     }
   
      public static final class Pivot {
