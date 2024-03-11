@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.Autos.*;
+import frc.robot.commands.Autos.MidLine.AUTO_MidLine_Beline;
 import frc.robot.commands.Autos.MidLine.AUTO_MidLine_ThreeP_One;
 import frc.robot.commands.Autos.MidLine.AUTO_MidLine_ThreeP_Two;
 import frc.robot.subsystems.SUB_Drivetrain;
@@ -37,6 +38,8 @@ public class AutoSelector {
         
         chooser.addOption("4P_Top", new AUTO_4P_Top());
         chooser.addOption("4P_Middle", new AUTO_4P_Mid());
+
+        chooser.addOption("Beline", new AUTO_MidLine_Beline());
 
 
         SmartDashboard.putData("Auto Selector", chooser);

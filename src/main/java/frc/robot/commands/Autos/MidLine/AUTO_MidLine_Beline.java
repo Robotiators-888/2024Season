@@ -16,17 +16,15 @@ import frc.robot.utils.AutoGenerator;
 import frc.robot.utils.PathPlannerBase;
 
 /** Add your docs here. */
-public class AUTO_MidLine_ThreeP_One extends AutoPaths {
+public class AUTO_MidLine_Beline extends AutoPaths {
 
     @Override
     public Command load(AutoGenerator autos) {
-        String p1Name = "2P_Middle";
-        String p2Name = "3P_Middle_to_TopGP";
-        String p3Name = "TopGP_to_1stGP";
-        String p4Name = "1st2nd_ReturnToShoot";
+        String p1Name = "SillyAuto_Start_Top_1";
+        String p2Name = "";
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
         var alliance = DriverStation.getAlliance();
-        
+    
         Pose2d startingPose = null;
         if (alliance.isPresent()) {
             if (alliance.get() == DriverStation.Alliance.Red){
@@ -34,23 +32,16 @@ public class AUTO_MidLine_ThreeP_One extends AutoPaths {
             } else {
                 startingPose = p1.getPreviewStartingHolonomicPose();
             }
-        }
+        } 
+
 
         return new SequentialCommandGroup(
-            autos.scoringSequence(Pivot.kSpeakerAngleSP-2,2500),
             autos.resetOdometry(startingPose),
+            autos.pathIntake(p1Name)
 
-            autos.pathIntake(p1Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP, 4000),
-
-            autos.pathIntake(p2Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP-8, 4500),
-
-            autos.pathIntake(p3Name).withTimeout(4),
-            PathPlannerBase.followTrajectory(p4Name),
-
-            autos.scoringSequence(Pivot.kLowAngleSP-5, 4000)
         );
     }
+
+
     
 }
