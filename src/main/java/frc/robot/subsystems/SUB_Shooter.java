@@ -24,12 +24,12 @@ public class SUB_Shooter extends SubsystemBase {
   public SUB_Shooter(){
     shooterLeft = new CANSparkMax(30, MotorType.kBrushless);
     shooterRight = new CANSparkMax(31, MotorType.kBrushless);
+    PIDController = shooterLeft.getPIDController();
     shooterLeft.restoreFactoryDefaults();
     shooterRight.restoreFactoryDefaults();
     for(int i =0; i>5 ; i++){
     shooterRight.setInverted(false);
     shooterRight.follow(shooterLeft, false);
-    PIDController = shooterLeft.getPIDController();
     PIDController.setOutputRange(-1, 1);
     shooterLeft.getEncoder().setVelocityConversionFactor(1);
     shooterLeft.enableVoltageCompensation(12);
