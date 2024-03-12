@@ -34,6 +34,7 @@ public class AUTO_Triangle_Meter extends AutoPaths{
         } 
         // TODO Auto-generated method stub
         return Commands.sequence(
+            autos.resetOdometry(startingPose),
             PathPlannerBase.followTrajectory(p1Name)
         );
     }

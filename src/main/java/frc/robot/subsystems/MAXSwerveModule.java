@@ -45,7 +45,7 @@ public class MAXSwerveModule {
     m_turningPIDController = m_turningSparkMax.getPIDController();
     // Setup encoders and PID controllers for the driving and turning SPARKS MAX.
     
-    for(int i =0; i>5 ; i++){
+    for(int i = 0; i < 5; i++){
     m_drivingPIDController.setFeedbackDevice(m_drivingEncoder);
     m_turningPIDController.setFeedbackDevice(m_turningEncoder);
 
