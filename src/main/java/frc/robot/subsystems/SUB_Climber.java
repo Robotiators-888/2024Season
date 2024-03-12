@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -22,12 +24,14 @@ public class SUB_Climber extends SubsystemBase {
     
     climberLeft.restoreFactoryDefaults();
     climberRight.restoreFactoryDefaults();
-
+    for(int i =0; i<5 ; i++){
     climberLeft.setInverted(true);
 
     climberRight.setIdleMode(IdleMode.kBrake);
     climberLeft.setIdleMode(IdleMode.kBrake);
     //climberLeft.set
+    Timer.delay(.1);
+    }
 
     climberLeft.burnFlash();
     climberRight.burnFlash();

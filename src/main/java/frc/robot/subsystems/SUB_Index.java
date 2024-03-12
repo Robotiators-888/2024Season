@@ -40,7 +40,7 @@ public class SUB_Index extends SubsystemBase {
 
     indexLeft.restoreFactoryDefaults();
     indexRight.restoreFactoryDefaults();
-    for(int i =0; i>5 ; i++){
+    for(int i =0; i<5 ; i++){
     indexLeft.setInverted(true);
     indexRight.setInverted(false);
 
