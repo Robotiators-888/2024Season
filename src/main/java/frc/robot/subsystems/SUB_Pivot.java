@@ -51,7 +51,7 @@ public class SUB_Pivot extends SubsystemBase {
         rotateRelativeEncoder = pivotMotor.getEncoder();
         pivotTrapezoidProfile = new TrapezoidProfile(kArmMotionConstraint);
         pivotMotor.restoreFactoryDefaults();
-        for(int i =0; i>5 ; i++){
+        for(int i =0; i<5 ; i++){
         pivotMotor.setOpenLoopRampRate(0.6); // motor takes 0.6 secs to reach desired power
         pivotMotor.setInverted(false);
         pivotMotor.setIdleMode(IdleMode.kBrake);
@@ -126,7 +126,7 @@ public void setLimits(){
    
 
    public void setPivotSetpoint(double newSetpoint){
-      pivotSetpoint = newSetpoint;
+    pivotSetpoint = newSetpoint;
    }
 
    public void setPIDF(SparkPIDController pid, double P, double I, double D, double F){
@@ -137,7 +137,7 @@ public void setLimits(){
   }
   
 public void setSetpointToPivot(){
-  pivotSetpoint = rotateEncoder.getPosition();
+   pivotSetpoint = rotateEncoder.getPosition();
 }
 
 public double getRotations(){

@@ -27,7 +27,7 @@ public class SUB_Shooter extends SubsystemBase {
     PIDController = shooterLeft.getPIDController();
     shooterLeft.restoreFactoryDefaults();
     shooterRight.restoreFactoryDefaults();
-    for(int i =0; i>5 ; i++){
+    for(int i =0; i<5 ; i++){
     shooterRight.setInverted(false);
     shooterRight.follow(shooterLeft, false);
     PIDController.setOutputRange(-1, 1);
