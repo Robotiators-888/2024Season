@@ -50,6 +50,7 @@ public class SUB_Pivot extends SubsystemBase {
         rotateRelativeEncoder = pivotMotor.getEncoder();
         pivotTrapezoidProfile = new TrapezoidProfile(kArmMotionConstraint);
         pivotMotor.restoreFactoryDefaults();
+        for(int i =0; i>5 ; i++){
         pivotMotor.setOpenLoopRampRate(0.6); // motor takes 0.6 secs to reach desired power
         pivotMotor.setInverted(false);
         pivotMotor.setIdleMode(IdleMode.kBrake);
@@ -63,6 +64,8 @@ public class SUB_Pivot extends SubsystemBase {
         // pivotEncoder.setPositionConversionFactor(1.0/4.0 * 2 * Math.PI);
         // rotateRelativeEncoder.setPositionConversionFactor(1.0/(300.0)*2*Math.PI);
         // rotateRelativeEncoder.setPosition(pivotEncoder.getPosition());
+        Timer.delay(.1);
+        }
         pivotMotor.burnFlash();
         pivotPID = pivotMotor.getPIDController();
         pivotPID.setFeedbackDevice(rotateEncoder);

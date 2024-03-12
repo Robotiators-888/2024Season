@@ -40,7 +40,7 @@ public class SUB_Index extends SubsystemBase {
 
     indexLeft.restoreFactoryDefaults();
     indexRight.restoreFactoryDefaults();
-    
+    for(int i =0; i>5 ; i++){
     indexLeft.setInverted(true);
     indexRight.setInverted(false);
 
@@ -51,6 +51,8 @@ public class SUB_Index extends SubsystemBase {
     indexRight.follow(indexLeft, true); 
     indexLeft.setIdleMode(IdleMode.kBrake);
     indexRight.setIdleMode(IdleMode.kBrake);
+    Timer.delay(.1);
+    }
     indexLeft.burnFlash();
     indexRight.burnFlash();
     //Timer.delay(0.2);
