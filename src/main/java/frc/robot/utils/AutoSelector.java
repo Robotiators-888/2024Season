@@ -11,6 +11,8 @@ import frc.robot.commands.Autos.*;
 import frc.robot.commands.Autos.MidLine.AUTO_MidLine_Beline;
 import frc.robot.commands.Autos.MidLine.AUTO_MidLine_ThreeP_One;
 import frc.robot.commands.Autos.MidLine.AUTO_MidLine_ThreeP_Two;
+import frc.robot.commands.Autos.Troubles.AUTO_1_Meter;
+import frc.robot.commands.Autos.Troubles.AUTO_2_Meter;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Intake;
@@ -26,20 +28,23 @@ public class AutoSelector {
     public AutoSelector(SUB_Drivetrain drivetrain, SUB_Index index, SUB_Intake intake, SUB_Shooter shooter, SUB_Pivot pivot){
         autos = new AutoGenerator(drivetrain, index, intake, shooter, pivot);
 
-        chooser.setDefaultOption("1P_Stay", new AUTO_JustShoot());
-        chooser.addOption("2P_Top", new AUTO_2P_Top());
-        chooser.addOption("2P_Middle", new AUTO_2P_Mid());
+        // chooser.setDefaultOption("1P_Stay", new AUTO_JustShoot());
+        // chooser.addOption("2P_Top", new AUTO_2P_Top());
+        // chooser.addOption("2P_Middle", new AUTO_2P_Mid());
 
-        chooser.addOption("3P_Top", new AUTO_3P_Top());
-        chooser.addOption("3P_Middle", new AUTO_3P_Mid());
-        // chooser.addOption("3P_Bottom", new AUTO_3P_Bottom());
-        chooser.addOption("3P_MidLine_3_1st", new AUTO_MidLine_ThreeP_One());
-        chooser.addOption("3P_MidLine_3_2nd", new AUTO_MidLine_ThreeP_Two());
+        // chooser.addOption("3P_Top", new AUTO_3P_Top());
+        // chooser.addOption("3P_Middle", new AUTO_3P_Mid());
+        // // chooser.addOption("3P_Bottom", new AUTO_3P_Bottom());
+        // chooser.addOption("3P_MidLine_3_1st", new AUTO_MidLine_ThreeP_One());
+        // chooser.addOption("3P_MidLine_3_2nd", new AUTO_MidLine_ThreeP_Two());
         
-        chooser.addOption("4P_Top", new AUTO_4P_Top());
-        chooser.addOption("4P_Middle", new AUTO_4P_Mid());
+        // chooser.addOption("4P_Top", new AUTO_4P_Top());
+        // chooser.addOption("4P_Middle", new AUTO_4P_Mid());
 
-        chooser.addOption("Beline", new AUTO_MidLine_Beline());
+        // chooser.addOption("Beline", new AUTO_MidLine_Beline());
+
+        chooser.addOption("1 Meter back", new AUTO_1_Meter());
+        chooser.addOption("2 Meter", new AUTO_2_Meter());
 
 
         SmartDashboard.putData("Auto Selector", chooser);
