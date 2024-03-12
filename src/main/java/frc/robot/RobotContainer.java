@@ -156,7 +156,7 @@ public class RobotContainer {
 
 
 
-    CMD_AimOnDist aimCommand = new CMD_AimOnDist(pivot, limelight, drivetrain);
+    CMD_AimOnDist aimCommand = new CMD_AimOnDist(pivot, limelight, drivetrain, Driver1);
     Driver2.b().whileTrue(
         new ParallelCommandGroup(
           new ParallelCommandGroup(
