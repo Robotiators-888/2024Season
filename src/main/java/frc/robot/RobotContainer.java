@@ -17,6 +17,7 @@ import frc.robot.subsystems.SUB_Limelight;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -250,16 +251,21 @@ public class RobotContainer {
     SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
 
     Pose2d visionPose = limelight.getPose();
-    if (!visionPose.equals(new Pose2d())){
+
+    // Field is 1655 cm by 821 cm
+    if (!visionPose.equals(new Pose2d()) && 
+        limelight.getTv() && 
+        visionPose.getX() >= 0 && visionPose.getX() <= 1655.0/100 &&
+        visionPose.getY() >= 0 && visionPose.getY() <= 821.0/100){
       // Check if vision pose is within one meter of the current estiamted pose 
       // to avoid abnormalities with vision (detecting a tag that isn't present) from
       // affecting the accuracy of our pose measurement.
-      double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
-      drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
-      // Transform2d t2d = visionPose.minus(drivetrain.getPose());
-      // double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
-      // if (dist <= 1){
-      // }
+      Transform2d t2d = visionPose.minus(drivetrain.getPose());
+      double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
+      if (dist <= 1){
+        double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
+        drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
+      }
     }
   }
 }
