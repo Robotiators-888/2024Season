@@ -45,8 +45,8 @@ public class RobotContainer {
    public static AutoSelector autoSelector = new AutoSelector(drivetrain, index, intake, shooter, pivot);
 
   
-  CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
-  CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
+    CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
+    CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
     
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -84,7 +84,7 @@ public class RobotContainer {
       new InstantCommand(()->pivot.goToAngle(65))
     ));//Shoot From Bottom Setpoin
 
-   Driver1.povUp().onTrue(new SequentialCommandGroup(
+    Driver1.povUp().onTrue(new SequentialCommandGroup(
       new InstantCommand(()->pivot.goToAngle(90))
     ));//Shoot From Up Close Setpoint
 
@@ -92,7 +92,6 @@ public class RobotContainer {
       new InstantCommand(()->pivot.goToAngle(50))
     ));//Shoot From Bottom Setpoin
 
-    Driver1.back().onTrue(new InstantCommand(()->pivot.goToAngle(50)));
     Driver1.start().whileTrue( new ParallelCommandGroup(
           new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)),
           new RunCommand(()->shooter.shootFlywheelOnRPM(500), shooter),
@@ -224,7 +223,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    
     return autoSelector.getSelected();
   }
 
