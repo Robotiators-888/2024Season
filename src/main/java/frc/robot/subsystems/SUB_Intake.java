@@ -20,6 +20,8 @@ public class SUB_Intake extends SubsystemBase {
 
   /** Creates a new SUB_Intake. */
   public SUB_Intake() {
+
+    
     intakeMotor = new CANSparkMax(Intake.kINTAKE_MOTOR_CANID, MotorType.kBrushless);
     intakeMotor.restoreFactoryDefaults();
     intakeMotor.setIdleMode(IdleMode.kCoast);

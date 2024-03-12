@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.*;
 import frc.robot.commands.Limelight.CMD_AimOnDist;
 import frc.robot.commands.Limelight.CMD_AlignSource;
+import frc.robot.subsystems.SUB_Climber;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Shooter;
@@ -43,7 +44,9 @@ public class RobotContainer {
    public static SUB_Intake intake = new SUB_Intake();
    public static SUB_Pivot pivot = new SUB_Pivot();
    public static SUB_Limelight limelight = new SUB_Limelight();
+   public static SUB_Climber climber = new SUB_Climber();
    public static AutoSelector autoSelector = new AutoSelector(drivetrain, index, intake, shooter, pivot);
+
 
   
   CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
@@ -64,15 +67,22 @@ public class RobotContainer {
                 true, true),
                 drivetrain));
 
-    //shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(0), shooter));
+
+    shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(0), shooter));
     //index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
     //intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
     pivot.setDefaultCommand(new RunCommand(()->pivot.runAutomatic(), pivot));    
+    climber.setDefaultCommand(new RunCommand(()->{climber.runLeft(0);climber.runRight(0);}, climber));
 
 
      /* ================== *\
             Driver One 
      \* ================== */ 
+    Driver1.rightTrigger().whileTrue(new RunCommand(()->climber.runRight(Climber.kDownSpeed), climber));
+    Driver1.rightBumper().whileTrue(new RunCommand(()->climber.runRight(Climber.kUpSpeed), climber));
+
+    Driver1.leftTrigger().whileTrue(new RunCommand(()->climber.runLeft(Climber.kDownSpeed), climber));
+    Driver1.leftBumper().whileTrue(new RunCommand(()->climber.runLeft(Climber.kUpSpeed), climber));
 
 
     Driver1.leftStick().onTrue(new InstantCommand(()->drivetrain.zeroHeading()));
@@ -102,15 +112,19 @@ public class RobotContainer {
         );
 
     Driver1.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
+    
+    Driver1.a().whileTrue(
+      new CMD_AlignSource(pivot, limelight, drivetrain, Driver1)
+    );
 
-     Driver1.b().whileTrue(
-        new ParallelCommandGroup(
-          new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
-          new SequentialCommandGroup(
-            new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500),
-            new RunCommand(()->index.setMotorSpeed(0.5), index)
-          )
+    Driver1.b().whileTrue(
+      new ParallelCommandGroup(
+        new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
+        new SequentialCommandGroup(
+          new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500),
+          new RunCommand(()->index.setMotorSpeed(0.5), index)
         )
+      )
     ).onFalse(
       new ParallelCommandGroup(
         new InstantCommand(()->index.setMotorSpeed(0))
@@ -147,10 +161,6 @@ public class RobotContainer {
           new ParallelCommandGroup(
             new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
             aimCommand
-          ),
-          new SequentialCommandGroup(
-            new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500 && aimCommand.isFinished()),
-            new RunCommand(()->index.setMotorSpeed(0.5), index)
           )
         )
     ).onFalse(
@@ -234,6 +244,8 @@ public class RobotContainer {
     Driver2.leftTrigger().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
     Driver2.povRight().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));    
     Driver2.povLeft().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));
+    
+
 
   }
 
