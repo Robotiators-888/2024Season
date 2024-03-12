@@ -45,10 +45,10 @@ public class CMD_AlignAmp extends Command {
     var alliance = DriverStation.getAlliance();
     if (alliance.isPresent()){
       if (alliance.get() == DriverStation.Alliance.Red){
-        tagPose = drivetrain.at_field.getTagPose(9).get();
+        tagPose = drivetrain.at_field.getTagPose(5).get();
         targetId = 5;
       } else {
-        tagPose = drivetrain.at_field.getTagPose(2).get();
+        tagPose = drivetrain.at_field.getTagPose(6).get();
         targetId = 6;
       }
     } else {
