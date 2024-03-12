@@ -194,8 +194,7 @@ public class RobotContainer {
     ));
 
     Driver2.y().whileTrue(new ParallelCommandGroup(
-        // new CMD_AlignSource(pivot, limelight, drivetrain, Driver1),
-
+        new CMD_AlignSource(pivot, limelight, drivetrain, Driver1),
         new ParallelCommandGroup(
         new InstantCommand(()->index.starttimer()),
         new RunCommand(()->index.setMotorSpeed(-Constants.Intake.kIndexSpeed), index),
