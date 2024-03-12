@@ -156,7 +156,7 @@ public class RobotContainer {
 
 
 
-    CMD_AimOnDist aimCommand = new CMD_AimOnDist(pivot, limelight, drivetrain);
+    CMD_AimOnDist aimCommand = new CMD_AimOnDist(pivot, limelight, drivetrain, Driver1);
     Driver2.b().whileTrue(
         new ParallelCommandGroup(
           new ParallelCommandGroup(
@@ -194,8 +194,7 @@ public class RobotContainer {
     ));
 
     Driver2.y().whileTrue(new ParallelCommandGroup(
-        // new CMD_AlignSource(pivot, limelight, drivetrain, Driver1),
-
+        new CMD_AlignSource(pivot, limelight, drivetrain, Driver1),
         new ParallelCommandGroup(
         new InstantCommand(()->index.starttimer()),
         new RunCommand(()->index.setMotorSpeed(-Constants.Intake.kIndexSpeed), index),
