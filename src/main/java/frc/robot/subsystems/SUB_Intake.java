@@ -5,14 +5,12 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.Intake;
 
 public class SUB_Intake extends SubsystemBase {
@@ -23,10 +21,15 @@ public class SUB_Intake extends SubsystemBase {
 
   /** Creates a new SUB_Intake. */
   public SUB_Intake() {
+
+    
     intakeMotor = new CANSparkMax(Intake.kINTAKE_MOTOR_CANID, MotorType.kBrushless);
     intakeMotor.restoreFactoryDefaults();
+    for(int i =0; i<5 ; i++){
     intakeMotor.setIdleMode(IdleMode.kCoast);
     intakeMotor.setInverted(true);
+    Timer.delay(.1);
+    }
     intakeMotor.burnFlash();
     intakeBool = false;
 

@@ -5,8 +5,9 @@
 package frc.robot;
 
 import frc.robot.Constants.*;
-import frc.robot.commands.AutoActions.CMD_Intake;
 import frc.robot.commands.Limelight.CMD_AimOnDist;
+import frc.robot.commands.Limelight.CMD_AlignSource;
+import frc.robot.subsystems.SUB_Climber;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Shooter;
@@ -17,6 +18,7 @@ import frc.robot.subsystems.SUB_Limelight;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -43,14 +45,13 @@ public class RobotContainer {
    public static SUB_Intake intake = new SUB_Intake();
    public static SUB_Pivot pivot = new SUB_Pivot();
    public static SUB_Limelight limelight = new SUB_Limelight();
+   public static SUB_Climber climber = new SUB_Climber();
    public static AutoSelector autoSelector = new AutoSelector(drivetrain, index, intake, shooter, pivot);
 
+
   
-
-
   CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
-
-  private final CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
+  CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
     
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -67,25 +68,28 @@ public class RobotContainer {
                 true, true),
                 drivetrain));
 
-    //shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(1000), shooter));
+
+    shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(0), shooter));
     //index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
     //intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
     pivot.setDefaultCommand(new RunCommand(()->pivot.runAutomatic(), pivot));    
+    climber.setDefaultCommand(new RunCommand(()->{climber.runLeft(0);climber.runRight(0);}, climber));
 
 
      /* ================== *\
             Driver One 
      \* ================== */ 
+    Driver1.rightTrigger().whileTrue(new RunCommand(()->climber.runRight(Climber.kDownSpeed), climber));
+    Driver1.rightBumper().whileTrue(new RunCommand(()->climber.runRight(Climber.kUpSpeed), climber));
+
+    Driver1.leftTrigger().whileTrue(new RunCommand(()->climber.runLeft(Climber.kDownSpeed), climber));
+    Driver1.leftBumper().whileTrue(new RunCommand(()->climber.runLeft(Climber.kUpSpeed), climber));
 
 
     Driver1.leftStick().onTrue(new InstantCommand(()->drivetrain.zeroHeading()));
 
     Driver1.povRight().onTrue(new SequentialCommandGroup(
       new InstantCommand(()->pivot.goToAngle(75))
-    ));//Shoot From Bottom Setpoin
-
-    Driver1.povLeft().onTrue(new SequentialCommandGroup(
-      new InstantCommand(()->pivot.goToAngle(65))
     ));//Shoot From Bottom Setpoin
 
    Driver1.povUp().onTrue(new SequentialCommandGroup(
@@ -110,17 +114,19 @@ public class RobotContainer {
         new InstantCommand(()->index.setMotorSpeed(0))
         )
         );
+    
+    Driver1.a().whileTrue(
+      new CMD_AlignSource(pivot, limelight, drivetrain, Driver1)
+    );
 
-    Driver1.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
-
-     Driver1.b().whileTrue(
-        new ParallelCommandGroup(
-          new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
-          new SequentialCommandGroup(
-            new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500),
-            new RunCommand(()->index.setMotorSpeed(0.5), index)
-          )
+    Driver1.b().whileTrue(
+      new ParallelCommandGroup(
+        new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
+        new SequentialCommandGroup(
+          new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500),
+          new RunCommand(()->index.setMotorSpeed(0.5), index)
         )
+      )
     ).onFalse(
       new ParallelCommandGroup(
         new InstantCommand(()->shooter.setMotorSpeed(0)),
@@ -128,20 +134,31 @@ public class RobotContainer {
     )
     ); // Spin Shooter OUT
 
+    Driver1.povLeft().whileTrue(
+       new RunCommand(
+            () -> drivetrain.drive(
+                -MathUtil.applyDeadband(Math.copySign(Math.pow(Driver1.getRawAxis(1), 2), Driver1.getRawAxis(1)), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(Math.copySign(Math.pow(Driver1.getRawAxis(0), 2), Driver1.getRawAxis(0)), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(Driver1.getRawAxis(4), OIConstants.kDriveDeadband),
+                false, true),
+                drivetrain)
+    );
+
     /* ================== *\
            Driver Two
     \* ================== */
     Driver2.leftBumper().onTrue(new InstantCommand(()->
       SUB_Shooter.MANUAL_RPM -= 250
-    )); // Decrease manual RPM by 100
+    )); // Decrease manual RPM by 250
 
     Driver2.rightBumper().onTrue(
       new InstantCommand(()->
         SUB_Shooter.MANUAL_RPM += 250
-    )); // Increase manual RPM by 100
+    )); // Increase manual RPM by 250
 
 
-    CMD_AimOnDist aimCommand = new CMD_AimOnDist(pivot, limelight, drivetrain);
+
+    CMD_AimOnDist aimCommand = new CMD_AimOnDist(pivot, limelight, drivetrain, Driver1);
     Driver2.b().whileTrue(
         new ParallelCommandGroup(
           new ParallelCommandGroup(
@@ -170,15 +187,42 @@ public class RobotContainer {
       new InstantCommand(()->pivot.goToAngle(75)),
       new InstantCommand(()->index.starttimer()),
       new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
-      new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
-        ()->index.CurrentLimitSpike()).andThen(
-      new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
-    )).onFalse(
+      new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))
+      ).until(
+        ()->index.CurrentLimitSpike()
+      ).andThen(
+        new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
+    ).andThen(
       new ParallelCommandGroup(
         new RunCommand(()->shooter.shootFlywheelOnRPM(2500), shooter),
         new InstantCommand(()->index.setMotorSpeed(0)),
         new InstantCommand(()->intake.setMotorSpeed(0))
+    ))).onFalse(
+      new ParallelCommandGroup(
+        new InstantCommand(()->index.setMotorSpeed(0)),
+        new InstantCommand(()->intake.setMotorSpeed(0)),
+        new InstantCommand(()->shooter.shootFlywheelOnRPM(1500))
     ));
+
+    Driver2.y().whileTrue(new ParallelCommandGroup(
+        new CMD_AlignSource(pivot, limelight, drivetrain, Driver1),
+        new ParallelCommandGroup(
+        new InstantCommand(()->index.starttimer()),
+        new RunCommand(()->index.setMotorSpeed(-Constants.Intake.kIndexSpeed), index),
+        new RunCommand(()->shooter.shootFlywheelOnRPM(-1000), shooter)).until(
+          ()->index.CurrentLimitSpike()).andThen(
+        new RunCommand(()->index.setMotorSpeed(-0.1)).withTimeout(0.025)).andThen(
+          new ParallelCommandGroup(
+            new InstantCommand(()->index.setMotorSpeed(0)),
+            new InstantCommand(()->shooter.setMotorSpeed(0))
+          )
+        )
+      )).onFalse(
+        new ParallelCommandGroup(
+          new InstantCommand(()->index.setMotorSpeed(0)),
+          new InstantCommand(()->shooter.shootFlywheelOnRPM(1500))
+        )
+      );
 
     // Driver2.a().whileTrue(
     //   new ParallelCommandGroup(
@@ -197,23 +241,22 @@ public class RobotContainer {
     // )); // Suspicious if it will work or not, if it doesn't, just put onTrue();
 
     
-
-    // Driver2.x().whileTrue((new RunCommand(()->index.setMotorSpeed(-0.25), index))); //Drive Index OUT
-
-  Driver2.x().whileTrue(
-  new ParallelCommandGroup(
-  new RunCommand(()->index.setMotorSpeed(-0.5), index),
-  new RunCommand(()->intake.setMotorSpeed(-0.5), intake)
-  )).onFalse(
+    Driver2.x().whileTrue(
     new ParallelCommandGroup(
-      new InstantCommand(()->index.setMotorSpeed(0)),
-      new InstantCommand(()->intake.setMotorSpeed(0))
-    ));
+    new RunCommand(()->index.setMotorSpeed(-0.6), index),
+    new RunCommand(()->intake.setMotorSpeed(-0.6), intake)
+    )).onFalse(
+      new ParallelCommandGroup(
+        new InstantCommand(()->index.setMotorSpeed(0)),
+        new InstantCommand(()->intake.setMotorSpeed(0))
+      ));
 
-
+    // Driver2.a().whileTrue(new RunCommand(()->drivetrain.;, null) );
     Driver2.leftTrigger().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
     Driver2.povRight().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));    
     Driver2.povLeft().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));
+    
+
 
   }
 
@@ -242,6 +285,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    
     return autoSelector.getSelected();
   }
 
@@ -255,16 +299,21 @@ public class RobotContainer {
     SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
 
     Pose2d visionPose = limelight.getPose();
-    if (!visionPose.equals(new Pose2d())){
+
+    // Field is 1655 cm by 821 cm
+    if (!visionPose.equals(new Pose2d()) && 
+        limelight.getTv() && 
+        visionPose.getX() >= 0 && visionPose.getX() <= 1655.0/100 &&
+        visionPose.getY() >= 0 && visionPose.getY() <= 821.0/100){
       // Check if vision pose is within one meter of the current estiamted pose 
       // to avoid abnormalities with vision (detecting a tag that isn't present) from
       // affecting the accuracy of our pose measurement.
-      double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
-      drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
-      // Transform2d t2d = visionPose.minus(drivetrain.getPose());
-      // double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
-      // if (dist <= 1){
-      // }
+      Transform2d t2d = visionPose.minus(drivetrain.getPose());
+      double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
+      if (dist <= 1){
+        double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
+        drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
+      }
     }
   }
 }

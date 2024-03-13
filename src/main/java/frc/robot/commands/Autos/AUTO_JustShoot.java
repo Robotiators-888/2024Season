@@ -11,6 +11,7 @@ import frc.robot.utils.AutoGenerator;
 
 /** Add your docs here. */
 public class AUTO_JustShoot extends AutoPaths {
+    
 
     @Override
     public Command load(AutoGenerator autos) {

@@ -3,38 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.765872873427322,
-        "y": 6.535128633763529
+        "x": 5.861804639530567,
+        "y": 6.43232885750208
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7938706360418095,
-        "y": 6.667299774671107
+        "x": 6.625460120329902,
+        "y": 5.85958724690258
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "HomeLine_Top"
     },
     {
       "anchor": {
-        "x": 2.9122806337215734,
-        "y": 6.997746311014251
+        "x": 8.343684952128402,
+        "y": 5.786158835287259
       },
       "prevControl": {
-        "x": 1.9577112827224061,
-        "y": 6.792146758491353
+        "x": 6.596088755683772,
+        "y": 5.742101788318067
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "TopHomeGamePiece"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.95,
-      "rotationDegrees": -168.74112672650855,
-      "rotateFast": true
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -45,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -152.52242986166257,
-    "rotateFast": true
+    "rotation": 0,
+    "rotateFast": false
   },
   "reversed": false,
-  "folder": "3 Piece Path",
+  "folder": "Mid Line Paths",
   "previewStartingState": {
-    "rotation": -119.47588900324584,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true

@@ -6,7 +6,6 @@ package frc.robot;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -162,6 +161,10 @@ public final class Constants {
       public static final double kOutakeRPM = NeoMotorConstants.kFreeSpeedRpm;
       public static final double kIntakingSpeed = 0.35;
     }
+    public static final class Climber{
+      public static final double kUpSpeed = 1;
+      public static final double kDownSpeed = -1;
+    }
   
      public static final class Pivot {
       public static final int kPIVOT_ROTATE_MOTOR_CANID = 35;
@@ -195,9 +198,10 @@ public final class Constants {
 
       public static final double kHighAngleSP = 105.0;
       public static final double kSpeakerAngleSP = 90.0;
-      public static final double kSideSP = 80;
+      public static final double kSideSP = 87;
       public static final double kLowMidAngleSP = 75.0;
       public static final double kLowAngleSP = 55;
+      public static final double kSourceAngle = 90.0;
 
 
 

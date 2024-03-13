@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7805585557503859,
+      "y": 6.549814316086593
+    },
+    "rotation": -120.96375653207352
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Top_to_topGP"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TopGP_to_1stGP"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "1st2nd_ReturnToShoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "4 Piece",
+  "choreoAuto": false
+}

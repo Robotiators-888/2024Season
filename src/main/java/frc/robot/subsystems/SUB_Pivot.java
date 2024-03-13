@@ -4,7 +4,6 @@ import static frc.robot.Constants.Pivot.*;
 
 import java.util.function.Supplier;
 
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
@@ -13,7 +12,6 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController.ArbFFUnits;
 
 import frc.libs.PIDGains;
@@ -53,6 +51,7 @@ public class SUB_Pivot extends SubsystemBase {
         rotateRelativeEncoder = pivotMotor.getEncoder();
         pivotTrapezoidProfile = new TrapezoidProfile(kArmMotionConstraint);
         pivotMotor.restoreFactoryDefaults();
+        for(int i =0; i<5 ; i++){
         pivotMotor.setOpenLoopRampRate(0.6); // motor takes 0.6 secs to reach desired power
         pivotMotor.setInverted(false);
         pivotMotor.setIdleMode(IdleMode.kBrake);
@@ -66,6 +65,8 @@ public class SUB_Pivot extends SubsystemBase {
         // pivotEncoder.setPositionConversionFactor(1.0/4.0 * 2 * Math.PI);
         // rotateRelativeEncoder.setPositionConversionFactor(1.0/(300.0)*2*Math.PI);
         // rotateRelativeEncoder.setPosition(pivotEncoder.getPosition());
+        Timer.delay(.1);
+        }
         pivotMotor.burnFlash();
         pivotPID = pivotMotor.getPIDController();
         pivotPID.setFeedbackDevice(rotateEncoder);
@@ -125,7 +126,7 @@ public void setLimits(){
    
 
    public void setPivotSetpoint(double newSetpoint){
-      pivotSetpoint = newSetpoint;
+    pivotSetpoint = newSetpoint;
    }
 
    public void setPIDF(SparkPIDController pid, double P, double I, double D, double F){
@@ -136,7 +137,7 @@ public void setLimits(){
   }
   
 public void setSetpointToPivot(){
-  pivotSetpoint = rotateEncoder.getPosition();
+   pivotSetpoint = rotateEncoder.getPosition();
 }
 
 public double getRotations(){

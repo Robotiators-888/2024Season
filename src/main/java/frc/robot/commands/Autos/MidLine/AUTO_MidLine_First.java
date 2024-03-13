@@ -2,25 +2,27 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Autos;
+package frc.robot.commands.Autos.MidLine;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.*;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.Pivot;
+import frc.robot.commands.Autos.AutoPaths;
 import frc.robot.utils.AutoGenerator;
+import frc.robot.utils.PathPlannerBase;
 
 /** Add your docs here. */
-public class AUTO_4P_Mid extends AutoPaths{
+public class AUTO_MidLine_First extends AutoPaths {
 
     @Override
     public Command load(AutoGenerator autos) {
-        String p1Name = "MiddleStart_to_TopGP";
-        String p2Name = "TopGP_to_MiddleGP_Scorepos";
-        String p3Name = "4P_MiddleScorePose_to_BottomGP";
+        String p1Name = "Top_to_topGP";
+        String p2Name = "TopGP_to_1stGP";
+        String p3Name = "1st2nd_ReturnToShoot";
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
         var alliance = DriverStation.getAlliance();
     
@@ -33,19 +35,22 @@ public class AUTO_4P_Mid extends AutoPaths{
             }
         } 
 
-        return Commands.sequence(
-            autos.scoringSequence(Pivot.kSpeakerAngleSP,2500),
+
+        return new SequentialCommandGroup(
+            autos.scoringSequence(Pivot.kSpeakerAngleSP, 2000),
             autos.resetOdometry(startingPose),
 
             autos.pathIntake(p1Name),
-            autos.scoringSequence(Pivot.kLowAngleSP,4000),
 
-            autos.pathIntake(p2Name),
             autos.scoringSequence(Pivot.kLowAngleSP, 4000),
 
-            autos.pathIntake(p3Name),
+            autos.pathIntake(p2Name),
+
+            PathPlannerBase.followTrajectory(p3Name),
             autos.scoringSequence(Pivot.kLowAngleSP, 4000)
         );
     }
+
+
     
 }
