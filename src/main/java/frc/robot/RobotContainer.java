@@ -111,8 +111,6 @@ public class RobotContainer {
         )).onFalse(
           new InstantCommand(()->index.setMotorSpeed(0))
         );
-
-    Driver1.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
     
     Driver1.a().whileTrue(
       new CMD_AlignSource(pivot, limelight, drivetrain, Driver1)
