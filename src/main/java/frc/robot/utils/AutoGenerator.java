@@ -43,7 +43,7 @@ public class AutoGenerator {
     this.pivot = pivot;
     
     AutoBuilder.configureHolonomic(drivetrain::getPose, drivetrain::resetPose, drivetrain::getChassisSpeeds, drivetrain::driveRobotRelative,
-     new HolonomicPathFollowerConfig(new PIDConstants(5.0, 0,0), new PIDConstants(5.0, 0,0), Constants.Drivetrain.kMaxModuleSpeed, Constants.Drivetrain.kTrackRadius, new ReplanningConfig())
+     new HolonomicPathFollowerConfig(new PIDConstants(2.55, 0.00008,0.0003), new PIDConstants(5.0, 0,0), Constants.Drivetrain.kMaxModuleSpeed, Constants.Drivetrain.kTrackRadius, new ReplanningConfig())
     , ()->{
       var alliance = DriverStation.getAlliance();
                     if (alliance.isPresent()) {
@@ -86,6 +86,17 @@ public class AutoGenerator {
       return new SequentialCommandGroup(
         new InstantCommand(()->pivot.goToAngle(setpoint)),
         new WaitCommand(.25),
+        new RunCommand(()->shooter.shootFlywheelOnRPM(rpm), shooter)
+      .until(()->shooter.getFlywheelRPM() >= rpm - 500)
+      .andThen(new RunCommand(()->index.setMotorSpeed(0.5)).withTimeout(0.25))
+      .andThen(new InstantCommand(()->index.setMotorSpeed(0)))
+      );
+    }
+
+    public Command scoringSequence(double setpoint, int rpm, double delay){
+      return new SequentialCommandGroup(
+        new InstantCommand(()->pivot.goToAngle(setpoint)),
+        new WaitCommand(delay),
         new RunCommand(()->shooter.shootFlywheelOnRPM(rpm), shooter)
       .until(()->shooter.getFlywheelRPM() >= rpm - 500)
       .andThen(new RunCommand(()->index.setMotorSpeed(0.5)).withTimeout(0.25))

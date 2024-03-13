@@ -24,6 +24,7 @@ public class SUB_Climber extends SubsystemBase {
     climberRight.restoreFactoryDefaults();
 
     climberLeft.setInverted(true);
+    climberRight.setInverted(true);
 
     climberRight.setIdleMode(IdleMode.kBrake);
     climberLeft.setIdleMode(IdleMode.kBrake);

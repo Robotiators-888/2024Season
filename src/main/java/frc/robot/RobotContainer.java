@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
+  
    public static SUB_Drivetrain drivetrain = new SUB_Drivetrain();
    public static SUB_Shooter shooter = new SUB_Shooter();
    public static SUB_Index index = new SUB_Index();
@@ -115,7 +116,6 @@ public class RobotContainer {
           new InstantCommand(()->index.setMotorSpeed(0))
         );
 
-    Driver1.rightBumper().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
     
     Driver1.a().whileTrue(
       new CMD_AlignSource(pivot, limelight, drivetrain, Driver1)
@@ -173,7 +173,7 @@ public class RobotContainer {
         new InstantCommand(()->shooter.shootFlywheelOnRPM(0), shooter)
     )); // Spin Shooter OUT
     
-    Driver2.rightTrigger().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
+    Driver2.rightTrigger().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
      
     Driver2.a().whileTrue(
     new ParallelCommandGroup(
