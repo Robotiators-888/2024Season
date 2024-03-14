@@ -62,16 +62,15 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
         new RunCommand(
             () -> drivetrain.drive(
-                -MathUtil.applyDeadband(Math.copySign(Math.pow(Driver1.getRawAxis(1), 2), Driver1.getRawAxis(1)), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(Math.copySign(Math.pow(Driver1.getRawAxis(0), 2), Driver1.getRawAxis(0)), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(Driver1.getRawAxis(4), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(Math.copySign(Math.pow(Driver1.getRawAxis(1), 2), Driver1.getRawAxis(1)*.5), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(Math.copySign(Math.pow(Driver1.getRawAxis(0), 2), Driver1.getRawAxis(0)*.5), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(Driver1.getRawAxis(4)*.75, OIConstants.kDriveDeadband),
                 true, true),
                 drivetrain));
 
-
     shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(0), shooter));
-    //index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
-    //intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
+    index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
+    intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
     pivot.setDefaultCommand(new RunCommand(()->pivot.runAutomatic(), pivot));    
     climber.setDefaultCommand(new RunCommand(()->{climber.runLeft(0);climber.runRight(0);}, climber));
 
@@ -79,11 +78,11 @@ public class RobotContainer {
      /* ================== *\
             Driver One 
      \* ================== */ 
-    Driver1.rightTrigger().whileTrue(new RunCommand(()->climber.runRight(Climber.kDownSpeed), climber));
-    Driver1.rightBumper().whileTrue(new RunCommand(()->climber.runRight(Climber.kUpSpeed), climber));
+    // Driver1.rightTrigger().whileTrue(new RunCommand(()->climber.runRight(Climber.kDownSpeed), climber));
+    // Driver1.rightBumper().whileTrue(new RunCommand(()->climber.runRight(Climber.kUpSpeed), climber));
 
-    Driver1.leftTrigger().whileTrue(new RunCommand(()->climber.runLeft(Climber.kDownSpeed), climber));
-    Driver1.leftBumper().whileTrue(new RunCommand(()->climber.runLeft(Climber.kUpSpeed), climber));
+    // Driver1.leftTrigger().whileTrue(new RunCommand(()->climber.runLeft(Climber.kDownSpeed), climber));
+    // Driver1.leftBumper().whileTrue(new RunCommand(()->climber.runLeft(Climber.kUpSpeed), climber));
 
 
     Driver1.leftStick().onTrue(new InstantCommand(()->drivetrain.zeroHeading()));
@@ -91,6 +90,16 @@ public class RobotContainer {
     Driver1.povRight().onTrue(new SequentialCommandGroup(
       new InstantCommand(()->pivot.goToAngle(75))
     ));//Shoot From Bottom Setpoin
+
+    Driver1.povLeft().whileTrue(
+      new RunCommand(
+           () -> drivetrain.drive(
+               -MathUtil.applyDeadband(Math.copySign(Math.pow(Driver1.getRawAxis(1), 2), Driver1.getRawAxis(1)), OIConstants.kDriveDeadband),
+               -MathUtil.applyDeadband(Math.copySign(Math.pow(Driver1.getRawAxis(0), 2), Driver1.getRawAxis(0)), OIConstants.kDriveDeadband),
+               -MathUtil.applyDeadband(Driver1.getRawAxis(4), OIConstants.kDriveDeadband),
+               false, true),
+               drivetrain)
+   );
 
    Driver1.povUp().onTrue(new SequentialCommandGroup(
       new InstantCommand(()->pivot.goToAngle(90))
@@ -115,19 +124,23 @@ public class RobotContainer {
         )
         );
     
-    Driver1.a().whileTrue(
-      new CMD_AlignSource(pivot, limelight, drivetrain, Driver1)
-    );
+    // Driver1.a().whileTrue(
+    //   new CMD_AlignSource(pivot, limelight, drivetrain, Driver1)
+    // );
 
-    Driver1.b().whileTrue(
-      new ParallelCommandGroup(
-        new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
-        new SequentialCommandGroup(
-          new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500),
-          new RunCommand(()->index.setMotorSpeed(0.5), index)
+    Driver1.rightBumper().whileTrue( new ParallelCommandGroup(
+      new RunCommand(()->shooter.setMotorSpeed(-0.1), shooter),
+      new RunCommand(()->index.setMotorSpeed(-0.25)))); // Spin Shooter IN
+
+     Driver1.b().whileTrue(
+        new ParallelCommandGroup(
+          new RunCommand(()->shooter.shootFlywheelOnRPM(1500), shooter),
+          new SequentialCommandGroup(
+            new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 1000),
+            new RunCommand(()->index.setMotorSpeed(0.5), index)
+          )
         )
-      )
-    ).onFalse(
+      ).onFalse(
       new ParallelCommandGroup(
         new InstantCommand(()->shooter.setMotorSpeed(0)),
         new InstantCommand(()->index.setMotorSpeed(0))
@@ -157,25 +170,25 @@ public class RobotContainer {
     )); // Increase manual RPM by 250
 
 
-
-    CMD_AimOnDist aimCommand = new CMD_AimOnDist(pivot, limelight, drivetrain, Driver1);
-    Driver2.b().whileTrue(
-        new ParallelCommandGroup(
-          new ParallelCommandGroup(
-            new RunCommand(()->shooter.shootFlywheelOnRPM(2500), shooter),
-            aimCommand
-          ),
-          new SequentialCommandGroup(
-            new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 2250 && aimCommand.isFinished()),
-            new RunCommand(()->index.setMotorSpeed(0.5), index)
-          )
-        )
-    ).onFalse(
-       new ParallelCommandGroup(
-        new InstantCommand(()->shooter.setMotorSpeed(0)),
-        new InstantCommand(()->index.setMotorSpeed(0))
-    )
-    ); // Spin Shooter OUT
+    //CMD_AimOnDist aimCommand = new CMD_AimOnDist(pivot, limelight, drivetrain);
+    // Driver2.b().whileTrue(
+    //     new ParallelCommandGroup(
+    //       new ParallelCommandGroup(
+    //         new RunCommand(()->shooter.shootFlywheelOnRPM(1500), shooter),
+    //         aimCommand
+    //       ),
+    //       new SequentialCommandGroup(
+    //         new WaitUntilCommand(()->shooter.getFlywheelRPM() >=  && aimCommand.isFinished()),
+    //         new RunCommand(()->index.setMotorSpeed(0.5), index)
+    //       )
+    //     )
+    // ).onFalse(
+    //    new ParallelCommandGroup(
+    //     new InstantCommand(()->shooter.setMotorSpeed(0)),
+    //     new InstantCommand(()->index.setMotorSpeed(0))
+    // )
+    // ); 
+    // Spin Shooter OUT
 
     // Driver2.b().whileTrue(new CMD_AimOnDist(pivot, limelight, drivetrain));
     
@@ -194,7 +207,7 @@ public class RobotContainer {
         new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
     ).andThen(
       new ParallelCommandGroup(
-        new RunCommand(()->shooter.shootFlywheelOnRPM(2500), shooter),
+        new RunCommand(()->shooter.shootFlywheelOnRPM(600), shooter),
         new InstantCommand(()->index.setMotorSpeed(0)),
         new InstantCommand(()->intake.setMotorSpeed(0))
     ))).onFalse(
