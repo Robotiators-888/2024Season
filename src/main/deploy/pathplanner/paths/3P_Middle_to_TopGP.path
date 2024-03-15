@@ -8,54 +8,43 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8913918387633224,
-        "y": 6.066177055358203
+        "x": 2.1903840587645407,
+        "y": 5.7567874706411315
       },
       "isLocked": false,
       "linkedName": "MiddleHomeGamePiece"
     },
     {
       "anchor": {
-        "x": 2.9122806337215734,
-        "y": 6.997746311014251
+        "x": 2.043527235533899,
+        "y": 6.197357940333054
       },
       "prevControl": {
-        "x": 2.9122806337215734,
-        "y": 7.012431993337315
+        "x": 1.8089456955069279,
+        "y": 5.712319455092716
       },
       "nextControl": {
-        "x": 2.9122806337215734,
-        "y": 6.983060628691187
+        "x": 2.2012409739105196,
+        "y": 6.523458761203237
       },
       "isLocked": false,
-      "linkedName": "TopHomeGamePiece"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.484097705225823,
-        "y": 6.726042503963363
+        "x": 2.891391838763322,
+        "y": 6.977901955803912
       },
       "prevControl": {
-        "x": 2.484097705225828,
-        "y": 6.733385345124894
+        "x": 2.4655070513944626,
+        "y": 6.6695026270195665
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "TopHomeGamePiece"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1,
-      "rotationDegrees": -91.80000000000001,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": -90.0,
-      "rotateFast": true
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -72,7 +61,7 @@
   "reversed": false,
   "folder": "3 Piece Path",
   "previewStartingState": {
-    "rotation": 0.0,
+    "rotation": -178.1876249306974,
     "velocity": 0
   },
   "useDefaultConstraints": false

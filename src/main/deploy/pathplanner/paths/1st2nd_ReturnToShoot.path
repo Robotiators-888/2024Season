@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.124773319314081,
-        "y": 6.755413868609491
+        "x": 8.343684952128402,
+        "y": 7.460326620116567
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.9926021784065036,
-        "y": 6.814156597901747
+        "x": 7.8590585378010624,
+        "y": 7.4456046057625604
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "GP_1"
     },
     {
       "anchor": {
-        "x": 5.759004863269118,
-        "y": 6.579185680732721
+        "x": 2.891391838763322,
+        "y": 6.977901955803912
       },
       "prevControl": {
-        "x": 6.111461239022658,
-        "y": 6.637928410024977
+        "x": 3.2438482145168637,
+        "y": 7.036644685096168
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "TopHomeGamePiece"
     }
   ],
   "rotationTargets": [],
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -166.4295656148386,
+    "rotation": -152.44222484383445,
     "rotateFast": false
   },
   "reversed": false,

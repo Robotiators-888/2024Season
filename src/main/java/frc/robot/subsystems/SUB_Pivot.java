@@ -15,7 +15,6 @@ import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.SparkPIDController.ArbFFUnits;
 
 import frc.libs.PIDGains;
-import frc.robot.Constants;
 import frc.robot.Constants.Pivot;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -65,16 +64,20 @@ public class SUB_Pivot extends SubsystemBase {
         // pivotEncoder.setPositionConversionFactor(1.0/4.0 * 2 * Math.PI);
         // rotateRelativeEncoder.setPositionConversionFactor(1.0/(300.0)*2*Math.PI);
         // rotateRelativeEncoder.setPosition(pivotEncoder.getPosition());
-        Timer.delay(.1);
-        }
-        pivotMotor.burnFlash();
         pivotPID = pivotMotor.getPIDController();
         pivotPID.setFeedbackDevice(rotateEncoder);
         PIDGains.setSparkMaxGains(pivotPID, new PIDGains(0, 0, 0));
         pivotPID.setOutputRange(-0.2, 0.2);
+        setPIDF(pivotPID, 0.010, 0, 0.012, 0);
+
+        Timer.delay(.1);
+        
+        }
+        System.out.println("DONE");
+        pivotMotor.burnFlash();
+      
         pivotSetpoint = khome;
         
-        setPIDF(pivotPID, 0.010, 0, 0.012, 0);
 
         pivotTimer = new Timer();
         pivotTimer.start();

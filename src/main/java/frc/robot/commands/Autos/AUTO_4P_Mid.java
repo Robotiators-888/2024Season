@@ -33,18 +33,19 @@ public class AUTO_4P_Mid extends AutoPaths{
             }
         } 
 
+        //Path misses first pickup
         return Commands.sequence(
             autos.scoringSequence(Pivot.kSpeakerAngleSP,2500),
             autos.resetOdometry(startingPose),
 
-            autos.pathIntake(p1Name),
+            autos.pathIntake(p1Name).withTimeout(4),
             autos.scoringSequence(Pivot.kLowAngleSP,4000),
 
-            autos.pathIntake(p2Name),
+            autos.pathIntake(p2Name).withTimeout(4),
             autos.scoringSequence(Pivot.kLowAngleSP, 4000),
 
-            autos.pathIntake(p3Name),
-            autos.scoringSequence(Pivot.kLowAngleSP, 4000)
+            autos.pathIntake(p3Name).withTimeout(4),
+            autos.scoringSequence(Pivot.kLowAngleSP+5.0, 4000)
         );
     }
     

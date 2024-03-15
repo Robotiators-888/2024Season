@@ -3,51 +3,56 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7218158264523252,
-        "y": 6.608557045380159
+        "x": 2.3225551996721174,
+        "y": 5.9770727054870925
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.588271083518912,
-        "y": 6.226729304979183
+        "x": 2.322555199672118,
+        "y": 6.476385904471273
       },
       "isLocked": false,
-      "linkedName": "TopRobotStart"
+      "linkedName": "ScorePosMiddle"
     },
     {
       "anchor": {
-        "x": 4.775064147623824,
-        "y": 6.608557045380159
+        "x": 2.891391838763322,
+        "y": 6.977901955803912
       },
       "prevControl": {
-        "x": 3.3652386446096694,
-        "y": 6.35890044588676
+        "x": 2.891391838763322,
+        "y": 6.992587638126976
       },
       "nextControl": {
-        "x": 6.096696138839931,
-        "y": 6.842596043825907
+        "x": 2.891391838763322,
+        "y": 6.963216273480848
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "TopHomeGamePiece"
     },
     {
       "anchor": {
-        "x": 8.343684952128402,
-        "y": 7.460326620116567
+        "x": 2.484097705225823,
+        "y": 6.726042503963363
       },
       "prevControl": {
-        "x": 7.7122006122366455,
-        "y": 7.166612973655286
+        "x": 2.484097705225828,
+        "y": 6.733385345124894
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "GP_1"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": -172.87498365109832,
+      "rotationDegrees": -91.80000000000001,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -90.0,
       "rotateFast": true
     }
   ],
@@ -61,14 +66,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -158.96248897457815,
+    "rotation": -151.89669709525646,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Silly Paths",
+  "folder": null,
   "previewStartingState": {
-    "rotation": -116.56505117616162,
-    "velocity": 0.0
+    "rotation": 179.15846067117047,
+    "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

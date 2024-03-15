@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.Autos.*;
+import frc.robot.commands.Autos.MidLine.*;
+import frc.robot.commands.Autos.Troubles.*;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Intake;
@@ -30,9 +32,16 @@ public class AutoSelector {
         chooser.addOption("3P_Top", new AUTO_3P_Top());
         chooser.addOption("3P_Middle", new AUTO_3P_Mid());
         // chooser.addOption("3P_Bottom", new AUTO_3P_Bottom());
+        chooser.addOption("4P_MidLine_3_1st", new AUTO_MidLine_FourP_One());
+        //chooser.addOption("3P_MidLine_3_2nd", new AUTO_MidLine_FourP_Two());
         
         chooser.addOption("4P_Top", new AUTO_4P_Top());
-        chooser.addOption("4P_Middle", new AUTO_4P_Mid());
+        //chooser.addOption("4P_Middle", new AUTO_4P_Mid());
+
+        //chooser.addOption("Beline", new AUTO_MidLine_Beline());
+
+        // chooser.addOption("1 Meter back", new AUTO_1_Meter());
+        // chooser.addOption("2 Meter", new AUTO_2_Meter());
 
 
         SmartDashboard.putData("Auto Selector", chooser);

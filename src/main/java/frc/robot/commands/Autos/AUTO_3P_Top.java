@@ -37,7 +37,7 @@ public class AUTO_3P_Top extends AutoPaths{
             autos.scoringSequence(Pivot.kSpeakerAngleSP, 2500),
             autos.resetOdometry(startingPose),
 
-            autos.pathIntake(p1Name),
+            autos.pathIntake(p1Name).withTimeout(4),
             autos.scoringSequence(Pivot.kLowAngleSP, 4000),
 
             autos.pathIntake(p2Name),

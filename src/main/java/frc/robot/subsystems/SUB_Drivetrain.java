@@ -18,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
@@ -137,6 +138,9 @@ public class SUB_Drivetrain extends SubsystemBase {
     SmartDashboard.putNumberArray(
         "Odometry",
         new double[] {getPose().getX(), getPose().getY(), getPose().getRotation().getDegrees()});
+
+    SmartDashboard.putNumber("Robot Pose X ft", Units.metersToInches(getPose().getX()));
+    SmartDashboard.putNumber("Robot Pose Y ft", Units.metersToInches(getPose().getY()));
 
     SmartDashboard.putNumber("Robot Speed", modules[0].getVelocityDrive());
   }

@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
+  
    public static SUB_Drivetrain drivetrain = new SUB_Drivetrain();
    public static SUB_Shooter shooter = new SUB_Shooter();
    public static SUB_Index index = new SUB_Index();
@@ -50,8 +51,8 @@ public class RobotContainer {
 
 
   
-  CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
-  CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
+    CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
+    CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
     
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -92,6 +93,10 @@ public class RobotContainer {
       new InstantCommand(()->pivot.goToAngle(75))
     ));//Shoot From Bottom Setpoin
 
+    Driver1.povLeft().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()->pivot.goToAngle(65))
+    ));//Shoot From Bottom Setpoin
+
    Driver1.povUp().onTrue(new SequentialCommandGroup(
       new InstantCommand(()->pivot.goToAngle(90))
     ));//Shoot From Up Close Setpoint
@@ -100,7 +105,6 @@ public class RobotContainer {
       new InstantCommand(()->pivot.goToAngle(50))
     ));//Shoot From Bottom Setpoin
 
-    Driver1.back().onTrue(new InstantCommand(()->pivot.goToAngle(50)));
     Driver1.start().whileTrue( new ParallelCommandGroup(
           new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)),
           new RunCommand(()->shooter.shootFlywheelOnRPM(500), shooter),
@@ -168,23 +172,17 @@ public class RobotContainer {
         new InstantCommand(()->shooter.shootFlywheelOnRPM(0), shooter)
     )); // Spin Shooter OUT
     
-    Driver2.rightTrigger().whileTrue(new RunCommand(()->shooter.shootFlywheelOnRPM(SUB_Shooter.MANUAL_RPM))).onFalse(new InstantCommand(()->shooter.shootFlywheelOnRPM(0)));
+    Driver2.rightTrigger().whileTrue(new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter)); // Spin Shooter IN
      
     Driver2.a().whileTrue(
     new ParallelCommandGroup(
       new InstantCommand(()->pivot.goToAngle(75)),
       new InstantCommand(()->index.starttimer()),
       new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
-      new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))
-      ).until(
-        ()->index.CurrentLimitSpike()
-      ).andThen(
-        new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025)
-    ).andThen(
-      new ParallelCommandGroup(
-        new InstantCommand(()->index.setMotorSpeed(0)),
-        new InstantCommand(()->intake.setMotorSpeed(0))
-    ))).onFalse(
+      new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
+        ()->index.CurrentLimitSpike()).andThen(
+      new RunCommand(()->index.setMotorSpeed(0.0)).withTimeout(0.0)
+    )).onFalse(
       new ParallelCommandGroup(
         new InstantCommand(()->index.setMotorSpeed(0)),
         new InstantCommand(()->intake.setMotorSpeed(0)),
@@ -272,19 +270,10 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    
     return autoSelector.getSelected();
   }
 
-  public void robotPeriodic(){
-
-    SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
-    SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
-    SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.calculateDegreesRotation());
-
-    SmartDashboard.putNumber("X Pose", drivetrain.getPose().getX());
-    SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
-
+  public void teleopPeriodic(){
     Pose2d visionPose = limelight.getPose();
 
     // Field is 1655 cm by 821 cm
@@ -302,5 +291,16 @@ public class RobotContainer {
         drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
       }
     }
+  }
+
+  public void robotPeriodic(){
+
+    SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
+    SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
+    SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.calculateDegreesRotation());
+
+    SmartDashboard.putNumber("X Pose", drivetrain.getPose().getX());
+    SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
+
   }
 }
