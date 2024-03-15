@@ -4,11 +4,14 @@
 
 package frc.robot.commands.Limelight;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Limelight;
 import frc.robot.subsystems.SUB_Pivot;
@@ -28,14 +31,17 @@ public class CMD_AimOnDist extends Command {
   double yError;
   double angle;
 
+  CommandXboxController driverController;
+
   private final PIDController robotAngleController = new PIDController( 0.5, 0.01, 0); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
-  public CMD_AimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain) {
+  public CMD_AimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain, CommandXboxController driverController) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pivot = pivot;
     this.limelight = limelight;
     this.drivetrain = drivetrain;
+    this.driverController = driverController;
     addRequirements(pivot, limelight, drivetrain);
   }
 
@@ -84,8 +90,10 @@ public class CMD_AimOnDist extends Command {
     SmartDashboard.putNumber("Distance error", positionError);
 
 
-    drivetrain.drive(0,0, 
-       robotAngleController.calculate(currentPose.getRotation().getRadians(), angle),
+    drivetrain.drive(
+      -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(1), 2), driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
+      -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(0), 2), driverController.getRawAxis(0)), OIConstants.kDriveDeadband), 
+      robotAngleController.calculate(currentPose.getRotation().getRadians(), angle),
      true, true);
   }
 

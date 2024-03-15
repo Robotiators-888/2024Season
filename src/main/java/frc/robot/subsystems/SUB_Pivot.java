@@ -129,7 +129,7 @@ public void setLimits(){
    
 
    public void setPivotSetpoint(double newSetpoint){
-      pivotSetpoint = newSetpoint;
+    pivotSetpoint = newSetpoint;
    }
 
    public void setPIDF(SparkPIDController pid, double P, double I, double D, double F){
@@ -140,7 +140,7 @@ public void setLimits(){
   }
   
 public void setSetpointToPivot(){
-  pivotSetpoint = rotateEncoder.getPosition();
+   pivotSetpoint = rotateEncoder.getPosition();
 }
 
 public double getRotations(){

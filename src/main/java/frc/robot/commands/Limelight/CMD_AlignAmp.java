@@ -17,7 +17,7 @@ import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Limelight;
 import frc.robot.subsystems.SUB_Pivot;
 import static frc.robot.Constants.Pivot.*;
-public class CMD_AlignSource extends Command {
+public class CMD_AlignAmp extends Command {
   SUB_Pivot pivot;
   SUB_Limelight limelight;
   SUB_Drivetrain drivetrain;
@@ -30,7 +30,7 @@ public class CMD_AlignSource extends Command {
   private final PIDController robotAngleController = new PIDController( 0.5, 0.01, 0); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
-  public CMD_AlignSource(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain, CommandXboxController driverController) {
+  public CMD_AlignAmp(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain, CommandXboxController driverController) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pivot = pivot;
     this.limelight = limelight;
@@ -45,11 +45,11 @@ public class CMD_AlignSource extends Command {
     var alliance = DriverStation.getAlliance();
     if (alliance.isPresent()){
       if (alliance.get() == DriverStation.Alliance.Red){
-        tagPose = drivetrain.at_field.getTagPose(9).get();
-        targetId = 9;
+        tagPose = drivetrain.at_field.getTagPose(5).get();
+        targetId = 5;
       } else {
-        tagPose = drivetrain.at_field.getTagPose(2).get();
-        targetId = 2;
+        tagPose = drivetrain.at_field.getTagPose(6).get();
+        targetId = 6;
       }
     } else {
       SmartDashboard.putBoolean("Alliance Error", true);
@@ -64,7 +64,7 @@ public class CMD_AlignSource extends Command {
   @Override
   public void execute() {
     Pose2d currentPose = drivetrain.getPose();
-    pivot.goToAngle(kSourceAngle);
+    pivot.goToAngle(kHighAngleSP);
     pivot.runAutomatic();
     double target = tagPose.getRotation().getAngle() + Math.PI;
 
