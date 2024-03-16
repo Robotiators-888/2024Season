@@ -20,9 +20,9 @@ public class AUTO_MidLine_Bottom_Two extends AutoPaths {
 
     @Override
     public Command load(AutoGenerator autos) {
-        String p1Name = "Back_to_Podium";
-        String p2Name = "BottomGP_to_5thGP";
-        String p3Name = "TopGP_to_1stGP";
+        String p1Name = "BottomStart_5GP";
+        String p2Name = "5th_to_BottomGP";
+        
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
         var alliance = DriverStation.getAlliance();
         
@@ -36,19 +36,12 @@ public class AUTO_MidLine_Bottom_Two extends AutoPaths {
         }
 
         return new SequentialCommandGroup(
-            autos.scoringSequence(Pivot.kSpeakerAngleSP-6,4000, 0.33),
+            autos.scoringSequence(Pivot.kSpeakerAngleSP-6,4000, 0.45),
             autos.resetOdometry(startingPose),
 
             autos.pathIntake(p1Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP+6, 4000),
-
-            autos.pathIntake(p2Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP-1, 4500, 0.5),
-
-            autos.pathIntake(p3Name).withTimeout(4),
-           // PathPlannerBase.followTrajectory(p4Name),
-
-            autos.scoringSequence(Pivot.kLowAngleSP+1, 4000)
+            PathPlannerBase.followTrajectory(p2Name).withTimeout(4),
+            autos.scoringSequence(Pivot.kLowAngleSP-1, 4500, 0.5)
         );
     }
     

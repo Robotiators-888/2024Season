@@ -37,7 +37,7 @@ public class AUTO_MidLine_FourP_Two extends AutoPaths {
         }
 
         return new SequentialCommandGroup(
-            autos.scoringSequence(Pivot.kSpeakerAngleSP-6,4000, 0.33),
+            autos.scoringSequence(Pivot.kSpeakerAngleSP-6,4000, 0.45),
             autos.resetOdometry(startingPose),
 
             autos.pathIntake(p1Name).withTimeout(4),

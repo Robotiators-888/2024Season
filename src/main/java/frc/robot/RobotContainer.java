@@ -94,7 +94,7 @@ public class RobotContainer {
     ));//Shoot From Middle Setpoint
 
    Driver1.povUp().onTrue(new SequentialCommandGroup(
-      new InstantCommand(()->pivot.goToAngle(90))
+      new InstantCommand(()->pivot.goToAngle(Constants.Pivot.kSpeakerAngleSP))
     ));//Shoot From Up Close Setpoint
 
     Driver1.povDown().onTrue(new SequentialCommandGroup(
@@ -186,8 +186,15 @@ public class RobotContainer {
 
         Driver2.rightTrigger().whileTrue(
           new ParallelCommandGroup(
-            new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter),
-            new RunCommand(()->index.setMotorSpeed(-0.3), index)
+        new InstantCommand(()->index.starttimer()),
+        new RunCommand(()->index.setMotorSpeed(-Constants.Intake.kIndexSpeed), index),
+        new RunCommand(()->shooter.shootFlywheelOnRPM(-1000), shooter)).until(
+          ()->index.CurrentLimitSpike()).andThen(
+        new RunCommand(()->index.setMotorSpeed(-0.05)).withTimeout(0.045)).andThen(
+          new ParallelCommandGroup(
+            new InstantCommand(()->index.setMotorSpeed(0)),
+            new InstantCommand(()->shooter.setMotorSpeed(0))
+          )
         )).onFalse(
            new ParallelCommandGroup(
             new RunCommand(()->shooter.setMotorSpeed(0.0), shooter),

@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.6619978954243629,
-        "y": 4.559091403897094
+        "x": 8.280700937992206,
+        "y": 0.7624410159761787
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6619978954243644,
-        "y": 4.559091403897094
+        "x": 7.0535215356145,
+        "y": 1.246053920679271
       },
       "isLocked": false,
-      "linkedName": "BottomRobotStart"
+      "linkedName": "GP_5"
     },
     {
       "anchor": {
-        "x": 3.242062484124969,
-        "y": 2.2282375993323424
+        "x": 2.802278747414638,
+        "y": 3.0051888675205927
       },
       "prevControl": {
-        "x": 2.3504836160323936,
-        "y": 2.6811030561412696
-      },
-      "nextControl": {
-        "x": 4.165608331216663,
-        "y": 1.759134946841323
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 8.548786240429624,
-        "y": 0.7183134366268737
-      },
-      "prevControl": {
-        "x": 7.185456656627599,
-        "y": 0.8502485576399733
+        "x": 3.579230015602889,
+        "y": 2.711999709713705
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -179.6416782997656,
+    "rotation": 147.99461679191646,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Mid Line Paths",
   "previewStartingState": {
-    "rotation": 123.69006752597984,
+    "rotation": 171.50500020759682,
     "velocity": 0
   },
   "useDefaultConstraints": true

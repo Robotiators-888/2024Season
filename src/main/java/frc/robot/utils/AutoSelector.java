@@ -29,6 +29,8 @@ public class AutoSelector {
         chooser.addOption("2P_Top", new AUTO_2P_Top());
         chooser.addOption("2P_Middle", new AUTO_2P_Mid());
 
+        chooser.addOption("2P_Midline_Bottom_Two", new AUTO_MidLine_Bottom_Two());
+
         chooser.addOption("3P_Top", new AUTO_3P_Top());
         chooser.addOption("3P_Middle", new AUTO_3P_Mid());
         // chooser.addOption("3P_Bottom", new AUTO_3P_Bottom());
