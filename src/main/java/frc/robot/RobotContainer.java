@@ -112,6 +112,17 @@ public class RobotContainer {
           new InstantCommand(()->index.setMotorSpeed(0))
         );
     
+    Driver1.back().whileTrue( new ParallelCommandGroup(
+          new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)),
+          new RunCommand(()->shooter.shootFlywheelOnRPM(500), shooter),
+          new SequentialCommandGroup(
+            new WaitCommand(.75),
+            new RunCommand(()->index.setMotorSpeed(0.45), index)
+          )
+        )).onFalse(
+          new InstantCommand(()->index.setMotorSpeed(0))
+        );
+
     Driver1.a().whileTrue(
       new CMD_AlignSource(pivot, limelight, drivetrain, Driver1)
     );
@@ -126,7 +137,8 @@ public class RobotContainer {
       )
     ).onFalse(
       new ParallelCommandGroup(
-        new InstantCommand(()->index.setMotorSpeed(0))
+        new InstantCommand(()->index.setMotorSpeed(0)),
+        new InstantCommand(()->shooter.setMotorSpeed(0))
     )
     ); // Spin Shooter OUT
 
@@ -137,7 +149,7 @@ public class RobotContainer {
         new RunCommand(()->index.setMotorSpeed(-Constants.Intake.kIndexSpeed), index),
         new RunCommand(()->shooter.shootFlywheelOnRPM(-1000), shooter)).until(
           ()->index.CurrentLimitSpike()).andThen(
-        new RunCommand(()->index.setMotorSpeed(-0.1)).withTimeout(0.025)).andThen(
+        new RunCommand(()->index.setMotorSpeed(-0.05)).withTimeout(0.025)).andThen(
           new ParallelCommandGroup(
             new InstantCommand(()->index.setMotorSpeed(0)),
             new InstantCommand(()->shooter.setMotorSpeed(0))
@@ -176,7 +188,12 @@ public class RobotContainer {
           new ParallelCommandGroup(
             new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter),
             new RunCommand(()->index.setMotorSpeed(-0.3), index)
-        )); // Spin Shooter IN
+        )).onFalse(
+           new ParallelCommandGroup(
+            new RunCommand(()->shooter.setMotorSpeed(0.0), shooter),
+            new RunCommand(()->index.setMotorSpeed(0.0), index)
+        )
+        ); // Spin Shooter IN
 
 
 
@@ -240,7 +257,7 @@ public class RobotContainer {
       ));
 
     // Driver2.a().whileTrue(new RunCommand(()->drivetrain.;, null) );
-    Driver2.leftTrigger().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)); //Drive Intake OUT
+    Driver2.leftTrigger().whileTrue(new RunCommand(()->intake.setMotorSpeed(-Constants.Intake.kOutakeSpeed), intake)).onFalse(new InstantCommand(()->intake.setMotorSpeed(0.0))); //Drive Intake OUT
     Driver2.povRight().whileTrue(new RunCommand(()->pivot.runManual(-0.2), pivot));    
     Driver2.povLeft().whileTrue(new RunCommand(()->pivot.runManual(0.2), pivot));
     
@@ -279,6 +296,9 @@ public class RobotContainer {
   public void teleopPeriodic(){
     Pose2d visionPose = limelight.getPose();
 
+    SmartDashboard.putNumber("LL X pose", visionPose.getX());
+    SmartDashboard.putNumber("LL Y pose", visionPose.getY());
+
     // Field is 1655 cm by 821 cm
     if (!visionPose.equals(new Pose2d()) && 
         limelight.getTv() && 
@@ -289,7 +309,7 @@ public class RobotContainer {
       // affecting the accuracy of our pose measurement.
       Transform2d t2d = visionPose.minus(drivetrain.getPose());
       double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
-      if (dist <= 1){
+      if (dist <= 1000){
         double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
         drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
       }

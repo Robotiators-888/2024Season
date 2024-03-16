@@ -197,11 +197,11 @@ public final class Constants {
       public static final double kmaxAcceleration = 4.27;
 
       public static final double kHighAngleSP = 105.0;
-      public static final double kSpeakerAngleSP = 90.0;
-      public static final double kSideSP = 87;
+      public static final double kSpeakerAngleSP = 88.0;
+      public static final double kSideSP = 83;
       public static final double kLowMidAngleSP = 75.0;
       public static final double kLowAngleSP = 55;
-      public static final double kSourceAngle = 90.0;
+      public static final double kSourceAngle = 86.0;
 
 
 

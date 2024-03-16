@@ -61,7 +61,7 @@ public class SUB_Shooter extends SubsystemBase {
 
   public double getFlywheelRPM(){
     SmartDashboard.putNumber("FF", PIDController.getFF());;
-    return shooterLeft.getEncoder().getVelocity();
+    return shooterRight.getEncoder().getVelocity();
   }
 
   public void shootFlywheelOnRPM(double rpm) {

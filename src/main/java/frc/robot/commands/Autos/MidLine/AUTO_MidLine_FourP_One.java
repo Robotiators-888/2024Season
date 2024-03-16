@@ -37,11 +37,11 @@ public class AUTO_MidLine_FourP_One extends AutoPaths {
         }
 
         return new SequentialCommandGroup(
-            autos.scoringSequence(Pivot.kSpeakerAngleSP-6,2500, 0.33),
+            autos.scoringSequence(Pivot.kSpeakerAngleSP-6,4000, 0.33),
             autos.resetOdometry(startingPose),
 
             autos.pathIntake(p1Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP+2, 4000),
+            autos.scoringSequence(Pivot.kLowAngleSP+6, 4000, 0.33),
 
             autos.pathIntake(p2Name).withTimeout(4),
             autos.scoringSequence(Pivot.kLowAngleSP-1, 4500, 0.5),
@@ -49,7 +49,7 @@ public class AUTO_MidLine_FourP_One extends AutoPaths {
             autos.pathIntake(p3Name).withTimeout(4),
             PathPlannerBase.followTrajectory(p4Name),
 
-            autos.scoringSequence(Pivot.kLowAngleSP-3, 4000)
+            autos.scoringSequence(Pivot.kLowAngleSP+1, 4000)
         );
     }
     
