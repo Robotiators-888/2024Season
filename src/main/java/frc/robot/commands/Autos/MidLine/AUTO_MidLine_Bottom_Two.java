@@ -21,7 +21,7 @@ public class AUTO_MidLine_Bottom_Two extends AutoPaths {
     @Override
     public Command load(AutoGenerator autos) {
         String p1Name = "Back_to_Podium";
-        String p2Name = "3";
+        String p2Name = "BottomGP_to_5thGP";
         String p3Name = "TopGP_to_1stGP";
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
         var alliance = DriverStation.getAlliance();
