@@ -36,6 +36,11 @@ public class AutoSelector {
         // chooser.addOption("3P_Bottom", new AUTO_3P_Bottom());
         chooser.addOption("4P_MidLine_3_1st", new AUTO_MidLine_FourP_One());
         //chooser.addOption("3P_MidLine_3_2nd", new AUTO_MidLine_FourP_Two());
+
+        chooser.addOption("2P_MidLine_BOTTOM", new AUTO_MidLine_Bottom_Two());
+        chooser.addOption("3P_MidLine_BOTTOM", new AUTO_MidLine_Bottom_Three());
+        chooser.addOption("4P_MidLine_BOTTOM", new AUTO_MidLine_Bottom_Four());
+
         
         chooser.addOption("4P_Top", new AUTO_4P_Top());
         //chooser.addOption("4P_Middle", new AUTO_4P_Mid());

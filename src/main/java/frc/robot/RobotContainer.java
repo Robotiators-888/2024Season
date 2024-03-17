@@ -110,18 +110,10 @@ public class RobotContainer {
           )
         )).onFalse(
           new InstantCommand(()->index.setMotorSpeed(0))
+          //new RunCommand(()->shooter.shootFlywheelOnRPM(3000), shooter).withTimeout(0.25)
         );
     
-    Driver1.back().whileTrue( new ParallelCommandGroup(
-          new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)),
-          new RunCommand(()->shooter.shootFlywheelOnRPM(500), shooter),
-          new SequentialCommandGroup(
-            new WaitCommand(.75),
-            new RunCommand(()->index.setMotorSpeed(0.45), index)
-          )
-        )).onFalse(
-          new InstantCommand(()->index.setMotorSpeed(0))
-        );
+    Driver1.back().whileTrue( new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)));
 
     Driver1.a().whileTrue(
       new CMD_AlignSource(pivot, limelight, drivetrain, Driver1)
