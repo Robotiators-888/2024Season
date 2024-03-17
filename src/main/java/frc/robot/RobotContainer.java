@@ -308,7 +308,6 @@ public class RobotContainer {
 
     // Field is 1655 cm by 821 cm
     if (!visionPose.equals(new Pose2d()) && 
-        limelight.getTv() && 
         visionPose.getX() >= 0 && visionPose.getX() <= 1655.0/100 &&
         visionPose.getY() >= 0 && visionPose.getY() <= 821.0/100){
       // Check if vision pose is within one meter of the current estiamted pose 
