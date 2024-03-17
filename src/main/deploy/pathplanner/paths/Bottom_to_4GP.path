@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.280700937992206,
-        "y": 0.7624410159761787
+        "x": 2.8365540809793615,
+        "y": 3.1867930641049127
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.12137281780925,
-        "y": 1.2115501075785877
+        "x": 3.3667636427580563,
+        "y": 2.4318165534721072
       },
       "isLocked": false,
-      "linkedName": "GP_5"
+      "linkedName": "BottomShootPos"
     },
     {
       "anchor": {
-        "x": 5.220492476608363,
-        "y": 1.7233255840557489
+        "x": 5.421234169838644,
+        "y": 1.9531957489675267
       },
       "prevControl": {
-        "x": 6.3734500844206,
-        "y": 1.7734541756997595
+        "x": 4.112147472165115,
+        "y": 1.9531957489675267
       },
       "nextControl": {
-        "x": 4.259607908528794,
-        "y": 1.6815479941392457
+        "x": 6.082089874376528,
+        "y": 1.9531957489675267
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.07,
-        "y": 3.09
+        "x": 8.431799046066786,
+        "y": 2.437823265628643
       },
       "prevControl": {
-        "x": 3.1124991117159446,
-        "y": 2.8031309959173774
+        "x": 7.976542894051799,
+        "y": 2.349709171690258
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "GP_4"
     }
   ],
   "rotationTargets": [],
@@ -55,13 +55,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 149.62087398863153,
+    "rotation": -176.45816425383157,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "3 Piece Path",
+  "folder": "Mid Line Paths",
   "previewStartingState": {
-    "rotation": -179.10482628978895,
+    "rotation": 147.99,
     "velocity": 0
   },
   "useDefaultConstraints": true

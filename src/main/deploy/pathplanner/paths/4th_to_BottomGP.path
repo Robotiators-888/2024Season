@@ -3,16 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.280700937992206,
-        "y": 0.7624410159761787
+        "x": 8.431799046066786,
+        "y": 2.437823265628643
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.0535215356145,
-        "y": 1.246053920679271
+        "x": 6.5667173910376455,
+        "y": 2.158795301490425
       },
       "isLocked": false,
-      "linkedName": "GP_5"
+      "linkedName": "GP_4"
+    },
+    {
+      "anchor": {
+        "x": 5.142206205700426,
+        "y": 1.7916532434138215
+      },
+      "prevControl": {
+        "x": 5.964604415792016,
+        "y": 1.6741677848293086
+      },
+      "nextControl": {
+        "x": 4.24413380436827,
+        "y": 1.9199493007469866
+      },
+      "isLocked": false,
+      "linkedName": null
     },
     {
       "anchor": {
@@ -20,8 +36,8 @@
         "y": 3.1867930641049127
       },
       "prevControl": {
-        "x": 3.6135053491676126,
-        "y": 2.893603906298025
+        "x": 3.322706595788864,
+        "y": 2.6374161059950043
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +61,7 @@
   "reversed": false,
   "folder": "Mid Line Paths",
   "previewStartingState": {
-    "rotation": 171.50500020759682,
+    "rotation": -178.53119928561415,
     "velocity": 0
   },
   "useDefaultConstraints": true
