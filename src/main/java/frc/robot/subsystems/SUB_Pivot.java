@@ -174,7 +174,6 @@ public void runManual(double _power) {
 }
 
   public void runAutomatic(){
-    
     // currentState = pivotTrapezoidProfile.calculate(.02, currentState, targetState);
     feedforward = 12 * constantApplicationMap.get(rotateEncoder.getPosition());
     pivotPID.setReference(pivotSetpoint, ControlType.kPosition, 0, feedforward, ArbFFUnits.kVoltage);
