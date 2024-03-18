@@ -20,15 +20,37 @@
         "y": 4.075329293515731
       },
       "prevControl": {
-        "x": 1.8443264445946221,
-        "y": 3.877439724212442
+        "x": 2.8960663564738596,
+        "y": 4.072175531688916
+      },
+      "nextControl": {
+        "x": 2.6850050485342023,
+        "y": 4.104660974026971
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.42,
+        "y": 4.08
+      },
+      "prevControl": {
+        "x": 2.4053405421096556,
+        "y": 4.138637831561377
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BottomGP"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -39,7 +61,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -177.70138902409485,
+    "rotation": 148.24051991518718,
     "rotateFast": false
   },
   "reversed": false,

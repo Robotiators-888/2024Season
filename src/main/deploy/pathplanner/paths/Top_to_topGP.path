@@ -16,25 +16,19 @@
     },
     {
       "anchor": {
-        "x": 2.891391838763322,
-        "y": 6.977901955803912
+        "x": 2.934213868427737,
+        "y": 6.875285750571502
       },
       "prevControl": {
-        "x": 1.9368224877641547,
-        "y": 6.772302403281014
+        "x": 1.9796445174285697,
+        "y": 6.669686198048604
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "TopHomeGamePiece"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.95,
-      "rotationDegrees": -168.74112672650855,
-      "rotateFast": true
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {

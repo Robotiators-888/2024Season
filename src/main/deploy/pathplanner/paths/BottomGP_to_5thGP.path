@@ -12,20 +12,20 @@
         "y": 2.7175576212293837
       },
       "isLocked": false,
-      "linkedName": "BottomGP"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.969826937109345,
-        "y": 1.5979928143062396
+        "x": 4.033673210203563,
+        "y": 1.4512863311440911
       },
       "prevControl": {
-        "x": 3.9984979715506506,
-        "y": 2.0262131109503945
+        "x": 3.0623442446448688,
+        "y": 1.8795066277882457
       },
       "nextControl": {
-        "x": 5.955066747416261,
-        "y": 1.1636397796548046
+        "x": 5.018913020510479,
+        "y": 1.016933296492656
       },
       "isLocked": false,
       "linkedName": null
@@ -61,7 +61,7 @@
   "reversed": false,
   "folder": "3 Piece Path",
   "previewStartingState": {
-    "rotation": 175.08343399398993,
+    "rotation": 178.02506598911816,
     "velocity": 0
   },
   "useDefaultConstraints": true

@@ -37,9 +37,7 @@ public class AutoSelector {
         chooser.addOption("4P_MidLine_3_1st", new AUTO_MidLine_FourP_One());
         //chooser.addOption("3P_MidLine_3_2nd", new AUTO_MidLine_FourP_Two());
 
-        chooser.addOption("2P_MidLine_BOTTOM", new AUTO_MidLine_Bottom_Two());
-        chooser.addOption("3P_MidLine_BOTTOM", new AUTO_MidLine_Bottom_Three());
-        chooser.addOption("4P_MidLine_BOTTOM", new AUTO_MidLine_Bottom_Four());
+       chooser.addOption("PLAYOFFS!!!!!", new AUTO_3P_Playoffs());
 
         
         chooser.addOption("4P_Top", new AUTO_4P_Top());
