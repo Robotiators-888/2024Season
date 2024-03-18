@@ -29,11 +29,16 @@ public class AutoSelector {
         chooser.addOption("2P_Top", new AUTO_2P_Top());
         chooser.addOption("2P_Middle", new AUTO_2P_Mid());
 
+        chooser.addOption("2P_Midline_Bottom_Two", new AUTO_MidLine_Bottom_Two());
+
         chooser.addOption("3P_Top", new AUTO_3P_Top());
         chooser.addOption("3P_Middle", new AUTO_3P_Mid());
         // chooser.addOption("3P_Bottom", new AUTO_3P_Bottom());
         chooser.addOption("4P_MidLine_3_1st", new AUTO_MidLine_FourP_One());
         //chooser.addOption("3P_MidLine_3_2nd", new AUTO_MidLine_FourP_Two());
+
+       chooser.addOption("PLAYOFFS!!!!!", new AUTO_3P_Playoffs());
+
         
         chooser.addOption("4P_Top", new AUTO_4P_Top());
         //chooser.addOption("4P_Middle", new AUTO_4P_Mid());

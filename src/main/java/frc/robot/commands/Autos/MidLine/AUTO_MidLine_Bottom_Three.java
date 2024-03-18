@@ -16,17 +16,20 @@ import frc.robot.utils.AutoGenerator;
 import frc.robot.utils.PathPlannerBase;
 
 /** Add your docs here. */
-public class AUTO_MidLine_FourP_Two extends AutoPaths {
+public class AUTO_MidLine_Bottom_Three extends AutoPaths {
 
     @Override
     public Command load(AutoGenerator autos) {
-        String p1Name = "2P_Middle";
-        String p2Name = "3P_Middle_to_TopGP";
-        String p3Name = "TopGP_to_2ndGP";
-        String p4Name = "1st2nd_ReturnToShoot";
+        String p1Name = "BottomStart_5GP";
+        String p2Name = "5th_to_BottomGP";
+        String p3Name = "Bottom_to_4GP";
+        String p4Name = "4th_to_BottomGP";
+        
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
         var alliance = DriverStation.getAlliance();
         
+        // 3.07, 3.09, 147.99
+
         Pose2d startingPose = null;
         if (alliance.isPresent()) {
             if (alliance.get() == DriverStation.Alliance.Red){
@@ -41,15 +44,13 @@ public class AUTO_MidLine_FourP_Two extends AutoPaths {
             autos.resetOdometry(startingPose),
 
             autos.pathIntake(p1Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP+6, 4000, 0.33),
-
-            autos.pathIntake(p2Name).withTimeout(4),
+            PathPlannerBase.followTrajectory(p2Name).withTimeout(4),
             autos.scoringSequence(Pivot.kLowAngleSP-1, 4500, 0.5),
 
             autos.pathIntake(p3Name).withTimeout(4),
-            PathPlannerBase.followTrajectory(p4Name),
+            PathPlannerBase.followTrajectory(p4Name).withTimeout(4),
+            autos.scoringSequence(Pivot.kLowAngleSP-1, 4500, 0.5)
 
-            autos.scoringSequence(Pivot.kLowAngleSP+1, 4000)
         );
     }
     

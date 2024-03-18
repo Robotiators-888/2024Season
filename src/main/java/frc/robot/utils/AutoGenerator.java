@@ -98,7 +98,7 @@ public class AutoGenerator {
         new InstantCommand(()->pivot.goToAngle(setpoint)),
         new WaitCommand(delay),
         new RunCommand(()->shooter.shootFlywheelOnRPM(rpm), shooter)
-      .until(()->shooter.getFlywheelRPM() >= rpm - 500)
+      .until(()->shooter.getFlywheelRPM() >= rpm - 250)
       .andThen(new RunCommand(()->index.setMotorSpeed(0.5)).withTimeout(0.25))
       .andThen(new InstantCommand(()->index.setMotorSpeed(0)))
       );

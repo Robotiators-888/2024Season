@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.891391838763322,
-        "y": 5.566863856374023
+        "x": 2.8365540809793615,
+        "y": 3.1867930641049127
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1903840587645407,
-        "y": 5.7567874706411315
+        "x": 4.070151396116747,
+        "y": 2.9371364646128226
       },
       "isLocked": false,
-      "linkedName": "MiddleHomeGamePiece"
+      "linkedName": "BottomShootPos"
     },
     {
       "anchor": {
-        "x": 2.043527235533899,
-        "y": 6.197357940333054
+        "x": 5.876490321853631,
+        "y": 4.038562638842631
       },
       "prevControl": {
-        "x": 1.8089456955069279,
-        "y": 5.712319455092716
+        "x": 5.274377346608003,
+        "y": 3.979819909550374
       },
       "nextControl": {
-        "x": 2.2012409739105196,
-        "y": 6.523458761203237
+        "x": 6.738851260637728,
+        "y": 4.122695413358153
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.934213868427737,
-        "y": 6.875285750571502
+        "x": 8.461170410712915,
+        "y": 4.126676732781015
       },
       "prevControl": {
-        "x": 2.5083290810588776,
-        "y": 6.5668864217871565
+        "x": 7.9324858470826065,
+        "y": 4.156048097427144
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "TopHomeGamePiece"
+      "linkedName": "GP_3"
     }
   ],
   "rotationTargets": [],
@@ -55,14 +55,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -151.89669709525646,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "3 Piece Path",
+  "folder": "Mid Line Paths",
   "previewStartingState": {
-    "rotation": -178.1876249306974,
+    "rotation": 140.44033203100554,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

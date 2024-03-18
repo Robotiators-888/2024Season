@@ -34,7 +34,7 @@ public class AUTO_2P_Mid extends AutoPaths{
         } 
         // TODO Auto-generated method stub
         return Commands.sequence(
-            autos.scoringSequence(Pivot.kSpeakerAngleSP-5,4000, 0.33),
+            autos.scoringSequence(Pivot.kSpeakerAngleSP-5,4000, 0.45),
             autos.resetOdometry(startingPose),
 
             autos.pathIntake(p1Name).withTimeout(4),

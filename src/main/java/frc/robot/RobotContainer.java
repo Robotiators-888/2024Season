@@ -94,7 +94,7 @@ public class RobotContainer {
     ));//Shoot From Middle Setpoint
 
    Driver1.povUp().onTrue(new SequentialCommandGroup(
-      new InstantCommand(()->pivot.goToAngle(90))
+      new InstantCommand(()->pivot.goToAngle(Constants.Pivot.kSpeakerAngleSP))
     ));//Shoot From Up Close Setpoint
 
     Driver1.povDown().onTrue(new SequentialCommandGroup(
@@ -110,18 +110,10 @@ public class RobotContainer {
           )
         )).onFalse(
           new InstantCommand(()->index.setMotorSpeed(0))
+          //new RunCommand(()->shooter.shootFlywheelOnRPM(3000), shooter).withTimeout(0.25)
         );
     
-    Driver1.back().whileTrue( new ParallelCommandGroup(
-          new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)),
-          new RunCommand(()->shooter.shootFlywheelOnRPM(500), shooter),
-          new SequentialCommandGroup(
-            new WaitCommand(.75),
-            new RunCommand(()->index.setMotorSpeed(0.45), index)
-          )
-        )).onFalse(
-          new InstantCommand(()->index.setMotorSpeed(0))
-        );
+    Driver1.back().whileTrue( new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)));
 
     Driver1.a().whileTrue(
       new CMD_AlignSource(pivot, limelight, drivetrain, Driver1)
@@ -186,8 +178,15 @@ public class RobotContainer {
 
         Driver2.rightTrigger().whileTrue(
           new ParallelCommandGroup(
-            new RunCommand(()->shooter.setMotorSpeed(-0.25), shooter),
-            new RunCommand(()->index.setMotorSpeed(-0.3), index)
+        new InstantCommand(()->index.starttimer()),
+        new RunCommand(()->index.setMotorSpeed(-Constants.Intake.kIndexSpeed), index),
+        new RunCommand(()->shooter.shootFlywheelOnRPM(-1000), shooter)).until(
+          ()->index.CurrentLimitSpike()).andThen(
+        new RunCommand(()->index.setMotorSpeed(-0.05)).withTimeout(0.045)).andThen(
+          new ParallelCommandGroup(
+            new InstantCommand(()->index.setMotorSpeed(0)),
+            new InstantCommand(()->shooter.setMotorSpeed(0))
+          )
         )).onFalse(
            new ParallelCommandGroup(
             new RunCommand(()->shooter.setMotorSpeed(0.0), shooter),
@@ -301,7 +300,6 @@ public class RobotContainer {
 
     // Field is 1655 cm by 821 cm
     if (!visionPose.equals(new Pose2d()) && 
-        limelight.getTv() && 
         visionPose.getX() >= 0 && visionPose.getX() <= 1655.0/100 &&
         visionPose.getY() >= 0 && visionPose.getY() <= 821.0/100){
       // Check if vision pose is within one meter of the current estiamted pose 
