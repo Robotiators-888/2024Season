@@ -15,6 +15,7 @@ import frc.robot.subsystems.SUB_Intake;
 import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.utils.AutoSelector;
 import frc.robot.subsystems.SUB_Limelight;
+import frc.robot.subsystems.SUB_PhotonVision;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -48,7 +49,7 @@ public class RobotContainer {
    public static SUB_Limelight limelight = new SUB_Limelight();
    public static SUB_Climber climber = new SUB_Climber();
    public static AutoSelector autoSelector = new AutoSelector(drivetrain, index, intake, shooter, pivot);
-
+   public static SUB_PhotonVision photonVision = new SUB_PhotonVision();
 
   
     CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
@@ -312,7 +313,11 @@ public class RobotContainer {
         drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
       }
     }
-  }
+
+    SUB_PhotonVision.PosePair photonPose = photonVision.getPose2dPhotonvision();
+    if (photonPose.pose.getX() >= 0 && photonPose.pose.getX() <= 1655.0/100 && photonPose.pose.getY() >= 0 && photonPose.pose.getX() <= 821.0/100){}
+      drivetrain.addVisionMeasurement(photonPose.pose, photonPose.time);
+    }
 
   public void robotPeriodic(){
 

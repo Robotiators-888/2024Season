@@ -7,6 +7,9 @@ package frc.robot;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -220,7 +223,8 @@ public final class Constants {
     public static final int camResolutionWidth = 0; // pixels
     public static final int camResolutionHeight = 0; // pixels
     public static final double minTargetArea = 0; // square pixels
-
+    public static final Rotation3d cameraRotation = new Rotation3d();
+    public static final Transform3d kCameraToRobot = new Transform3d(0,0,0,cameraRotation);
   }
   public static class Limelight{
     public static final String LIMELIGHT_NAME = "limelight";
