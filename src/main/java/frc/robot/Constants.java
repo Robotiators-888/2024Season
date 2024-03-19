@@ -208,6 +208,20 @@ public final class Constants {
         
     }
 
+  public static class PhotonVision{
+    public static final double targetWidth = 0;
+    public static final double targetHeight = 0;
+    public static final String kCamName = "AprilTagCam";
+
+    //Camera Specs
+    public static final double camDiagFOV = 0; // degrees
+    public static final double camPitch = 0; // degrees
+    public static final double camHeightOffGround = 0; // meters
+    public static final int camResolutionWidth = 0; // pixels
+    public static final int camResolutionHeight = 0; // pixels
+    public static final double minTargetArea = 0; // square pixels
+
+  }
   public static class Limelight{
     public static final String LIMELIGHT_NAME = "limelight";
     public static final double VERTICAL_FOV_DEGREES = 49.7;
