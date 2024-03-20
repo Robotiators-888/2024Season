@@ -232,7 +232,8 @@ public class RobotContainer {
       new ParallelCommandGroup(
         new InstantCommand(()->index.setMotorSpeed(0)),
         new InstantCommand(()->intake.setMotorSpeed(0)),
-        new InstantCommand(()->shooter.shootFlywheelOnRPM(1500))
+        new InstantCommand(()->shooter.shootFlywheelOnRPM(1500)),
+        new InstantCommand(()->pivot.goToAngle(Constants.Pivot.kHighAngleSP))
     ).andThen(
       new SequentialCommandGroup(
         new WaitCommand(.5),
