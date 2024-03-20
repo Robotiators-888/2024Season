@@ -182,7 +182,7 @@ public class RobotContainer {
         new RunCommand(()->index.setMotorSpeed(-Constants.Intake.kIndexSpeed), index),
         new RunCommand(()->shooter.shootFlywheelOnRPM(-1000), shooter)).until(
           ()->index.CurrentLimitSpike()).andThen(
-        new RunCommand(()->index.setMotorSpeed(-0.05)).withTimeout(0.045)).andThen(
+        new RunCommand(()->index.setMotorSpeed(-0.05)).withTimeout(0.025)).andThen(
           new ParallelCommandGroup(
             new InstantCommand(()->index.setMotorSpeed(0)),
             new InstantCommand(()->shooter.setMotorSpeed(0))
@@ -217,7 +217,11 @@ public class RobotContainer {
       new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
       new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
         ()->index.CurrentLimitSpike()).andThen(
-      new RunCommand(()->index.setMotorSpeed(0.0)).withTimeout(0.0)
+      new RunCommand(()->index.setMotorSpeed(0.0)).withTimeout(0.0).andThen(
+          new ParallelCommandGroup(
+            new InstantCommand(()->index.setMotorSpeed(0)),
+            new InstantCommand(()->shooter.setMotorSpeed(0))
+          ))
     )).onFalse(
       new ParallelCommandGroup(
         new InstantCommand(()->index.setMotorSpeed(0)),
