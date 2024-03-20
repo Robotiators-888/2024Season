@@ -30,7 +30,10 @@ public class SUB_Index extends SubsystemBase {
   }
 
   public boolean CurrentLimitSpike(){
-    return (currentTimer.hasElapsed(.2) && indexLeft.getOutputCurrent() > 20);
+    double avg = (indexLeft.getOutputCurrent()+indexRight.getOutputCurrent())/2.0;
+
+    SmartDashboard.putNumber("Index/OutputCurrent", avg);
+    return (currentTimer.hasElapsed(.2) && avg > 15.0);
   }
 
   /** Creates a new SUB_Index. */
