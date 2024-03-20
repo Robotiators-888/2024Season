@@ -18,7 +18,7 @@ public class AUTO_2P_Top extends AutoPaths{
 
     @Override
     public Command load(AutoGenerator autos) {
-        String p1Name = "2P_Top";
+        String p1Name = "TopStart_to_TopGP";
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
         var alliance = DriverStation.getAlliance();
     
@@ -32,10 +32,10 @@ public class AUTO_2P_Top extends AutoPaths{
         } 
         // TODO Auto-generated method stub
         return Commands.sequence(
-           // autos.scoringSequence(Pivot.kSpeakerAngleSP, 2500),
+            autos.scoringSequence(Pivot.kSpeakerAngleSP, 2500),
             autos.resetOdometry(startingPose),
-            autos.pathIntake(p1Name)
-            //autos.scoringSequence(Pivot.kLowAngleSP, 4000)
+            autos.pathIntake(p1Name),
+            autos.scoringSequence(Pivot.kLowAngleSP, 4000)
         );
     }
     

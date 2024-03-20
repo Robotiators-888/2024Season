@@ -43,7 +43,6 @@ public class SUB_Index extends SubsystemBase {
 
     indexLeft.restoreFactoryDefaults();
     indexRight.restoreFactoryDefaults();
-    for(int i =0; i<5 ; i++){
     indexLeft.setInverted(true);
     indexRight.setInverted(false);
 
@@ -55,7 +54,7 @@ public class SUB_Index extends SubsystemBase {
     indexLeft.setIdleMode(IdleMode.kBrake);
     indexRight.setIdleMode(IdleMode.kBrake);
     Timer.delay(.1);
-    }
+    
     indexLeft.burnFlash();
     indexRight.burnFlash();
     //Timer.delay(0.2);
@@ -65,11 +64,11 @@ public class SUB_Index extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     //SmartDashboard.putNumber("Index RPM", indexLeft.getEncoder().getVelocity());
-    SmartDashboard.putBoolean("Banner", getTopBannerSensor());
-    SmartDashboard.putNumber("LeftIndexCurrent", indexLeft.getOutputCurrent());
-    SmartDashboard.putNumber("RightIndexCurrent", indexRight.getOutputCurrent());
-    SmartDashboard.putNumber("LeftIndexVelocity", indexLeft.getEncoder().getVelocity());
-    SmartDashboard.putNumber("RightIndexVelocity", indexRight.getEncoder().getVelocity());
+    SmartDashboard.putBoolean("Index/Banner", getTopBannerSensor());
+    SmartDashboard.putNumber("Index/LeftIndexCurrent", indexLeft.getOutputCurrent());
+    SmartDashboard.putNumber("Index/RightIndexCurrent", indexRight.getOutputCurrent());
+    SmartDashboard.putNumber("Index/LeftIndexVelocity", indexLeft.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Index/RightIndexVelocity", indexRight.getEncoder().getVelocity());
   }
 
   public void setMotorSpeed(double speed){
