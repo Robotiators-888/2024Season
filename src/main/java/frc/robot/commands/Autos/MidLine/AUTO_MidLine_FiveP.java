@@ -52,7 +52,7 @@ public class AUTO_MidLine_FiveP extends AutoPaths {
 
             autos.scoringSequence(Pivot.kLowAngleSP-3, 4000),
 
-            autos.pathIntake(p5name);
+            autos.pathIntake(p5name)
         );
     }
     
