@@ -33,7 +33,7 @@ public class CMD_AimOnDist extends Command {
 
   CommandXboxController driverController;
 
-  private final PIDController robotAngleController = new PIDController( 0.5, 0.01, 0); // 0.25, 0, 0
+  private final PIDController robotAngleController = new PIDController( 0.6, 0, 0); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
   public CMD_AimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain, CommandXboxController driverController) {
@@ -64,7 +64,6 @@ public class CMD_AimOnDist extends Command {
   
 
     robotAngleController.setTolerance(0.07);
-    robotAngleController.setSetpoint(angle);
 
   }
 
@@ -89,11 +88,18 @@ public class CMD_AimOnDist extends Command {
     SmartDashboard.putNumber("Cur Rotation Radians", currentPose.getRotation().getRadians());
     SmartDashboard.putNumber("Distance error", positionError);
 
+    double ks = 0.05;
+    if (Math.abs(currentPose.getRotation().getRadians()-angle) <= 0.07){
+      ks = 0;
+    } else if (currentPose.getRotation().getRadians()-angle < 0){
+      ks *= -1;
+    }
+
 
     drivetrain.drive(
       -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(1), 2), driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
       -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(0), 2), driverController.getRawAxis(0)), OIConstants.kDriveDeadband), 
-      robotAngleController.calculate(currentPose.getRotation().getRadians(), angle),
+      robotAngleController.calculate(currentPose.getRotation().getRadians(), angle) + ks,
      true, true);
   }
 
@@ -108,6 +114,6 @@ public class CMD_AimOnDist extends Command {
   @Override
   public boolean isFinished() {
     return Math.abs(pivot.calculateDegreesRotation()-pivot.distToPivotAngle.get(positionError)) < 5 
-    && (currentPose.getRotation().getRadians()-angle <= 0.07);
+    && (Math.abs(currentPose.getRotation().getRadians()-angle) <= 0.07);
   }
 }

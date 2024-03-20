@@ -19,6 +19,7 @@ import frc.robot.subsystems.SUB_Limelight;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -29,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.GenericHID;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -51,8 +53,9 @@ public class RobotContainer {
 
 
   
-    CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
-    CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
+  CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
+  CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
+
     
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -208,7 +211,6 @@ public class RobotContainer {
         )
     ).onFalse(
       new ParallelCommandGroup(
-        new InstantCommand(()->index.setMotorSpeed(0), index),
         new InstantCommand(()->shooter.shootFlywheelOnRPM(0), shooter)
     )); // Spin Shooter OUT
     
@@ -220,6 +222,9 @@ public class RobotContainer {
       new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
       new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
         ()->index.CurrentLimitSpike()).andThen(
+          new InstantCommand(()->Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)),
+          new InstantCommand(()->Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1))
+        ).andThen(
       new RunCommand(()->index.setMotorSpeed(0.0)).withTimeout(0.0).andThen(
           new ParallelCommandGroup(
             new InstantCommand(()->index.setMotorSpeed(0)),
@@ -230,6 +235,14 @@ public class RobotContainer {
         new InstantCommand(()->index.setMotorSpeed(0)),
         new InstantCommand(()->intake.setMotorSpeed(0)),
         new InstantCommand(()->shooter.shootFlywheelOnRPM(1500))
+    ).andThen(
+      new SequentialCommandGroup(
+        new WaitCommand(.5),
+        new ParallelCommandGroup(
+          new InstantCommand(()->Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0)),
+          new InstantCommand(()->Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0))
+        )
+      )
     ));
 
     
@@ -299,6 +312,11 @@ public class RobotContainer {
   }
 
   public void teleopPeriodic(){
+
+  }
+
+  public void robotPeriodic(){
+
     Pose2d visionPose = limelight.getPose();
 
     SmartDashboard.putNumber("LL X pose", visionPose.getX());
@@ -316,11 +334,9 @@ public class RobotContainer {
       if (dist <= 1000){
         double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
         drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
+
       }
     }
-  }
-
-  public void robotPeriodic(){
 
     SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
     SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
