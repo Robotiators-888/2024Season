@@ -209,7 +209,6 @@ public class RobotContainer {
         )
     ).onFalse(
       new ParallelCommandGroup(
-        new InstantCommand(()->index.setMotorSpeed(0), index),
         new InstantCommand(()->shooter.shootFlywheelOnRPM(0), shooter)
     )); // Spin Shooter OUT
     
@@ -311,6 +310,11 @@ public class RobotContainer {
   }
 
   public void teleopPeriodic(){
+
+  }
+
+  public void robotPeriodic(){
+
     Pose2d visionPose = limelight.getPose();
 
     SmartDashboard.putNumber("LL X pose", visionPose.getX());
@@ -328,11 +332,9 @@ public class RobotContainer {
       if (dist <= 1000){
         double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
         drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
+
       }
     }
-  }
-
-  public void robotPeriodic(){
 
     SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
     SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
