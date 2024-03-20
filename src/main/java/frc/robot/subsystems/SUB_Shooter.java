@@ -27,7 +27,6 @@ public class SUB_Shooter extends SubsystemBase {
     PIDController = shooterLeft.getPIDController();
     shooterLeft.restoreFactoryDefaults();
     shooterRight.restoreFactoryDefaults();
-    for(int i =0; i<5 ; i++){
     shooterRight.setInverted(false);
     shooterRight.follow(shooterLeft, false);
     PIDController.setOutputRange(-1, 1);
@@ -35,7 +34,7 @@ public class SUB_Shooter extends SubsystemBase {
     shooterLeft.enableVoltageCompensation(12);
     setPIDF(PIDController, 0, 0, 0, 1.0/5800.0 * (3000.0/2600.0));
     Timer.delay(.1);
-    }
+    
     shooterLeft.burnFlash();
     shooterRight.burnFlash();  
 
@@ -50,7 +49,7 @@ public class SUB_Shooter extends SubsystemBase {
   }
 
   public void periodic(){
-    SmartDashboard.putNumber("Shooter RPM", shooterLeft.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Shooter/Shooter RPM", shooterLeft.getEncoder().getVelocity());
   }
   public void setPIDF(SparkPIDController pid, double P, double I, double D, double F){
     pid.setP(P);

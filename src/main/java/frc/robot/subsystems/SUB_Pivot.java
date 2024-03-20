@@ -50,7 +50,6 @@ public class SUB_Pivot extends SubsystemBase {
         rotateRelativeEncoder = pivotMotor.getEncoder();
         pivotTrapezoidProfile = new TrapezoidProfile(kArmMotionConstraint);
         pivotMotor.restoreFactoryDefaults();
-        for(int i =0; i<5 ; i++){
         pivotMotor.setOpenLoopRampRate(0.6); // motor takes 0.6 secs to reach desired power
         pivotMotor.setInverted(false);
         pivotMotor.setIdleMode(IdleMode.kBrake);
@@ -72,7 +71,7 @@ public class SUB_Pivot extends SubsystemBase {
 
         Timer.delay(.1);
         
-        }
+        
         System.out.println("DONE");
         pivotMotor.burnFlash();
       
@@ -171,6 +170,7 @@ public void goToAngle(double angle){
 
 public void runManual(double _power) {
      pivotMotor.set(_power);
+     setPivotSetpoint(rotateEncoder.getPosition());
 }
 
   public void runAutomatic(){
@@ -190,13 +190,13 @@ public void runManual(double _power) {
   }
 
   public void periodic(){
-    SmartDashboard.putNumber("Pivot Setpoint", pivotSetpoint);
-    SmartDashboard.putNumber("Pivot Rotations", getRotations());
-    SmartDashboard.putNumber("Current Velocity", rotateEncoder.getVelocity());
-    SmartDashboard.putNumber("TargetVelocity", currentState.velocity);
-    SmartDashboard.putNumber("Next position", currentState.position);
-    SmartDashboard.putNumber("Pivot FF", feedforward);
-    SmartDashboard.putNumber("Pivot % out", pivotMotor.getAppliedOutput());
+    SmartDashboard.putNumber("Pivot/Pivot Setpoint", pivotSetpoint);
+    SmartDashboard.putNumber("Pivot/Pivot Rotations", getRotations());
+    SmartDashboard.putNumber("Pivot/Current Velocity", rotateEncoder.getVelocity());
+    SmartDashboard.putNumber("Pivot/TargetVelocity", currentState.velocity);
+    SmartDashboard.putNumber("Pivot/Next position", currentState.position);
+    SmartDashboard.putNumber("Pivot/Pivot FF", feedforward);
+    SmartDashboard.putNumber("Pivot/Pivot % out", pivotMotor.getAppliedOutput());
 
   }
 }

@@ -76,6 +76,8 @@ public class RobotContainer {
     pivot.setDefaultCommand(new RunCommand(()->pivot.runAutomatic(), pivot));    
     climber.setDefaultCommand(new RunCommand(()->{climber.runLeft(0);climber.runRight(0);}, climber));
 
+    //pivot.set
+
 
      /* ================== *\
             Driver One 
