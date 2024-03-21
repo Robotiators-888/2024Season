@@ -42,10 +42,6 @@ public class SUB_PhotonVision extends SubsystemBase {
     }      
   }
   
-
-
-
-  
   public PhotonTrackedTarget getBestTarget() {
     return bestTarget;
   }

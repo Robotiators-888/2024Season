@@ -298,8 +298,6 @@ public class RobotContainer {
 
     SmartDashboard.putNumber("LL X pose", visionPose.getX());
     SmartDashboard.putNumber("LL Y pose", visionPose.getY());
-
-    // Field is 1655 cm by 821 cm
     if (!visionPose.equals(new Pose2d()) && 
         visionPose.getX() >= 0 && visionPose.getX() <= 1655.0/100 &&
         visionPose.getY() >= 0 && visionPose.getY() <= 821.0/100){
@@ -311,16 +309,16 @@ public class RobotContainer {
       if (dist <= 1000){
         double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
         drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
-      }
-    }
-
-    SUB_PhotonVision.PosePair photonPose = photonVision.getPose2dPhotonvision();
-    if (photonPose.pose.getX() >= 0 && photonPose.pose.getX() <= 1655.0/100 && photonPose.pose.getY() >= 0 && photonPose.pose.getX() <= 821.0/100){}
-      drivetrain.addVisionMeasurement(photonPose.pose, photonPose.time);
+      }}
+    // drivetrain.limelightVisionUpdate();
     }
 
   public void robotPeriodic(){
-
+   SUB_PhotonVision.PosePair photonPose = photonVision.getPose2dPhotonvision();
+  if (photonPose!= null){
+  if (photonPose.pose.getX() >= 0 && photonPose.pose.getX() <= 1655.0/100 && photonPose.pose.getY() >= 0 && photonPose.pose.getX() <= 821.0/100){}
+    drivetrain.addVisionMeasurement(photonPose.pose, photonPose.time);
+  }
     SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
     SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
     SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.calculateDegreesRotation());
