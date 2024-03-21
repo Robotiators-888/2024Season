@@ -235,7 +235,7 @@ public class RobotContainer {
         new InstantCommand(()->index.setMotorSpeed(0)),
         new InstantCommand(()->intake.setMotorSpeed(0)),
         new InstantCommand(()->shooter.shootFlywheelOnRPM(1500)),
-        new InstantCommand(()->pivot.goToAngle(Constants.Pivot.kHighAngleSP))
+        new InstantCommand(()->pivot.goToAngle(Constants.Pivot.kLowAngleSP))
     ).andThen(
       new SequentialCommandGroup(
         new WaitCommand(.5),
@@ -314,10 +314,6 @@ public class RobotContainer {
 
   public void teleopPeriodic(){
 
-  }
-
-  public void robotPeriodic(){
-
     Pose2d visionPose = limelight.getPose();
 
     SmartDashboard.putNumber("LL X pose", visionPose.getX());
@@ -338,6 +334,10 @@ public class RobotContainer {
 
       }
     }
+  }
+
+  public void robotPeriodic(){
+
 
     SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
     SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);

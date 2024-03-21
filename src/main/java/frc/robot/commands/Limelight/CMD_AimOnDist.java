@@ -33,11 +33,11 @@ public class CMD_AimOnDist extends Command {
 
   CommandXboxController driverController;
 
-  private final PIDController robotAngleController = new PIDController( 0.6, 0, 0); // 0.25, 0, 0
+  private final PIDController robotAngleController = new PIDController( 1.5, 0, 0); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
   public CMD_AimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain, CommandXboxController driverController) {
-    // Use addRequirements() here to declare subsystem dependencies.
+    // Use addRequirements() here to declare subsystem dependencies.  
     this.pivot = pivot;
     this.limelight = limelight;
     this.drivetrain = drivetrain;
@@ -63,7 +63,7 @@ public class CMD_AimOnDist extends Command {
     }
   
 
-    robotAngleController.setTolerance(0.07);
+    robotAngleController.setTolerance(0.04);
 
   }
 
@@ -78,8 +78,17 @@ public class CMD_AimOnDist extends Command {
     xError = tagPose.getX() - currentPose.getX();
     yError = tagPose.getY() - currentPose.getY();
     angle = Math.atan2(yError, xError); // x and y are not flipped???
+    var alliance = DriverStation.getAlliance();
+    
+    if (alliance.isPresent()) {
+      if (alliance.get() == DriverStation.Alliance.Red){
+        pivot.goToAngle((pivot.distToPivotAngle.get(positionError) + 27) - (Math.abs(currentPose.getRotation().getRadians()) * 4));
+      } else {
+        pivot.goToAngle((pivot.distToPivotAngle.get(positionError) + 27) + (Math.abs(currentPose.getRotation().getRadians()) * 4));
 
-    pivot.goToAngle(pivot.distToPivotAngle.get(positionError) + 27);
+      }
+    } 
+    // |currentpos - radians| * 5 - ()
     pivot.runAutomatic();
 
     SmartDashboard.putNumber("X Error", xError);
@@ -88,8 +97,8 @@ public class CMD_AimOnDist extends Command {
     SmartDashboard.putNumber("Cur Rotation Radians", currentPose.getRotation().getRadians());
     SmartDashboard.putNumber("Distance error", positionError);
 
-    double ks = 0.05;
-    if (Math.abs(currentPose.getRotation().getRadians()-angle) <= 0.07){
+    double ks = 0.1;
+    if (Math.abs(currentPose.getRotation().getRadians()-angle) <= 0.04){
       ks = 0;
     } else if (currentPose.getRotation().getRadians()-angle < 0){
       ks *= -1;
@@ -114,6 +123,6 @@ public class CMD_AimOnDist extends Command {
   @Override
   public boolean isFinished() {
     return Math.abs(pivot.calculateDegreesRotation()-pivot.distToPivotAngle.get(positionError)) < 5 
-    && (Math.abs(currentPose.getRotation().getRadians()-angle) <= 0.07);
+    && (Math.abs(currentPose.getRotation().getRadians()-angle) <= 0.04);
   }
 }
