@@ -12,6 +12,7 @@ import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Shooter;
 import frc.robot.subsystems.SUB_Intake;
+import frc.robot.subsystems.SUB_LEDs;
 import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.utils.AutoSelector;
 import frc.robot.subsystems.SUB_Limelight;
@@ -48,6 +49,7 @@ public class RobotContainer {
    public static SUB_Intake intake = new SUB_Intake();
    public static SUB_Pivot pivot = new SUB_Pivot();
    public static SUB_Limelight limelight = new SUB_Limelight();
+   public static SUB_LEDs led = new SUB_LEDs(9);
    public static SUB_Climber climber = new SUB_Climber();
    public static AutoSelector autoSelector = new AutoSelector(drivetrain, index, intake, shooter, pivot);
 
@@ -107,8 +109,8 @@ public class RobotContainer {
     ));//Shoot From Bottom Setpoint
 
     Driver1.start().whileTrue( new ParallelCommandGroup(
-          new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)),
-          new RunCommand(()->shooter.shootFlywheelOnRPM(500), shooter),
+          //new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)),
+          new RunCommand(()->shooter.shootFlywheelOnRPM(1000), shooter),
           new SequentialCommandGroup(
             new WaitCommand(.75),
             new RunCommand(()->index.setMotorSpeed(0.45), index)
@@ -169,6 +171,8 @@ public class RobotContainer {
                 drivetrain)
     );
 
+
+
     /* ================== *\
            Driver Two
     \* ================== */
@@ -191,7 +195,15 @@ public class RobotContainer {
           new ParallelCommandGroup(
             new InstantCommand(()->index.setMotorSpeed(0)),
             new InstantCommand(()->shooter.setMotorSpeed(0))
-          )
+          ).andThen(
+      new SequentialCommandGroup(
+        new WaitCommand(.5),
+        new ParallelCommandGroup(
+          new InstantCommand(()->Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0)),
+          new InstantCommand(()->Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0))
+        )
+      )
+    )
         )).onFalse(
            new ParallelCommandGroup(
             new RunCommand(()->shooter.setMotorSpeed(0.0), shooter),
@@ -246,6 +258,7 @@ public class RobotContainer {
       )
     ));
 
+    Driver2.start().whileTrue(new RunCommand(()->led.set(0.5), led)).onFalse(new RunCommand(()->led.set(0.0), led));
     
 
     // Driver2.a().whileTrue(
