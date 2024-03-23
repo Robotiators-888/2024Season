@@ -5,7 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.*;
-import frc.robot.commands.Limelight.CMD_AimOnDist;
+import frc.robot.commands.Limelight.CMD_TeleopAimOnDist;
 import frc.robot.commands.Limelight.CMD_AlignSource;
 import frc.robot.subsystems.SUB_Climber;
 import frc.robot.subsystems.SUB_Drivetrain;
@@ -216,12 +216,11 @@ public class RobotContainer {
 
 
 
-    CMD_AimOnDist aimCommand = new CMD_AimOnDist(pivot, limelight, drivetrain, Driver1);
     Driver2.b().whileTrue(
         new ParallelCommandGroup(
           new ParallelCommandGroup(
             new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
-            aimCommand
+            new CMD_TeleopAimOnDist(pivot, limelight, drivetrain, Driver1)
           )
         ).andThen(new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value))
     ).onFalse(
@@ -250,11 +249,11 @@ public class RobotContainer {
       new ParallelCommandGroup(
         new InstantCommand(()->index.setMotorSpeed(0)),
         new InstantCommand(()->intake.setMotorSpeed(0)),
-        new InstantCommand(()->shooter.shootFlywheelOnRPM(1500)),
-        new InstantCommand(()->pivot.goToAngle(Constants.Pivot.kLowAngleSP))
+        new InstantCommand(()->shooter.shootFlywheelOnRPM(1500))
     ).andThen(
       new SequentialCommandGroup(
         new WaitCommand(.5),
+        new InstantCommand(()->pivot.goToAngle(Constants.Pivot.kLowAngleSP)),
         new ParallelCommandGroup(
           new InstantCommand(()->Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0)),
           new InstantCommand(()->Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0))
