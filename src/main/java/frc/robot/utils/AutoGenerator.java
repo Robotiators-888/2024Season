@@ -39,12 +39,13 @@ public class AutoGenerator {
   CommandXboxController driver1;
 
   
-  public AutoGenerator(SUB_Drivetrain drivetrain, SUB_Index index, SUB_Intake intake, SUB_Shooter shooter, SUB_Pivot pivot, CommandXboxController driver1) {
+  public AutoGenerator(SUB_Drivetrain drivetrain, SUB_Index index, SUB_Intake intake, SUB_Shooter shooter, SUB_Pivot pivot, SUB_Limelight limelight, CommandXboxController driver1) {
     this.drivetrain = drivetrain;
     this.index = index;
     this.intake = intake;
     this.shooter = shooter;
     this.pivot = pivot;
+    this.limelight = limelight;
     this.driver1 = driver1;
 
     

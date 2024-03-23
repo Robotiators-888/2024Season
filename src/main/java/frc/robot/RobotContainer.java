@@ -54,7 +54,9 @@ public class RobotContainer {
    public static SUB_Climber climber = new SUB_Climber();
    public static CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
    public static CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
-   public static AutoSelector autoSelector = new AutoSelector(drivetrain, index, intake, shooter, pivot, Driver1);
+
+
+   public static AutoSelector autoSelector = new AutoSelector(drivetrain, index, intake, shooter, pivot, limelight, Driver1);
 
     
   /** The container for the robot. Contains subsystems, OI devices, and commands. */

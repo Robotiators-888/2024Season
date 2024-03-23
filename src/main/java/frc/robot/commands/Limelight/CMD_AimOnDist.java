@@ -33,7 +33,7 @@ public class CMD_AimOnDist extends Command {
 
   CommandXboxController driverController;
 
-  private final PIDController robotAngleController = new PIDController( 1.5, 0, 0); // 0.25, 0, 0
+  private final PIDController robotAngleController = new PIDController( 0.6, 0, 0); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
   public CMD_AimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain, CommandXboxController driverController) {
@@ -100,7 +100,7 @@ public class CMD_AimOnDist extends Command {
     double ks = 0.1;
     if (Math.abs(currentPose.getRotation().getRadians()-angle) <= 0.04){
       ks = 0;
-    } else if (currentPose.getRotation().getRadians()-angle < 0){
+    } else if (robotAngleController.calculate(currentPose.getRotation().getRadians(), angle) < 0 ){
       ks *= -1;
     }
 

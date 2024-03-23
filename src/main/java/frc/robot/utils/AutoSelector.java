@@ -8,12 +8,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.Limelight;
 import frc.robot.commands.Autos.*;
 import frc.robot.commands.Autos.MidLine.*;
 import frc.robot.commands.Autos.Troubles.*;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Intake;
+import frc.robot.subsystems.SUB_Limelight;
 import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.subsystems.SUB_Shooter;
 
@@ -23,8 +25,8 @@ public class AutoSelector {
 
     AutoGenerator autos;
 
-    public AutoSelector(SUB_Drivetrain drivetrain, SUB_Index index, SUB_Intake intake, SUB_Shooter shooter, SUB_Pivot pivot, CommandXboxController driver1){
-        autos = new AutoGenerator(drivetrain, index, intake, shooter, pivot, driver1);
+    public AutoSelector(SUB_Drivetrain drivetrain, SUB_Index index, SUB_Intake intake, SUB_Shooter shooter, SUB_Pivot pivot, SUB_Limelight limelight, CommandXboxController driver1){
+        autos = new AutoGenerator(drivetrain, index, intake, shooter, pivot, limelight, driver1);
 
         chooser.setDefaultOption("1P_Stay", new AUTO_JustShoot());
         chooser.addOption("2P_Top", new AUTO_2P_Top());
@@ -34,6 +36,8 @@ public class AutoSelector {
 
         chooser.addOption("3P_Top", new AUTO_3P_Top());
         chooser.addOption("3P_Middle", new AUTO_3P_Mid());
+        chooser.addOption("3P_Midline_ONLY_Bottom", new AUTO_MidLine_Bottom_Three());
+
         // chooser.addOption("3P_Bottom", new AUTO_3P_Bottom());
         chooser.addOption("4P_MidLine_3_1st", new AUTO_MidLine_FourP_One());
         //chooser.addOption("3P_MidLine_3_2nd", new AUTO_MidLine_FourP_Two());
