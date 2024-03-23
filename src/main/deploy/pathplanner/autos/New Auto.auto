@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7805585557503859,
-      "y": 6.549814316086593
+      "x": 0.6514243165472632,
+      "y": 4.557812951242341
     },
-    "rotation": -120.96375653207352
+    "rotation": 119.29136217098429
   },
   "command": {
     "type": "sequential",
@@ -14,19 +14,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "BottomStart_5GP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "TopGP_to_1stGP"
+            "pathName": "5th_to_BottomGP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "1st2nd_ReturnToShoot"
+            "pathName": "Bottom_to_4GP"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4th_to_BottomGP"
           }
         }
       ]

@@ -145,5 +145,6 @@ public class LogiUtils extends Joystick {
     public double getRightTriggerAxis(){
         return getRawAxis(axis.kRIGHTTRIGGER.value);
     }
+
 }
     

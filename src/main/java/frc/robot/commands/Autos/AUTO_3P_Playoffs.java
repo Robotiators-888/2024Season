@@ -22,6 +22,7 @@ public class AUTO_3P_Playoffs extends AutoPaths{
         String p1Name = "TopStart_to_TopGP";
         String p2Name = "TopGP_to_1stGP";
         String p3Name = "1st2nd_ReturnToShoot";
+        String p4Name = "TopGP_to_2ndGP";
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
 
         var alliance = DriverStation.getAlliance();
@@ -43,9 +44,12 @@ public class AUTO_3P_Playoffs extends AutoPaths{
 
             autos.pathIntake(p2Name).withTimeout(4),
             PathPlannerBase.followTrajectory(p3Name),
-            autos.scoringSequence(Pivot.kLowAngleSP+3, 4500, 0.5)
+            autos.scoringSequence(Pivot.kLowAngleSP+3, 4500, 0.5),
 
-           
+           autos.pathIntake(p4Name),
+           PathPlannerBase.followTrajectory(p3Name),
+           autos.scoringSequence(Pivot.kLowAngleSP+3, 4500, 0.5)
+
             
 
         );

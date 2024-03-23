@@ -11,7 +11,9 @@ import frc.robot.subsystems.SUB_Climber;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Shooter;
+import frc.robot.subsystems.SUB_LEDs.BlinkinPattern;
 import frc.robot.subsystems.SUB_Intake;
+import frc.robot.subsystems.SUB_LEDs;
 import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.utils.AutoSelector;
 import frc.robot.subsystems.SUB_Limelight;
@@ -20,6 +22,7 @@ import frc.robot.subsystems.SUB_PhotonVision;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -30,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.GenericHID;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -52,6 +56,7 @@ public class RobotContainer {
   public static SUB_Climber climber = new SUB_Climber();
   public static AutoSelector autoSelector = new AutoSelector(drivetrain, index, intake, shooter, pivot);
   public static SUB_PhotonVision photonVision = new SUB_PhotonVision();
+  public static SUB_LEDs led = new SUB_LEDs(9);
 
   CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
   CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort);
@@ -84,13 +89,14 @@ public class RobotContainer {
       climber.runRight(0);
     }, climber));
 
-    /*
-     * ================== *\
-     * Driver One
-     * \* ==================
-     */
-    Driver1.rightTrigger().whileTrue(new RunCommand(() -> climber.runRight(Climber.kDownSpeed), climber));
-    Driver1.rightBumper().whileTrue(new RunCommand(() -> climber.runRight(Climber.kUpSpeed), climber));
+    shooter.setDefaultCommand(new RunCommand(()->shooter.shootFlywheelOnRPM(0), shooter));
+    //index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
+    //intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0), intake));
+    pivot.setDefaultCommand(new RunCommand(()->pivot.runAutomatic(), pivot));    
+    climber.setDefaultCommand(new RunCommand(()->{climber.runLeft(0);climber.runRight(0);}, climber));
+    led.setDefaultCommand(new RunCommand(()->led.set(SUB_LEDs.ledValue), led));
+
+    //pivot.set
 
     Driver1.leftTrigger().whileTrue(new RunCommand(() -> climber.runLeft(Climber.kDownSpeed), climber));
     Driver1.leftBumper().whileTrue(new RunCommand(() -> climber.runLeft(Climber.kUpSpeed), climber));
@@ -106,51 +112,58 @@ public class RobotContainer {
     Driver1.povDown().onTrue(new SequentialCommandGroup(
         new InstantCommand(() -> pivot.goToAngle(50))));// Shoot From Bottom Setpoint
 
-    Driver1.start().whileTrue(new ParallelCommandGroup(
-        new InstantCommand(() -> pivot.goToAngle(Pivot.kSideSP)),
-        new RunCommand(() -> shooter.shootFlywheelOnRPM(500), shooter),
-        new SequentialCommandGroup(
+    Driver1.start().whileTrue( new ParallelCommandGroup(
+          //new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)),
+          new RunCommand(()->shooter.shootFlywheelOnRPM(1000), shooter),
+          new SequentialCommandGroup(
             new WaitCommand(.75),
-            new RunCommand(() -> index.setMotorSpeed(0.45), index))))
-        .onFalse(
-            new InstantCommand(() -> index.setMotorSpeed(0))
-        // new RunCommand(()->shooter.shootFlywheelOnRPM(3000),
-        // shooter).withTimeout(0.25)
-        );
-
-    Driver1.back().whileTrue(new InstantCommand(() -> pivot.goToAngle(Pivot.kSideSP)));
+            new RunCommand(()->index.setMotorSpeed(0.45), index)
+          )
+        )).onFalse(new SequentialCommandGroup(
+          new InstantCommand(()->index.setMotorSpeed(0)),
+          new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.HOT_PINK.value)
+          //new RunCommand(()->shooter.shootFlywheelOnRPM(3000), shooter).withTimeout(0.25)
+        ));
+    
+    Driver1.back().whileTrue( new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)));
 
     Driver1.a().whileTrue(
         new CMD_AlignSource(pivot, limelight, drivetrain, Driver1));
 
     Driver1.b().whileTrue(
-        new ParallelCommandGroup(
-            new RunCommand(() -> shooter.shootFlywheelOnRPM(4000), shooter),
-            new SequentialCommandGroup(
-                new WaitUntilCommand(() -> shooter.getFlywheelRPM() >= 3500),
-                new RunCommand(() -> index.setMotorSpeed(0.5), index))))
-        .onFalse(
-            new ParallelCommandGroup(
-                new InstantCommand(() -> index.setMotorSpeed(0)),
-                new InstantCommand(() -> shooter.setMotorSpeed(0)))); // Spin Shooter OUT
+      new ParallelCommandGroup(
+        new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
+        new SequentialCommandGroup(
+          new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500),
+          new RunCommand(()->index.setMotorSpeed(0.5), index)
+        )
+      ).andThen(new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.HOT_PINK.value))
+    ).onFalse(
+      new ParallelCommandGroup(
+        new InstantCommand(()->index.setMotorSpeed(0)),
+        new InstantCommand(()->shooter.setMotorSpeed(0))
+    )
+    ); // Spin Shooter OUT
 
     Driver1.y().whileTrue(new ParallelCommandGroup(
         new CMD_AlignSource(pivot, limelight, drivetrain, Driver1),
         new ParallelCommandGroup(
-            new InstantCommand(() -> index.starttimer()),
-            new RunCommand(() -> index.setMotorSpeed(-Constants.Intake.kIndexSpeed), index),
-            new RunCommand(() -> shooter.shootFlywheelOnRPM(-1000), shooter)).until(
-                () -> index.CurrentLimitSpike())
-            .andThen(
-                new RunCommand(() -> index.setMotorSpeed(-0.05)).withTimeout(0.025))
-            .andThen(
-                new ParallelCommandGroup(
-                    new InstantCommand(() -> index.setMotorSpeed(0)),
-                    new InstantCommand(() -> shooter.setMotorSpeed(0))))))
-        .onFalse(
-            new ParallelCommandGroup(
-                new InstantCommand(() -> index.setMotorSpeed(0)),
-                new InstantCommand(() -> shooter.shootFlywheelOnRPM(1500))));
+        new InstantCommand(()->index.starttimer()),
+        new RunCommand(()->index.setMotorSpeed(-Constants.Intake.kIndexSpeed), index),
+        new RunCommand(()->shooter.shootFlywheelOnRPM(-1000), shooter)).until(
+          ()->index.CurrentLimitSpike()).andThen(
+        new RunCommand(()->index.setMotorSpeed(-0.05)).withTimeout(0.025)).andThen(
+          new ParallelCommandGroup(
+            new InstantCommand(()->index.setMotorSpeed(0)),
+            new InstantCommand(()->shooter.setMotorSpeed(0))
+          ).andThen(new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.GREEN.value))
+        )
+      )).onFalse(
+        new ParallelCommandGroup(
+          new InstantCommand(()->index.setMotorSpeed(0)),
+          new InstantCommand(()->shooter.shootFlywheelOnRPM(1500))
+        )
+      );
 
     Driver1.povLeft().whileTrue(
         new RunCommand(
@@ -163,15 +176,47 @@ public class RobotContainer {
                 false, true),
             drivetrain));
 
-    /*
-     * ================== *\
-     * Driver Two
-     * \* ==================
-     */
-    Driver2.leftBumper().onTrue(new InstantCommand(() -> SUB_Shooter.MANUAL_RPM -= 250)); // Decrease manual RPM by 250
+
+
+    /* ================== *\
+           Driver Two
+    \* ================== */
+    Driver2.leftBumper().onTrue(new InstantCommand(()->
+      SUB_Shooter.MANUAL_RPM -= 250
+    )); // Decrease manual RPM by 250
 
     Driver2.rightBumper().onTrue(
-        new InstantCommand(() -> SUB_Shooter.MANUAL_RPM += 250)); // Increase manual RPM by 250
+      new InstantCommand(()->
+        SUB_Shooter.MANUAL_RPM += 250
+    )); // Increase manual RPM by 250
+
+        Driver2.rightTrigger().whileTrue(
+          new ParallelCommandGroup(
+        new InstantCommand(()->index.starttimer()),
+        new RunCommand(()->index.setMotorSpeed(-Constants.Intake.kIndexSpeed), index),
+        new RunCommand(()->shooter.shootFlywheelOnRPM(-1000), shooter)).until(
+          ()->index.CurrentLimitSpike()).andThen(
+        new RunCommand(()->index.setMotorSpeed(-0.05)).withTimeout(0.025)).andThen(
+          new ParallelCommandGroup(
+            new InstantCommand(()->index.setMotorSpeed(0)),
+            new InstantCommand(()->shooter.setMotorSpeed(0))
+          ).andThen(
+      new SequentialCommandGroup(
+        new WaitCommand(.5),
+        new ParallelCommandGroup(
+          new InstantCommand(()->Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0)),
+          new InstantCommand(()->Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0)),
+          new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.GREEN.value)
+        )
+      )
+    )
+        )).onFalse(
+           new ParallelCommandGroup(
+            new RunCommand(()->shooter.setMotorSpeed(0.0), shooter),
+            new RunCommand(()->index.setMotorSpeed(0.0), index)
+        )
+        ); // Spin Shooter IN
+
 
     Driver2.rightTrigger().whileTrue(
         new ParallelCommandGroup(
@@ -193,28 +238,51 @@ public class RobotContainer {
     CMD_AimOnDist aimCommand = new CMD_AimOnDist(pivot, limelight, drivetrain, Driver1);
     Driver2.b().whileTrue(
         new ParallelCommandGroup(
-            new ParallelCommandGroup(
-                new RunCommand(() -> shooter.shootFlywheelOnRPM(4000), shooter),
-                aimCommand)))
-        .onFalse(
-            new ParallelCommandGroup(
-                new InstantCommand(() -> index.setMotorSpeed(0), index),
-                new InstantCommand(() -> shooter.shootFlywheelOnRPM(0), shooter))); // Spin Shooter OUT
-
+          new ParallelCommandGroup(
+            new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
+            aimCommand
+          )
+        ).andThen(new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.HOT_PINK.value))
+    ).onFalse(
+      new ParallelCommandGroup(
+        new InstantCommand(()->shooter.shootFlywheelOnRPM(0), shooter)
+    )); // Spin Shooter OUT
+    
+     
     Driver2.a().whileTrue(
+    new ParallelCommandGroup(
+      new InstantCommand(()->pivot.goToAngle(75)),
+      new InstantCommand(()->index.starttimer()),
+      new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
+      new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
+        ()->index.CurrentLimitSpike()).andThen(
+          new InstantCommand(()->Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)),
+          new InstantCommand(()->Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1))
+        ).andThen(
+      new RunCommand(()->index.setMotorSpeed(0.0)).withTimeout(0.0).andThen(
+          new ParallelCommandGroup(
+            new InstantCommand(()->index.setMotorSpeed(0)),
+            new InstantCommand(()->shooter.setMotorSpeed(0)),
+            new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.GREEN.value)
+          ))
+    )).onFalse(
+      new ParallelCommandGroup(
+        new InstantCommand(()->index.setMotorSpeed(0)),
+        new InstantCommand(()->intake.setMotorSpeed(0)),
+        new InstantCommand(()->shooter.shootFlywheelOnRPM(1500)),
+        new InstantCommand(()->pivot.goToAngle(Constants.Pivot.kLowAngleSP))
+    ).andThen(
+      new SequentialCommandGroup(
+        new WaitCommand(.5),
         new ParallelCommandGroup(
-            new InstantCommand(() -> pivot.goToAngle(75)),
-            new InstantCommand(() -> index.starttimer()),
-            new RunCommand(() -> index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
-            new RunCommand(() -> intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
-                () -> index.CurrentLimitSpike())
-            .andThen(
-                new RunCommand(() -> index.setMotorSpeed(0.0)).withTimeout(0.0)))
-        .onFalse(
-            new ParallelCommandGroup(
-                new InstantCommand(() -> index.setMotorSpeed(0)),
-                new InstantCommand(() -> intake.setMotorSpeed(0)),
-                new InstantCommand(() -> shooter.shootFlywheelOnRPM(1500))));
+          new InstantCommand(()->Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0)),
+          new InstantCommand(()->Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0))
+        )
+      )
+    ));
+
+    //Driver2.start().whileTrue(new RunCommand(()->led.set(0.5), led)).onFalse(new RunCommand(()->led.set(0.0), led));
+    
 
     // Driver2.a().whileTrue(
     // new ParallelCommandGroup(
@@ -291,6 +359,10 @@ public class RobotContainer {
     // limelightPoseUpdate();
   }
 
+  public void robotPeriodic(){
+    
+  }
+
   public void limelightPoseUpdate() {
     Pose2d visionPose = limelight.getPose();
 
@@ -306,7 +378,8 @@ public class RobotContainer {
       double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
       if (dist <= 1000) {
         double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
-        drivetrain.addVisionMeasurement(visionPose, latencySec / 1000);
+        drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
+
       }
     }
     // drivetrain.limelightVisionUpdate();

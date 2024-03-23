@@ -135,17 +135,17 @@ public class SUB_Drivetrain extends SubsystemBase {
     m_lastFieldRelVel = m_fieldRelVel;
 
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("rotation", getPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("Drive/rotation", getPose().getRotation().getDegrees());
     //SmartDashboard.putNumber("Speed", m_poseEstimator);
-    SmartDashboard.putData("Field", m_field);
+    SmartDashboard.putData("Drive/Field", m_field);
     SmartDashboard.putNumberArray(
         "Odometry",
         new double[] {getPose().getX(), getPose().getY(), getPose().getRotation().getDegrees()});
 
-    SmartDashboard.putNumber("Robot Pose X ft", Units.metersToInches(getPose().getX()));
-    SmartDashboard.putNumber("Robot Pose Y ft", Units.metersToInches(getPose().getY()));
+    SmartDashboard.putNumber("Drive/Robot Pose X ft", Units.metersToInches(getPose().getX()));
+    SmartDashboard.putNumber("Drive/Robot Pose Y ft", Units.metersToInches(getPose().getY()));
 
-    SmartDashboard.putNumber("Robot Speed", modules[0].getVelocityDrive());
+    SmartDashboard.putNumber("Drive/Robot Speed", modules[0].getVelocityDrive());
   }
 
   /**

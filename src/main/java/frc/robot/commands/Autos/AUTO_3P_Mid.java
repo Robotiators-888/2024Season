@@ -35,14 +35,14 @@ public class AUTO_3P_Mid extends AutoPaths{
         } 
 
         return Commands.sequence(
-            autos.scoringSequence(Pivot.kSpeakerAngleSP-2,2500),
+            autos.scoringSequence(Pivot.kSpeakerAngleSP-6,4000, 0.45),
             autos.resetOdometry(startingPose),
 
             autos.pathIntake(p1Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP, 4000),
+            autos.scoringSequence(Pivot.kLowAngleSP+3, 4000, 0.33),
 
             autos.pathIntake(p2Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP-5, 4500)
+            autos.scoringSequence(Pivot.kLowAngleSP-1, 4500, 0.5)
         );
     }
     

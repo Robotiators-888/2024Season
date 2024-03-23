@@ -25,11 +25,10 @@ public class SUB_Intake extends SubsystemBase {
     
     intakeMotor = new CANSparkMax(Intake.kINTAKE_MOTOR_CANID, MotorType.kBrushless);
     intakeMotor.restoreFactoryDefaults();
-    for(int i =0; i<5 ; i++){
     intakeMotor.setIdleMode(IdleMode.kCoast);
     intakeMotor.setInverted(true);
     Timer.delay(.1);
-    }
+    
     intakeMotor.burnFlash();
     intakeBool = false;
 
@@ -50,9 +49,9 @@ public class SUB_Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Intake RPM", intakeMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Intake/RPM", intakeMotor.getEncoder().getVelocity());
     //SmartDashboard.putNumber(getName(), 0)
-    SmartDashboard.putNumber("Intake Speed (m/sec)", (((intakeMotor.getEncoder().getVelocity()*2*Math.PI)/8))/60);
+    SmartDashboard.putNumber("Intake/Speed (m/sec)", (((intakeMotor.getEncoder().getVelocity()*2*Math.PI)/8))/60);
 
   }
 
