@@ -7,6 +7,7 @@ package frc.robot.utils;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Autos.*;
 import frc.robot.commands.Autos.MidLine.*;
 import frc.robot.commands.Autos.Troubles.*;
@@ -22,8 +23,8 @@ public class AutoSelector {
 
     AutoGenerator autos;
 
-    public AutoSelector(SUB_Drivetrain drivetrain, SUB_Index index, SUB_Intake intake, SUB_Shooter shooter, SUB_Pivot pivot){
-        autos = new AutoGenerator(drivetrain, index, intake, shooter, pivot);
+    public AutoSelector(SUB_Drivetrain drivetrain, SUB_Index index, SUB_Intake intake, SUB_Shooter shooter, SUB_Pivot pivot, CommandXboxController driver1){
+        autos = new AutoGenerator(drivetrain, index, intake, shooter, pivot, driver1);
 
         chooser.setDefaultOption("1P_Stay", new AUTO_JustShoot());
         chooser.addOption("2P_Top", new AUTO_2P_Top());

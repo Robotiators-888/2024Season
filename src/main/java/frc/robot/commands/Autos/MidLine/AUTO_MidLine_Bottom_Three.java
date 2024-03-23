@@ -45,11 +45,12 @@ public class AUTO_MidLine_Bottom_Three extends AutoPaths {
 
             autos.pathIntake(p1Name).withTimeout(4),
             PathPlannerBase.followTrajectory(p2Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP-1, 4500, 0.5),
+           // autos.scoringSequence(Pivot.kLowAngleSP-1, 4500, 0.5),
+            autos.autoAimShot(0.0),
 
             autos.pathIntake(p3Name).withTimeout(4),
             PathPlannerBase.followTrajectory(p4Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP-1, 4500, 0.5)
+             autos.autoAimShot(0.0)
 
         );
     }

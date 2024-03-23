@@ -52,12 +52,9 @@ public class RobotContainer {
    public static SUB_Limelight limelight = new SUB_Limelight();
    public static SUB_LEDs led = new SUB_LEDs(9);
    public static SUB_Climber climber = new SUB_Climber();
-   public static AutoSelector autoSelector = new AutoSelector(drivetrain, index, intake, shooter, pivot);
-
-
-  
-  CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
-  CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
+   public static CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
+   public static CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort); 
+   public static AutoSelector autoSelector = new AutoSelector(drivetrain, index, intake, shooter, pivot, Driver1);
 
     
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -119,7 +116,7 @@ public class RobotContainer {
           )
         )).onFalse(new SequentialCommandGroup(
           new InstantCommand(()->index.setMotorSpeed(0)),
-          new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.HOT_PINK.value)
+          new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value)
           //new RunCommand(()->shooter.shootFlywheelOnRPM(3000), shooter).withTimeout(0.25)
         ));
     
@@ -136,7 +133,7 @@ public class RobotContainer {
           new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500),
           new RunCommand(()->index.setMotorSpeed(0.5), index)
         )
-      ).andThen(new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.HOT_PINK.value))
+      ).andThen(new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value))
     ).onFalse(
       new ParallelCommandGroup(
         new InstantCommand(()->index.setMotorSpeed(0)),
@@ -224,7 +221,7 @@ public class RobotContainer {
             new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
             aimCommand
           )
-        ).andThen(new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.HOT_PINK.value))
+        ).andThen(new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value))
     ).onFalse(
       new ParallelCommandGroup(
         new InstantCommand(()->shooter.shootFlywheelOnRPM(0), shooter)

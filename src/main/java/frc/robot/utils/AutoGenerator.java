@@ -12,12 +12,15 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.commands.AutoActions.CMD_Shoot;
 import frc.robot.commands.AutoActions.CMD_ShootSEQ;
+import frc.robot.commands.Limelight.CMD_AimOnDist;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Intake;
@@ -33,14 +36,17 @@ public class AutoGenerator {
   SUB_Shooter shooter; 
   SUB_Pivot pivot;
   SUB_Limelight limelight;
+  CommandXboxController driver1;
 
   
-  public AutoGenerator(SUB_Drivetrain drivetrain, SUB_Index index, SUB_Intake intake, SUB_Shooter shooter, SUB_Pivot pivot) {
+  public AutoGenerator(SUB_Drivetrain drivetrain, SUB_Index index, SUB_Intake intake, SUB_Shooter shooter, SUB_Pivot pivot, CommandXboxController driver1) {
     this.drivetrain = drivetrain;
     this.index = index;
     this.intake = intake;
     this.shooter = shooter;
     this.pivot = pivot;
+    this.driver1 = driver1;
+
     
     AutoBuilder.configureHolonomic(drivetrain::getPose, drivetrain::resetPose, drivetrain::getChassisSpeeds, drivetrain::driveRobotRelative,
      new HolonomicPathFollowerConfig(new PIDConstants(2.55, 0.00008,0.0003), new PIDConstants(5.0, 0,0), Constants.Drivetrain.kMaxModuleSpeed, Constants.Drivetrain.kTrackRadius, new ReplanningConfig())
@@ -104,12 +110,30 @@ public class AutoGenerator {
       );
     }
 
+    public Command autoAimShot(double delay){
+      return new SequentialCommandGroup(
+        new ParallelRaceGroup(
+            new RunCommand(()->shooter.shootFlywheelOnRPM(4500), shooter),
+            new CMD_AimOnDist(pivot, limelight, drivetrain, driver1).withTimeout(2.0)
+          ).andThen(
+            new ParallelCommandGroup(
+              new RunCommand(()->shooter.shootFlywheelOnRPM(4500), shooter),
+              new RunCommand(()->index.setMotorSpeed(0.5), index)
+            ).withTimeout(0.5)
+          ).andThen(
+            new InstantCommand(()->index.setMotorSpeed(0.0), index)
+          )
+      );
+    }
+
     public Command pathIntake(String path){
       return new ParallelCommandGroup(
         runIntake(),
         PathPlannerBase.followTrajectory(path)
       );
     }
+
+
 
 
     //TODO: Test CMD
