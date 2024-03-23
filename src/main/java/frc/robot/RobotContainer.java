@@ -119,7 +119,7 @@ public class RobotContainer {
           )
         )).onFalse(new SequentialCommandGroup(
           new InstantCommand(()->index.setMotorSpeed(0)),
-          new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value)
+          new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.HOT_PINK.value)
           //new RunCommand(()->shooter.shootFlywheelOnRPM(3000), shooter).withTimeout(0.25)
         ));
     
@@ -136,7 +136,7 @@ public class RobotContainer {
           new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500),
           new RunCommand(()->index.setMotorSpeed(0.5), index)
         )
-      ).andThen(new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value))
+      ).andThen(new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.HOT_PINK.value))
     ).onFalse(
       new ParallelCommandGroup(
         new InstantCommand(()->index.setMotorSpeed(0)),
@@ -224,7 +224,7 @@ public class RobotContainer {
             new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
             aimCommand
           )
-        ).andThen(new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value))
+        ).andThen(new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.HOT_PINK.value))
     ).onFalse(
       new ParallelCommandGroup(
         new InstantCommand(()->shooter.shootFlywheelOnRPM(0), shooter)
