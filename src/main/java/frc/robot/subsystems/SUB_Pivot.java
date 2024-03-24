@@ -88,7 +88,8 @@ public class SUB_Pivot extends SubsystemBase {
         constantApplicationMap.put(107.0 , -0.04);
         constantApplicationMap.put(95.0, -0.08);
         constantApplicationMap.put(61.0, -0.03);
-
+        
+        distToPivotAngle.put(Units.inchesToMeters(36.0), 86.0-27.0);
         distToPivotAngle.put(Units.inchesToMeters(49), 61.0);
         distToPivotAngle.put(Units.inchesToMeters(61), 55.0);
         distToPivotAngle.put(Units.inchesToMeters(73), 47.0);

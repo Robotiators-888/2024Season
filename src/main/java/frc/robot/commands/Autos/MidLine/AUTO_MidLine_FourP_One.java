@@ -46,7 +46,7 @@ public class AUTO_MidLine_FourP_One extends AutoPaths {
             autos.scoringSequence(Pivot.kLowAngleSP+3, 4000, 0.33),
 
             autos.pathIntake(p2Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP-1, 4500, 0.5),
+            autos.scoringSequence(Pivot.kLowAngleSP-4, 4000, 0.5),
 
             autos.pathIntake(p3Name).withTimeout(4),
             PathPlannerBase.followTrajectory(p4Name),

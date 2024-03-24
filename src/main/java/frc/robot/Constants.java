@@ -51,8 +51,10 @@ public final class Constants {
 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(2.70);
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(2.92);
     // Thrifty tread 2.95in
+    // Orange Tread 2.70
+    // Black Rev 2.95
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
     // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the
     // bevel pinion

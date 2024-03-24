@@ -48,6 +48,8 @@ public class CMD_TeleopAimOnDist extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    robotAngleController.reset();
+    
     var alliance = DriverStation.getAlliance();
     if (alliance.isPresent()){
       if (alliance.get() == DriverStation.Alliance.Red){

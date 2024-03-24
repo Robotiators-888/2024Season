@@ -104,6 +104,10 @@ public class RobotContainer {
     Driver1.leftTrigger().whileTrue(new RunCommand(() -> climber.runLeft(Climber.kDownSpeed), climber));
     Driver1.leftBumper().whileTrue(new RunCommand(() -> climber.runLeft(Climber.kUpSpeed), climber));
 
+    Driver1.rightTrigger().whileTrue(new RunCommand(() -> climber.runRight(Climber.kDownSpeed), climber));
+    Driver1.rightBumper().whileTrue(new RunCommand(() -> climber.runRight(Climber.kUpSpeed), climber));
+
+
     Driver1.leftStick().onTrue(new InstantCommand(() -> drivetrain.zeroHeading()));
 
     Driver1.povRight().onTrue(new SequentialCommandGroup(
@@ -115,18 +119,31 @@ public class RobotContainer {
     Driver1.povDown().onTrue(new SequentialCommandGroup(
         new InstantCommand(() -> pivot.goToAngle(50))));// Shoot From Bottom Setpoint
 
-    Driver1.start().whileTrue( new ParallelCommandGroup(
-          //new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)),
-          new RunCommand(()->shooter.shootFlywheelOnRPM(1000), shooter),
-          new SequentialCommandGroup(
-            new WaitCommand(.75),
-            new RunCommand(()->index.setMotorSpeed(0.45), index)
-          )
+    // Driver1.start().whileTrue( new ParallelCommandGroup(
+    //       //new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)),
+    //       new RunCommand(()->shooter.shootFlywheelOnRPM(1000), shooter),
+    //       new SequentialCommandGroup(
+    //         new WaitCommand(.75),
+    //         new RunCommand(()->index.setMotorSpeed(0.45), index)
+    //       )
+    //     )).onFalse(new SequentialCommandGroup(
+    //       new InstantCommand(()->index.setMotorSpeed(0)),
+    //       new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value)
+    //       //new RunCommand(()->shooter.shootFlywheelOnRPM(3000), shooter).withTimeout(0.25)
+    //     ));
+
+        
+          Driver1.start().whileTrue( new ParallelCommandGroup(
+          new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)),
+          new RunCommand(()->shooter.shootFlywheelOnRPM(3000), shooter),
+          new WaitUntilCommand(()->shooter.getFlywheelRPM() > 2750).andThen()
+          
         )).onFalse(new SequentialCommandGroup(
           new InstantCommand(()->index.setMotorSpeed(0)),
           new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value)
           //new RunCommand(()->shooter.shootFlywheelOnRPM(3000), shooter).withTimeout(0.25)
         ));
+       
     
     Driver1.back().whileTrue( new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)));
 
@@ -281,7 +298,7 @@ public class RobotContainer {
           new InstantCommand(()->Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0)),
           new InstantCommand(()->Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0))
         ),
-        new WaitCommand(0.5),
+        new WaitCommand(1.0),
         new InstantCommand(()->pivot.goToAngle(Constants.Pivot.kLowAngleSP))
       )
     ));
@@ -361,6 +378,7 @@ public class RobotContainer {
 
   public void teleopPeriodic() {
     //photonPoseUpdate();
+
     limelightPoseUpdate();
   }
 
@@ -381,11 +399,8 @@ public class RobotContainer {
       // affecting the accuracy of our pose measurement.
       Transform2d t2d = visionPose.minus(drivetrain.getPose());
       double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
-      if (dist <= 1000) {
-        double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
-        drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
-
-      }
+      double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
+      drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
     }
     // drivetrain.limelightVisionUpdate();
   }
