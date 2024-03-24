@@ -55,7 +55,7 @@ public class RobotContainer {
    public static SUB_Pivot pivot = new SUB_Pivot();
    public static SUB_Limelight limelight = new SUB_Limelight();
    public static SUB_LEDs led = new SUB_LEDs(9);
-   public static SUB_PhotonVision photonVision = new SUB_PhotonVision();
+  //  public static SUB_PhotonVision photonVision = new SUB_PhotonVision();
    public static SUB_Climber climber = new SUB_Climber();
 
    public static CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
@@ -138,9 +138,10 @@ public class RobotContainer {
         new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
         new SequentialCommandGroup(
           new WaitUntilCommand(()->shooter.getFlywheelRPM() >= 3500),
-          new RunCommand(()->index.setMotorSpeed(0.5), index)
+          new RunCommand(()->index.setMotorSpeed(0.5), index),
+          new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value)
         )
-      ).andThen(new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value))
+      )//.andThen(new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value))
     ).onFalse(
       new ParallelCommandGroup(
         new InstantCommand(()->index.setMotorSpeed(0)),
@@ -243,8 +244,9 @@ public class RobotContainer {
           new ParallelCommandGroup(
             new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter),
             new CMD_TeleopAimOnDist(pivot, limelight, drivetrain, Driver1)
-          )
-        ).andThen(new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value))
+          ),
+          new InstantCommand(()->SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value)
+        )
     ).onFalse(
       new ParallelCommandGroup(
         new InstantCommand(()->shooter.shootFlywheelOnRPM(0), shooter)
@@ -358,8 +360,8 @@ public class RobotContainer {
   }
 
   public void teleopPeriodic() {
-    photonPoseUpdate();
-    // limelightPoseUpdate();
+    //photonPoseUpdate();
+    limelightPoseUpdate();
   }
 
   public void robotPeriodic(){
@@ -389,19 +391,19 @@ public class RobotContainer {
   }
 
   public void photonPoseUpdate() {
-    SUB_PhotonVision.PosePair photonPose = photonVision.getPose2dPhotonvision();
-    if (photonPose != null) {
-      if (photonPose.pose.getX() >= 0 && photonPose.pose.getX() <= 1655.0 / 100 && photonPose.pose.getY() >= 0
-          && photonPose.pose.getY() <= 821.0 / 100) {
-      }
-      drivetrain.addVisionMeasurement(photonPose.pose, photonPose.time);
-    }
-    SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
-    SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
-    SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.calculateDegreesRotation());
+  //   SUB_PhotonVision.PosePair photonPose = photonVision.getPose2dPhotonvision();
+  //   if (photonPose != null) {
+  //     if (photonPose.pose.getX() >= 0 && photonPose.pose.getX() <= 1655.0 / 100 && photonPose.pose.getY() >= 0
+  //         && photonPose.pose.getY() <= 821.0 / 100) {
+  //     }
+  //     drivetrain.addVisionMeasurement(photonPose.pose, photonPose.time);
+  //   }
+  //   SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
+  //   SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
+  //   SmartDashboard.putNumber("Current Shooter Angle (Degrees)", pivot.calculateDegreesRotation());
 
-    SmartDashboard.putNumber("X Pose", drivetrain.getPose().getX());
-    SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
+  //   SmartDashboard.putNumber("X Pose", drivetrain.getPose().getX());
+  //   SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
 
-  }
+   }
 }
