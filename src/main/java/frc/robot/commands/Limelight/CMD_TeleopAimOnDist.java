@@ -16,7 +16,7 @@ import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Limelight;
 import frc.robot.subsystems.SUB_Pivot;
 
-public class CMD_AimOnDist extends Command {
+public class CMD_TeleopAimOnDist extends Command {
   SUB_Pivot pivot;
   SUB_Limelight limelight;
   SUB_Drivetrain drivetrain;
@@ -33,10 +33,10 @@ public class CMD_AimOnDist extends Command {
 
   CommandXboxController driverController;
 
-  private final PIDController robotAngleController = new PIDController( 1.5, 0, 0); // 0.25, 0, 0
+  private final PIDController robotAngleController = new PIDController( 0.25, 0, 0); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
-  public CMD_AimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain, CommandXboxController driverController) {
+  public CMD_TeleopAimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain, CommandXboxController driverController) {
     // Use addRequirements() here to declare subsystem dependencies.  
     this.pivot = pivot;
     this.limelight = limelight;
@@ -61,33 +61,35 @@ public class CMD_AimOnDist extends Command {
       SmartDashboard.putBoolean("Alliance Error", true);
       end(true);
     }
-  
+
+    SmartDashboard.putBoolean("SPEAKER LOCK?", false);
 
     robotAngleController.setTolerance(0.04);
+    robotAngleController.enableContinuousInput(-Math.PI, Math.PI);
 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putBoolean("SPEAKER LOCK?", false);
+    var alliance = DriverStation.getAlliance();
     currentPose = drivetrain.getPose();
     positionError = Math.sqrt(Math.pow(tagPose.getX() - currentPose.getX(), 2)
                            + Math.pow(tagPose.getY() - currentPose.getY(), 2));
 
     xError = tagPose.getX() - currentPose.getX();
     yError = tagPose.getY() - currentPose.getY();
-    angle = Math.atan2(yError, xError); // x and y are not flipped???
-    var alliance = DriverStation.getAlliance();
+    angle = Math.atan2(yError, xError);
     
-    if (alliance.isPresent()) {
-      if (alliance.get() == DriverStation.Alliance.Red){
-        pivot.goToAngle((pivot.distToPivotAngle.get(positionError) + 27) - (Math.abs(currentPose.getRotation().getRadians()) * 4));
-      } else {
-        pivot.goToAngle((pivot.distToPivotAngle.get(positionError) + 27) + (Math.abs(currentPose.getRotation().getRadians()) * 4));
+    // if (alliance.isPresent()) {
+    //   if (alliance.get() == DriverStation.Alliance.Red){
+    //     pivot.goToAngle((pivot.distToPivotAngle.get(positionError) + 27) - (Math.abs(currentPose.getRotation().getRadians() - 0) * 4));
+    //   } else {
+    //     pivot.goToAngle((pivot.distToPivotAngle.get(positionError) + 27)- (Math.abs(currentPose.getRotation().getRadians()) * 4));
 
-      }
-    } 
+    //   }
+    // } 
+    pivot.goToAngle((pivot.distToPivotAngle.get(positionError) + 27));
     // |currentpos - radians| * 5 - ()
     pivot.runAutomatic();
 
@@ -97,19 +99,23 @@ public class CMD_AimOnDist extends Command {
     SmartDashboard.putNumber("Cur Rotation Radians", currentPose.getRotation().getRadians());
     SmartDashboard.putNumber("Distance error", positionError);
 
-    double ks = 0.1;
-    if (Math.abs(currentPose.getRotation().getRadians()-angle) <= 0.04){
-      ks = 0;
-    } else if (currentPose.getRotation().getRadians()-angle < 0){
-      ks *= -1;
-    }
+    // double ks = 0.1;
+    // if (Math.abs(currentPose.getRotation().getRadians()-angle) <= 0.04){
+    //   ks = 0;
+    // } else if (robotAngleController.calculate(currentPose.getRotation().getRadians(), angle) < 0 ){
+    //   ks *= -1;
+    // }
+    // ks=0;
 
 
-    drivetrain.drive(
+
+      drivetrain.drive(
       -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(1), 2), driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
       -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(0), 2), driverController.getRawAxis(0)), OIConstants.kDriveDeadband), 
-      robotAngleController.calculate(currentPose.getRotation().getRadians(), angle) + ks,
-     true, true);
+      robotAngleController.calculate(currentPose.getRotation().getRadians(), angle),
+    true, true);
+    
+
   }
 
   // Called once the command ends or is interrupted.

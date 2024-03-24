@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.commands.AutoActions.CMD_Shoot;
 import frc.robot.commands.AutoActions.CMD_ShootSEQ;
-import frc.robot.commands.Limelight.CMD_AimOnDist;
+import frc.robot.commands.Limelight.CMD_AutoAimOnDist;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Intake;
@@ -39,12 +39,13 @@ public class AutoGenerator {
   CommandXboxController driver1;
 
   
-  public AutoGenerator(SUB_Drivetrain drivetrain, SUB_Index index, SUB_Intake intake, SUB_Shooter shooter, SUB_Pivot pivot, CommandXboxController driver1) {
+  public AutoGenerator(SUB_Drivetrain drivetrain, SUB_Index index, SUB_Intake intake, SUB_Shooter shooter, SUB_Pivot pivot, SUB_Limelight limelight, CommandXboxController driver1) {
     this.drivetrain = drivetrain;
     this.index = index;
     this.intake = intake;
     this.shooter = shooter;
     this.pivot = pivot;
+    this.limelight = limelight;
     this.driver1 = driver1;
 
     
@@ -102,6 +103,7 @@ public class AutoGenerator {
     public Command scoringSequence(double setpoint, int rpm, double delay){
       return new SequentialCommandGroup(
         new InstantCommand(()->pivot.goToAngle(setpoint)),
+        new InstantCommand(()->pivot.goToAngle(setpoint)),
         new WaitCommand(delay),
         new RunCommand(()->shooter.shootFlywheelOnRPM(rpm), shooter)
       .until(()->shooter.getFlywheelRPM() >= rpm - 250)
@@ -114,7 +116,7 @@ public class AutoGenerator {
       return new SequentialCommandGroup(
         new ParallelRaceGroup(
             new RunCommand(()->shooter.shootFlywheelOnRPM(4500), shooter),
-            new CMD_AimOnDist(pivot, limelight, drivetrain, driver1).withTimeout(2.0)
+            new CMD_AutoAimOnDist(pivot, limelight, drivetrain, driver1).withTimeout(2.0)
           ).andThen(
             new ParallelCommandGroup(
               new RunCommand(()->shooter.shootFlywheelOnRPM(4500), shooter),
