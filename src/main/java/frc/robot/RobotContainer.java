@@ -275,11 +275,12 @@ public class RobotContainer {
     ).andThen(
       new SequentialCommandGroup(
         new WaitCommand(.5),
-        new InstantCommand(()->pivot.goToAngle(Constants.Pivot.kLowAngleSP)),
         new ParallelCommandGroup(
           new InstantCommand(()->Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0)),
           new InstantCommand(()->Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0))
-        )
+        ),
+        new WaitCommand(0.5),
+        new InstantCommand(()->pivot.goToAngle(Constants.Pivot.kLowAngleSP))
       )
     ));
 
