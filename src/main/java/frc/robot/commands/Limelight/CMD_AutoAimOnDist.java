@@ -61,7 +61,7 @@ public class CMD_AutoAimOnDist extends Command {
       end(true);
     }
   
-
+    robotAngleController.enableContinuousInput(-Math.PI, Math.PI);
     robotAngleController.setTolerance(0.04);
 
   }

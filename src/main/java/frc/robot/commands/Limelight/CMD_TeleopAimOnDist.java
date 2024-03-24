@@ -33,7 +33,7 @@ public class CMD_TeleopAimOnDist extends Command {
 
   CommandXboxController driverController;
 
-  private final PIDController robotAngleController = new PIDController( 0.25, 0, 0); // 0.25, 0, 0
+  private final PIDController robotAngleController = new PIDController( 0.5, 0, 0); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
   public CMD_TeleopAimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain, CommandXboxController driverController) {
