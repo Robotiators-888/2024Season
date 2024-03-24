@@ -226,8 +226,8 @@ public final class Constants {
     public static final int camResolutionWidth = 0; // pixels
     public static final int camResolutionHeight = 0; // pixels
     public static final double minTargetArea = 0; // square pixels
-    public static final Rotation3d cameraRotation = new Rotation3d();
-    public static final Transform3d kCameraToRobot = new Transform3d(0,0,0,cameraRotation);
+    public static final Rotation3d cameraRotation = new Rotation3d(-14,0,0);
+    public static final Transform3d kCameraToRobot = new Transform3d(Units.inchesToMeters(-15.5 + 2.25), Units.inchesToMeters(12.0 - 3.75), Units.inchesToMeters(15.5),cameraRotation);
   }
   public static class Limelight{
     public static final String LIMELIGHT_NAME = "limelight";
