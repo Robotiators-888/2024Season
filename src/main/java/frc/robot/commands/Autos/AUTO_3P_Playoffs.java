@@ -19,7 +19,7 @@ public class AUTO_3P_Playoffs extends AutoPaths{
 
     @Override
     public Command load(AutoGenerator autos) {
-        String p1Name = "TopStart_to_TopGP";
+        String p1Name = "2P_Top";
         String p2Name = "TopGP_to_1stGP";
         String p3Name = "1st2nd_ReturnToShoot";
         String p4Name = "TopGP_to_2ndGP";

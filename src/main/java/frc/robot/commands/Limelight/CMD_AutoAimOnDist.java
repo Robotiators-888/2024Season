@@ -4,14 +4,11 @@
 
 package frc.robot.commands.Limelight;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Limelight;
 import frc.robot.subsystems.SUB_Pivot;
@@ -31,22 +28,22 @@ public class CMD_AutoAimOnDist extends Command {
   double yError;
   double angle;
 
-  CommandXboxController driverController;
 
-  private final PIDController robotAngleController = new PIDController( 0.5, 0, 0); // 0.25, 0, 0
+  private final PIDController robotAngleController = new PIDController( .88, 0, 0); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
-  public CMD_AutoAimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain, CommandXboxController driverController) {
-    // Use addRequirements() here to declare subsystem dependencies.  
+  public CMD_AutoAimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain) {
+    // Use addRequirements() here to declare subsystem dependencies.
     this.pivot = pivot;
     this.limelight = limelight;
     this.drivetrain = drivetrain;
-    this.driverController = driverController;
+    //addRequirements(pivot, limelight, drivetrain);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    
     var alliance = DriverStation.getAlliance();
     if (alliance.isPresent()){
       if (alliance.get() == DriverStation.Alliance.Red){
@@ -60,9 +57,19 @@ public class CMD_AutoAimOnDist extends Command {
       SmartDashboard.putBoolean("Alliance Error", true);
       end(true);
     }
-  
+
+    var targetTransform = limelight.getTargetTransform();
+    double xError = targetTransform.getZ();
+    double yError = targetTransform.getX();
+    
+    currentPose = drivetrain.getPose(); // Robot's current pose
+    positionError = Math.sqrt(Math.pow(xError, 2) + Math.pow(yError, 2));
+
+    double angle = -Math.atan2(xError, yError); // x and y are not flipped???
+
     robotAngleController.enableContinuousInput(-Math.PI, Math.PI);
-    robotAngleController.setTolerance(0.04);
+    robotAngleController.setTolerance(0.06);
+    robotAngleController.setSetpoint(angle);
 
   }
 
@@ -71,59 +78,34 @@ public class CMD_AutoAimOnDist extends Command {
   public void execute() {
     SmartDashboard.putBoolean("SPEAKER LOCK?", false);
     currentPose = drivetrain.getPose();
+    pivot.goToAngle(pivot.distToPivotAngle.get(positionError) + 25);
+    pivot.runAutomatic();
+
     positionError = Math.sqrt(Math.pow(tagPose.getX() - currentPose.getX(), 2)
                            + Math.pow(tagPose.getY() - currentPose.getY(), 2));
 
-    xError = tagPose.getX() - currentPose.getX();
-    yError = tagPose.getY() - currentPose.getY();
-    angle = Math.atan2(yError, xError); // x and y are not flipped???
-    var alliance = DriverStation.getAlliance();
-    
-    // if (alliance.isPresent()) {
-    //   if (alliance.get() == DriverStation.Alliance.Red){
-    //     pivot.goToAngle((pivot.distToPivotAngle.get(positionError) + 27) - (Math.abs(currentPose.getRotation().getRadians() - 0) * 4));
-    //   } else {
-    //     pivot.goToAngle((pivot.distToPivotAngle.get(positionError) + 27)- (Math.abs(currentPose.getRotation().getRadians()) * 4));
+double ks = 0.1;
+if (Math.abs(currentPose.getRotation().getRadians()-angle) <= 0.04){
+ ks = 0;
+ } else if (robotAngleController.calculate(currentPose.getRotation().getRadians(), angle) < 0 ){
+ ks *= -1;
+}
+ks=0;
 
-    //   }
-    // } 
-    pivot.goToAngle((pivot.distToPivotAngle.get(positionError) + 27));
-    // |currentpos - radians| * 5 - ()
-    pivot.runAutomatic();
-
-    SmartDashboard.putNumber("X Error", xError);
-    SmartDashboard.putNumber("Y Error", yError);
-    SmartDashboard.putNumber("Angle", angle);
-    SmartDashboard.putNumber("Cur Rotation Radians", currentPose.getRotation().getRadians());
     SmartDashboard.putNumber("Distance error", positionError);
-
-    double ks = 0.1;
-    if (Math.abs(currentPose.getRotation().getRadians()-angle) <= 0.04){
-      ks = 0;
-    } else if (robotAngleController.calculate(currentPose.getRotation().getRadians(), angle) < 0 ){
-      ks *= -1;
-    }
-    ks=0;
-
-
-    drivetrain.drive(
-      -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(1), 2), driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
-      -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(0), 2), driverController.getRawAxis(0)), OIConstants.kDriveDeadband), 
-      robotAngleController.calculate(currentPose.getRotation().getRadians(), angle) + ks,
+    drivetrain.drive(0, 0, robotAngleController.calculate(currentPose.getRotation().getRadians(), angle),
      true, true);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    SmartDashboard.putBoolean("SPEAKER LOCK?", true);
 
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(pivot.calculateDegreesRotation()-pivot.distToPivotAngle.get(positionError)) < 5 
-    && (Math.abs(currentPose.getRotation().getRadians()-angle) <= 0.07);
+    return Math.abs(pivot.calculateDegreesRotation()-pivot.distToPivotAngle.get(positionError)) < 4 && robotAngleController.atSetpoint();
   }
 }

@@ -74,9 +74,9 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
         new RunCommand(
             () -> drivetrain.drive(
-                -MathUtil.applyDeadband(Math.copySign(Math.pow(Driver1.getRawAxis(1), 2), Driver1.getRawAxis(1)),
+                -MathUtil.applyDeadband(Driver1.getRawAxis(1),
                     OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(Math.copySign(Math.pow(Driver1.getRawAxis(0), 2), Driver1.getRawAxis(0)),
+                -MathUtil.applyDeadband(Driver1.getRawAxis(0),
                     OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(Driver1.getRawAxis(4), OIConstants.kDriveDeadband),
                 true, true),
@@ -401,6 +401,8 @@ public class RobotContainer {
       double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
       double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
       drivetrain.addVisionMeasurement(visionPose, latencySec/1000);
+
+      
     }
     // drivetrain.limelightVisionUpdate();
   }

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -50,7 +51,7 @@ public class AutoGenerator {
 
     
     AutoBuilder.configureHolonomic(drivetrain::getPose, drivetrain::resetPose, drivetrain::getChassisSpeeds, drivetrain::driveRobotRelative,
-     new HolonomicPathFollowerConfig(new PIDConstants(2.55, 0.00008,0.0003), new PIDConstants(5.0, 0,0), Constants.Drivetrain.kMaxModuleSpeed, Constants.Drivetrain.kTrackRadius, new ReplanningConfig())
+     new HolonomicPathFollowerConfig(new PIDConstants(5.0, 0.0,0.0), new PIDConstants(5.0, 0,0), Constants.Drivetrain.kMaxModuleSpeed, Constants.Drivetrain.kTrackRadius, new ReplanningConfig())
     , ()->{
       var alliance = DriverStation.getAlliance();
                     if (alliance.isPresent()) {
@@ -114,9 +115,9 @@ public class AutoGenerator {
 
     public Command autoAimShot(double delay){
       return new SequentialCommandGroup(
-        new ParallelRaceGroup(
+        new ParallelDeadlineGroup(
             new RunCommand(()->shooter.shootFlywheelOnRPM(4500), shooter),
-            new CMD_AutoAimOnDist(pivot, limelight, drivetrain, driver1).withTimeout(2.0)
+            new CMD_AutoAimOnDist(pivot, limelight, drivetrain).withTimeout(2.0)
           ).andThen(
             new ParallelCommandGroup(
               new RunCommand(()->shooter.shootFlywheelOnRPM(4500), shooter),
@@ -136,7 +137,10 @@ public class AutoGenerator {
     }
 
 
-
+    public Command runShooter(int rpm){
+      return new RunCommand(
+       ()->shooter.shootFlywheelOnRPM(rpm), shooter);
+    }
 
     //TODO: Test CMD
     public Command runIntake(){

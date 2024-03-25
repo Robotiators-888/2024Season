@@ -90,20 +90,20 @@ public class SUB_Pivot extends SubsystemBase {
         constantApplicationMap.put(61.0, -0.03);
         
         distToPivotAngle.put(Units.inchesToMeters(36.0), 86.0-27.0);
-        distToPivotAngle.put(Units.inchesToMeters(49), 61.0);
-        distToPivotAngle.put(Units.inchesToMeters(61), 55.0);
-        distToPivotAngle.put(Units.inchesToMeters(73), 47.0);
-        distToPivotAngle.put(Units.inchesToMeters(85), 43.0);
-        distToPivotAngle.put(Units.inchesToMeters(97), 39.0);
-        distToPivotAngle.put(Units.inchesToMeters(109), 36.5);
-        distToPivotAngle.put(Units.inchesToMeters(121), 30.8);
+        distToPivotAngle.put(Units.inchesToMeters(49), 59.0);
+        distToPivotAngle.put(Units.inchesToMeters(61), 53.0);
+        distToPivotAngle.put(Units.inchesToMeters(73), 45.0);
+        distToPivotAngle.put(Units.inchesToMeters(85), 41.0);
+        distToPivotAngle.put(Units.inchesToMeters(97), 37.0);
+        distToPivotAngle.put(Units.inchesToMeters(109), 34.5);
+        distToPivotAngle.put(Units.inchesToMeters(121), 29.8);
         //distToPivotAngle.put()
 
 
         // Extrapolated from lin reg on previous ^ data
-        distToPivotAngle.put(Units.inchesToMeters(10*12 +13), 29.5);
-        distToPivotAngle.put(Units.inchesToMeters(11*12 +13), 26.0);
-        distToPivotAngle.put(Units.inchesToMeters(12*12 +13), 23.5);
+        distToPivotAngle.put(Units.inchesToMeters(10*12 +13), 27.5);
+        distToPivotAngle.put(Units.inchesToMeters(11*12 +13), 24.0);
+        distToPivotAngle.put(Units.inchesToMeters(12*12 +13), 21.5);
         // distToPivotAngle.put(Units.inchesToMeters(13*12 +13), -4.61*13 +72.57);
         // distToPivotAngle.put(Units.inchesToMeters(14*12 +13), -4.61*14 +72.57);
         // distToPivotAngle.put(Units.inchesToMeters(15*12 +13), -4.61*15 +72.57);
