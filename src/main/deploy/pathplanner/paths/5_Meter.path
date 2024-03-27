@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9928516999891146,
-        "y": 7.1391559925977
+        "x": 1.191757660796181,
+        "y": 5.54
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.216903321616508,
-        "y": 7.224883663158587
+        "x": 2.191757660796183,
+        "y": 5.54
       },
       "isLocked": false,
-      "linkedName": "TopHomeGamePiece"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.29957545629377,
-        "y": 7.417685692514242
+        "x": 6.19,
+        "y": 5.54
       },
       "prevControl": {
-        "x": 7.345006105294602,
-        "y": 7.329571598575857
+        "x": 5.19,
+        "y": 5.54
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "GP_1"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -43,7 +43,10 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "3 Piece Path",
-  "previewStartingState": null,
-  "useDefaultConstraints": false
+  "folder": "Troubleshooting ",
+  "previewStartingState": {
+    "rotation": 180.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
 }

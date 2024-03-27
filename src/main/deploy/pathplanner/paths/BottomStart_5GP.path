@@ -8,36 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3533001663498863,
-        "y": 4.009191274196502
+        "x": 1.0950105973165822,
+        "y": 4.309091403897094
       },
       "isLocked": false,
       "linkedName": "BottomRobotStart"
     },
     {
       "anchor": {
-        "x": 3.579230015602889,
-        "y": 2.7413186254943946
+        "x": 8.284915998403426,
+        "y": 0.7622918102979067
       },
       "prevControl": {
-        "x": 2.687651147510314,
-        "y": 3.194184082303322
-      },
-      "nextControl": {
-        "x": 4.502775862694582,
-        "y": 2.2722159730033753
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 8.695380819333067,
-        "y": 1.0115025944337612
-      },
-      "prevControl": {
-        "x": 7.39068906709242,
-        "y": 1.37798904169237
+        "x": 7.851903296511206,
+        "y": 1.0122918102979068
       },
       "nextControl": null,
       "isLocked": false,
@@ -61,7 +45,7 @@
   "reversed": false,
   "folder": "Mid Line Paths",
   "previewStartingState": {
-    "rotation": 123.69006752597984,
+    "rotation": 120.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

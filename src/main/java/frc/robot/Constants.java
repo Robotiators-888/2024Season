@@ -31,10 +31,6 @@ public final class Constants {
     public static final int kDriver2ControllerPort =1;
   }
 
-  public static final class NeoMotorConstants {
-    public static final double kFreeSpeedRpm = 5676;
-  }
-
   public static final class VortexMotorConstants{
     public static final double kFreeSpeedRpm = 6784;
   }
@@ -51,7 +47,7 @@ public final class Constants {
 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double kDrivingMotorFreeSpeedRps = VortexMotorConstants.kFreeSpeedRpm / 60;
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(2.90);
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(2.85);
     // Thrifty tread 2.95in
     // Orange Tread 2.70
     // Black Rev 2.95
@@ -164,7 +160,7 @@ public final class Constants {
 
       public static final double kIndexSpeed = 0.3;
       public static final double kOutakeSpeed = -0.5;
-      public static final double kOutakeRPM = NeoMotorConstants.kFreeSpeedRpm;
+      public static final double kOutakeRPM = VortexMotorConstants.kFreeSpeedRpm;
       public static final double kIntakingSpeed = 0.35;
     }
     public static final class Climber{

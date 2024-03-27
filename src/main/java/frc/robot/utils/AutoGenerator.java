@@ -51,7 +51,7 @@ public class AutoGenerator {
 
     
     AutoBuilder.configureHolonomic(drivetrain::getPose, drivetrain::resetPose, drivetrain::getChassisSpeeds, drivetrain::driveRobotRelative,
-     new HolonomicPathFollowerConfig(new PIDConstants(5.0, 0.0,0.0), new PIDConstants(5.0, 0,0), Constants.Drivetrain.kMaxModuleSpeed, Constants.Drivetrain.kTrackRadius, new ReplanningConfig())
+     new HolonomicPathFollowerConfig(new PIDConstants(1.5, 0.0,0.0), new PIDConstants(5.0, 0,0), Constants.Drivetrain.kMaxModuleSpeed, Constants.Drivetrain.kTrackRadius, new ReplanningConfig())
     , ()->{
       var alliance = DriverStation.getAlliance();
                     if (alliance.isPresent()) {

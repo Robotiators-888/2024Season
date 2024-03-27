@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Limelight;
 import frc.robot.commands.Autos.*;
 import frc.robot.commands.Autos.MidLine.*;
+import frc.robot.commands.Autos.Silly.AUTO_Silly_GERSTNER;
 import frc.robot.commands.Autos.Troubles.*;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
@@ -37,21 +38,22 @@ public class AutoSelector {
         chooser.addOption("3P_Top", new AUTO_3P_Top());
         chooser.addOption("3P_Middle", new AUTO_3P_Mid());
         chooser.addOption("3P_Midline_ONLY_Bottom", new AUTO_MidLine_Bottom_Three());
+        chooser.addOption("3P_Midline_Top", new AUTO_3P_Playoffs());
+
 
         // chooser.addOption("3P_Bottom", new AUTO_3P_Bottom());
         chooser.addOption("4P_MidLine_3_1st", new AUTO_MidLine_FourP_One());
         //chooser.addOption("3P_MidLine_3_2nd", new AUTO_MidLine_FourP_Two());
 
-       chooser.addOption("PLAYOFFS!!!!!", new AUTO_3P_Playoffs());
-
-        
         chooser.addOption("4P_Top", new AUTO_4P_Top());
         //chooser.addOption("4P_Middle", new AUTO_4P_Mid());
 
         //chooser.addOption("Beline", new AUTO_MidLine_Beline());
+        chooser.addOption("Gerstner Auto", new AUTO_Silly_GERSTNER());
 
-        // chooser.addOption("1 Meter back", new AUTO_1_Meter());
-        // chooser.addOption("2 Meter", new AUTO_2_Meter());
+        chooser.addOption("1 Meter back", new AUTO_1_Meter());
+        chooser.addOption("2 Meter", new AUTO_2_Meter());
+        chooser.addOption("5 Meter", new AUTO_5_Meter());
 
 
         SmartDashboard.putData("Auto Selector", chooser);
