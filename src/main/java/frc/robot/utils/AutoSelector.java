@@ -36,6 +36,7 @@ public class AutoSelector {
 
         // chooser.addOption("3P_Bottom", new AUTO_3P_Bottom());
         chooser.addOption("4P_MidLine_3_1st", new AUTO_MidLine_FourP_One());
+        chooser.addOption("4P_Autoshot", new AUTO_MidLine_FourP_One_AIM());
         //chooser.addOption("3P_MidLine_3_2nd", new AUTO_MidLine_FourP_Two());
 
         chooser.addOption("4P_Top", new AUTO_4P_Top());

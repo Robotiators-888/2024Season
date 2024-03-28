@@ -117,8 +117,8 @@ public class AutoGenerator {
     public Command autoAimShot(double delay){
       return new SequentialCommandGroup(
         new ParallelDeadlineGroup(
-            new RunCommand(()->shooter.shootFlywheelOnRPM(4500), shooter),
-            new CMD_AutoAimOnDist(pivot, limelight, drivetrain).withTimeout(2.0)
+            new CMD_AutoAimOnDist(pivot, limelight, drivetrain).withTimeout(2.0),
+            new RunCommand(()->shooter.shootFlywheelOnRPM(4500), shooter)
           ).andThen(
             new ParallelCommandGroup(
               new RunCommand(()->shooter.shootFlywheelOnRPM(4500), shooter),
