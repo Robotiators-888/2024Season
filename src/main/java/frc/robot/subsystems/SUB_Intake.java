@@ -15,13 +15,14 @@ import frc.robot.Constants.Intake;
 
 public class SUB_Intake extends SubsystemBase {
 
+  public static SUB_Intake INSTANCE;
   CANSparkMax intakeMotor;
   Boolean intakeBool;
+  boolean hasNote;
   
 
   /** Creates a new SUB_Intake. */
-  public SUB_Intake() {
-
+  private SUB_Intake() {
     
     intakeMotor = new CANSparkMax(Intake.kINTAKE_MOTOR_CANID, MotorType.kBrushless);
     intakeMotor.restoreFactoryDefaults();
@@ -43,7 +44,13 @@ public class SUB_Intake extends SubsystemBase {
     intakeMotor.burnFlash();
   }
 
+  public static SUB_Intake getInstance(){
+    if(INSTANCE == null){
+      INSTANCE = new SUB_Intake();
+    }
 
+    return INSTANCE;
+  }
 
 
   @Override
@@ -61,5 +68,13 @@ public class SUB_Intake extends SubsystemBase {
    */
   public void setMotorSpeed(double speed){
     intakeMotor.set(speed);
+  }
+
+  public boolean intakeHasNote(){
+    return hasNote;
+  }
+
+  public void setHasNote(boolean n){
+    hasNote = n;
   }
 }

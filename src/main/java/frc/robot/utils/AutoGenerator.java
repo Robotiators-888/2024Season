@@ -25,29 +25,25 @@ import frc.robot.commands.Limelight.CMD_AutoAimOnDist;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Intake;
-import frc.robot.subsystems.SUB_Limelight;
 import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.subsystems.SUB_Shooter;
+import frc.robot.subsystems.Vision.SUB_Limelight;
+import frc.robot.subsystems.Vision.NoteDetect.NoteVision;
 
 /** This utility class is built for selecting made autos */
 public class AutoGenerator {
   private SUB_Drivetrain drivetrain;
-  SUB_Index index;
-  SUB_Intake intake;
-  SUB_Shooter shooter; 
-  SUB_Pivot pivot;
-  SUB_Limelight limelight;
+  SUB_Index index = SUB_Index.getInstance();
+  SUB_Intake intake = SUB_Intake.getInstance();
+  SUB_Shooter shooter = SUB_Shooter.getInstance(); 
+  SUB_Pivot pivot = SUB_Pivot.getInstance();
+  SUB_Limelight limelight = SUB_Limelight.getInstance();
   CommandXboxController driver1;
 
   
-  public AutoGenerator(SUB_Drivetrain drivetrain, SUB_Index index, SUB_Intake intake, SUB_Shooter shooter, SUB_Pivot pivot, SUB_Limelight limelight, CommandXboxController driver1) {
-    this.drivetrain = drivetrain;
-    this.index = index;
-    this.intake = intake;
-    this.shooter = shooter;
-    this.pivot = pivot;
-    this.limelight = limelight;
+  public AutoGenerator(CommandXboxController driver1) {
     this.driver1 = driver1;
+
 
     
     AutoBuilder.configureHolonomic(drivetrain::getPose, drivetrain::resetPose, drivetrain::getChassisSpeeds, drivetrain::driveRobotRelative,
@@ -135,6 +131,18 @@ public class AutoGenerator {
         PathPlannerBase.followTrajectory(path)
       );
     }
+
+    public Command noteDetectPath(String path){
+      return new SequentialCommandGroup(
+        PathPlannerBase.followTrajectory(path)
+        .onlyWhile(() -> !NoteVision.getInstance().hasTarget())
+          .andThen(
+            runIntake()
+            .deadlineWith(
+                NoteVision.getInstance().autoIntake(() -> 2, SUB_Drivetrain.getInstance(), SUB_Intake.getInstance())
+            ) 
+      ));
+    } 
 
 
     public Command runShooter(int rpm){

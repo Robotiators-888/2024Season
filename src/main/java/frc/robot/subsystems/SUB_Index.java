@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SUB_Index extends SubsystemBase {
 
+  private static SUB_Index INSTANCE = null;
   CANSparkMax indexLeft;
   CANSparkMax indexRight;
   DigitalInput dio9 = new DigitalInput(9);
@@ -36,8 +37,16 @@ public class SUB_Index extends SubsystemBase {
     return (currentTimer.hasElapsed(.1) && avg > 15.0);
   }
 
+  public static SUB_Index getInstance(){
+    if (INSTANCE == null){
+      INSTANCE = new SUB_Index();
+    } 
+
+    return INSTANCE;
+  }
+
   /** Creates a new SUB_Index. */
-  public SUB_Index() {
+  private SUB_Index() {
     this.indexLeft = new CANSparkMax(32, MotorType.kBrushless);
     this.indexRight = new CANSparkMax(33, MotorType.kBrushless);
 

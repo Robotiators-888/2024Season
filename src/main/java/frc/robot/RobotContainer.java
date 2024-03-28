@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.*;
+import frc.robot.Constants.PhotonVision.Camera;
 import frc.robot.commands.Limelight.CMD_TeleopAimOnDist;
 import frc.robot.commands.Limelight.CMD_AlignSource;
 import frc.robot.subsystems.SUB_Climber;
@@ -12,12 +13,15 @@ import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Shooter;
 import frc.robot.subsystems.SUB_LEDs.BlinkinPattern;
+import frc.robot.subsystems.Vision.SUB_Limelight;
+import frc.robot.subsystems.Vision.SUB_PhotonVision;
+import frc.robot.subsystems.Vision.NoteDetect.NoteVision;
+import frc.robot.subsystems.Vision.NoteDetect.NoteVisionIOPhotonVision;
 import frc.robot.subsystems.SUB_Intake;
 import frc.robot.subsystems.SUB_LEDs;
 import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.utils.AutoSelector;
-import frc.robot.subsystems.SUB_Limelight;
-import frc.robot.subsystems.SUB_PhotonVision;
+import frc.robot.subsystems.*;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -47,21 +51,21 @@ import edu.wpi.first.wpilibj.GenericHID;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  public static SUB_Drivetrain drivetrain = new SUB_Drivetrain();
-  public static SUB_Shooter shooter = new SUB_Shooter();
-  public static SUB_Index index = new SUB_Index();
-  public static SUB_Intake intake = new SUB_Intake();
-  public static SUB_Pivot pivot = new SUB_Pivot();
-  public static SUB_Limelight limelight = new SUB_Limelight();
+  public static SUB_Drivetrain drivetrain = SUB_Drivetrain.getInstance();
+  public static SUB_Shooter shooter = SUB_Shooter.getInstance();
+  public static SUB_Index index = SUB_Index.getInstance();
+  public static SUB_Intake intake = SUB_Intake.getInstance();
+  public static SUB_Pivot pivot = SUB_Pivot.getInstance();
+  public static SUB_Limelight limelight = SUB_Limelight.getInstance();
   public static SUB_LEDs led = new SUB_LEDs(9);
-  //public static SUB_PhotonVision photonVision = new SUB_PhotonVision();
+  public static SUB_PhotonVision photonVision = SUB_PhotonVision.getInstance();
+  public static NoteVision noteVision = NoteVision.getInstance();
   public static SUB_Climber climber = new SUB_Climber();
 
   public static CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
   public static CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort);
 
-  public static AutoSelector autoSelector = new AutoSelector(drivetrain, index, intake, shooter, pivot, limelight,
-      Driver1);
+  public static AutoSelector autoSelector = new AutoSelector(Driver1);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -393,21 +397,21 @@ public class RobotContainer {
   }
 
   public void photonPoseUpdate() {
-    // SUB_PhotonVision.PosePair photonPose = photonVision.getPose2dPhotonvision();
-    // if (photonPose != null) {
-    // if (photonPose.pose.getX() >= 0 && photonPose.pose.getX() <= 1655.0 / 100 &&
-    // photonPose.pose.getY() >= 0
-    // && photonPose.pose.getY() <= 821.0 / 100) {
-    // }
-    // drivetrain.addVisionMeasurement(photonPose.pose, photonPose.time);
-    // }
-    // SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
-    // SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
-    // SmartDashboard.putNumber("Current Shooter Angle (Degrees)",
-    // pivot.calculateDegreesRotation());
+    SUB_PhotonVision.PosePair photonPose = photonVision.getPose2dPhotonvision();
+    if (photonPose != null) {
+    if (photonPose.pose.getX() >= 0 && photonPose.pose.getX() <= 1655.0 / 100 &&
+    photonPose.pose.getY() >= 0
+    && photonPose.pose.getY() <= 821.0 / 100) {
+    }
+    drivetrain.addVisionMeasurement(photonPose.pose, photonPose.time);
+    }
+    SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
+    SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
+    SmartDashboard.putNumber("Current Shooter Angle (Degrees)",
+    pivot.calculateDegreesRotation());
 
-    // SmartDashboard.putNumber("X Pose", drivetrain.getPose().getX());
-    // SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
+    SmartDashboard.putNumber("X Pose", drivetrain.getPose().getX());
+    SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
 
   }
 }

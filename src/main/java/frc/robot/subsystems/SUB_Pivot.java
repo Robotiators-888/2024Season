@@ -24,6 +24,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SUB_Pivot extends SubsystemBase {
+  public static SUB_Pivot INSTANCE = null;
+
   public InterpolatingDoubleTreeMap constantApplicationMap = new InterpolatingDoubleTreeMap();
   private final CANSparkMax pivotMotor;
   public final SparkAbsoluteEncoder rotateEncoder;
@@ -42,9 +44,15 @@ public class SUB_Pivot extends SubsystemBase {
   public InterpolatingDoubleTreeMap distToPivotAngle = new InterpolatingDoubleTreeMap();
   double gravitional_force_in_Kg = (lbsArm * 4.44822162) / 9.8;
 
+public static SUB_Pivot getInstance(){
+  if (INSTANCE == null){
+    INSTANCE = new SUB_Pivot();
+  }
 
+  return INSTANCE;
+}
 
- public SUB_Pivot(){
+ private SUB_Pivot(){
         pivotMotor = new CANSparkMax(kPIVOT_ROTATE_MOTOR_CANID, MotorType.kBrushless);
         rotateEncoder = pivotMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
         rotateRelativeEncoder = pivotMotor.getEncoder();

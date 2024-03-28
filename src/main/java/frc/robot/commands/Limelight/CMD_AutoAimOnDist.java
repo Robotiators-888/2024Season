@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SUB_Drivetrain;
-import frc.robot.subsystems.SUB_Limelight;
 import frc.robot.subsystems.SUB_Pivot;
+import frc.robot.subsystems.Vision.SUB_Limelight;
 
 public class CMD_AutoAimOnDist extends Command {
   SUB_Pivot pivot;

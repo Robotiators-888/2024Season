@@ -8,17 +8,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.Limelight;
 import frc.robot.commands.Autos.*;
 import frc.robot.commands.Autos.MidLine.*;
 import frc.robot.commands.Autos.Silly.AUTO_Silly_GERSTNER;
 import frc.robot.commands.Autos.Troubles.*;
-import frc.robot.subsystems.SUB_Drivetrain;
-import frc.robot.subsystems.SUB_Index;
-import frc.robot.subsystems.SUB_Intake;
-import frc.robot.subsystems.SUB_Limelight;
-import frc.robot.subsystems.SUB_Pivot;
-import frc.robot.subsystems.SUB_Shooter;
 
 /** Add your docs here. */
 public class AutoSelector {
@@ -26,8 +19,8 @@ public class AutoSelector {
 
     AutoGenerator autos;
 
-    public AutoSelector(SUB_Drivetrain drivetrain, SUB_Index index, SUB_Intake intake, SUB_Shooter shooter, SUB_Pivot pivot, SUB_Limelight limelight, CommandXboxController driver1){
-        autos = new AutoGenerator(drivetrain, index, intake, shooter, pivot, limelight, driver1);
+    public AutoSelector(CommandXboxController driver1){
+        autos = new AutoGenerator(driver1);
 
         chooser.setDefaultOption("1P_Stay", new AUTO_JustShoot());
         chooser.addOption("2P_Top", new AUTO_2P_Top());

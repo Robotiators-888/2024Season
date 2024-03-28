@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.Vision;
 
 import java.io.IOException;
 import org.photonvision.PhotonCamera;
@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PhotonVision;
 
 public class SUB_PhotonVision extends SubsystemBase {
+  public static SUB_PhotonVision INSTANCE = null;
+
   private PhotonCamera cam = new PhotonCamera(PhotonVision.kCamName);
   private PhotonTrackedTarget bestTarget;
   public PhotonPoseEstimator poseEstimator;
@@ -32,8 +34,16 @@ public class SUB_PhotonVision extends SubsystemBase {
 
   }
 
+  public static SUB_PhotonVision getInstance(){
+    if (INSTANCE == null){
+      INSTANCE = new SUB_PhotonVision();
+    }
+
+    return INSTANCE;
+  }
+
   /** Creates a new SUB_PhotonVision. */
-  public SUB_PhotonVision() { 
+  private SUB_PhotonVision() { 
     try {
     at_field = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("2024_at_field.json"));
       SmartDashboard.putBoolean("FILE FOUND?", true);   

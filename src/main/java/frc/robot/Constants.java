@@ -4,17 +4,39 @@
 
 package frc.robot;
 
+import java.util.Arrays;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import static edu.wpi.first.units.Units.Centimeters;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Kilograms;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Pounds;
+import static edu.wpi.first.units.Units.Radians;
+
+
+
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.wpilibj.RobotState;
 import frc.libs.PIDGains;
+import frc.robot.subsystems.SUB_Drivetrain;
+
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -88,6 +110,10 @@ public final class Constants {
     public static final double kTurningMinOutput = -1;
     public static final double kTurningMaxOutput = 1;
 
+    public static final double headingTolerance = Degrees.of(1).in(Radians);
+    // Max Rot = Max Linear ((meters/sec)/60 (m/s)) / radius
+    public static final double kMaxRotationalSpeed = (kDrivingMotorFreeSpeedRps/60) / Drivetrain.kTrackRadius;
+
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
@@ -118,6 +144,8 @@ public final class Constants {
     // public static final int kBACK_RIGHT_DRIVE_MOTOR_CANID = 26;
     // public static final int kBACK_RIGHT_STEER_MOTOR_CANID = 27;
 
+    public static final Rotation2d shooterSide = new Rotation2d(0);
+    public static final Rotation2d intakeSide = new Rotation2d(180);
 
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
@@ -224,7 +252,66 @@ public final class Constants {
     public static final double minTargetArea = 0; // square pixels
     public static final Rotation3d cameraRotation = new Rotation3d(-14,0,0);
     public static final Transform3d kCameraToRobot = new Transform3d(Units.inchesToMeters(-15.5 + 2.25), Units.inchesToMeters(12.0 - 3.75), Units.inchesToMeters(15.5),cameraRotation);
+  
+    public static enum Camera {
+            NoteVision(
+                "Note Cam",
+                new Transform3d(
+                    new Translation3d(
+                        Inches.of(-Drivetrain.kWheelBase/2),
+                        Inches.of(+3.5),
+                        Inches.of(+Drivetrain.kTrackWidth/2)
+                    ),
+                    new Rotation3d(
+                        0,
+                        0,
+                        Math.PI
+                    )
+                )
+            ),
+
+            AprilTagShooterSide(
+              "AprilTagCam",
+              new Transform3d(
+                new Translation3d(
+                  Inches.of(-15.5 + 2.25),
+                  Inches.of(12.0 - 3.75),
+                  Inches.of(15.5)
+                ),
+                new Rotation3d(
+                  -14,
+                  0,
+                  0
+                )
+              )
+            )
+            ;
+            public final String hardwareName;
+            private final Transform3d intermediateToCamera;
+            private Supplier<Transform3d> robotToIntermediate;
+            Camera(String hardwareName, Transform3d finalToCamera) {
+                this.hardwareName = hardwareName;
+                this.intermediateToCamera = finalToCamera;
+                this.robotToIntermediate = Transform3d::new;
+            }
+            @SuppressWarnings("unused")
+            private static Transform3d robotToCameraFromCalibTag(Transform3d robotToCalibTag, Transform3d cameraToCalibTag) {
+                return robotToCalibTag.plus(cameraToCalibTag.inverse());
+            }
+            public Camera withRobotToIntermediate(Supplier<Transform3d> robotToFinal) {
+                this.robotToIntermediate = robotToFinal;
+                return this;
+            }
+
+            public Transform3d getRobotToCam() {
+                return robotToIntermediate.get().plus(intermediateToCamera);
+            }
+        }
+  
   }
+
+
+
   public static class Limelight{
     public static final String LIMELIGHT_NAME = "limelight";
     public static final double VERTICAL_FOV_DEGREES = 49.7;

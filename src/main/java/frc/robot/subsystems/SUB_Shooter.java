@@ -13,6 +13,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 
 public class SUB_Shooter extends SubsystemBase {
+  public static SUB_Shooter INSTANCE = null;
+
   public InterpolatingDoubleTreeMap distToTimeMap = new InterpolatingDoubleTreeMap();
   private SparkPIDController PIDController;
   public static int MANUAL_RPM = 1000;
@@ -21,7 +23,15 @@ public class SUB_Shooter extends SubsystemBase {
   CANSparkMax shooterLeft;
   CANSparkMax shooterRight;
 
-  public SUB_Shooter(){
+  public static SUB_Shooter getInstance(){
+    if (INSTANCE == null){
+      INSTANCE = new SUB_Shooter();
+    }
+
+    return INSTANCE;
+  }
+
+  private SUB_Shooter(){
     shooterLeft = new CANSparkMax(30, MotorType.kBrushless);
     shooterRight = new CANSparkMax(31, MotorType.kBrushless);
     PIDController = shooterLeft.getPIDController();
