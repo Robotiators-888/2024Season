@@ -140,10 +140,36 @@ public class RobotContainer {
     // shooter).withTimeout(0.25)
     // ));
 
+    Driver1.back().whileTrue(
+      new ParallelCommandGroup(
+        new ParallelCommandGroup(
+            new InstantCommand(() -> pivot.goToAngle(75)),
+            new InstantCommand(() -> index.starttimer()),
+            new RunCommand(() -> index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
+            new RunCommand(() -> intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
+                () -> index.CurrentLimitSpike())
+            .andThen(
+                new InstantCommand(() -> Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)),
+                new InstantCommand(() -> Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)))
+            .andThen(
+                 new InstantCommand(()->intake.setHasNote(true)),
+                new RunCommand(() -> index.setMotorSpeed(0.0)).withTimeout(0.0).andThen(
+                    new ParallelCommandGroup(
+                        new InstantCommand(() -> index.setMotorSpeed(0)),
+                        new InstantCommand(() -> shooter.setMotorSpeed(0)),
+                        new InstantCommand(() -> SUB_LEDs.ledValue = BlinkinPattern.GREEN.value)))),
+        NoteVision.getInstance().autoIntake(()-> 0.2, drivetrain, intake)
+      )  
+    );
+
     Driver1.start().whileTrue(new ParallelCommandGroup(
         new InstantCommand(() -> pivot.goToAngle(Pivot.kSideSP)),
         new RunCommand(() -> shooter.shootFlywheelOnRPM(3000), shooter),
-        new WaitUntilCommand(() -> shooter.getFlywheelRPM() > 2750).andThen()
+        new WaitUntilCommand(() -> shooter.getFlywheelRPM() > 2750).andThen(
+            new RunCommand(()->index.setMotorSpeed(0.5)).withTimeout(1.0)
+        ).andThen(
+            new InstantCommand(()->intake.setHasNote(false))
+        )
 
     )).onFalse(new SequentialCommandGroup(
         new InstantCommand(() -> index.setMotorSpeed(0)),
@@ -163,10 +189,8 @@ public class RobotContainer {
             new SequentialCommandGroup(
                 new WaitUntilCommand(() -> shooter.getFlywheelRPM() >= 3500),
                 new RunCommand(() -> index.setMotorSpeed(0.5), index),
-                new InstantCommand(() -> SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value)))// .andThen(new
-                                                                                                            // InstantCommand(()->SUB_LEDs.ledValue
-                                                                                                            // =
-                                                                                                            // BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value))
+                new InstantCommand(()->intake.setHasNote(false)),
+                new InstantCommand(() -> SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value)))
     ).onFalse(
         new ParallelCommandGroup(
             new InstantCommand(() -> index.setMotorSpeed(0)),
@@ -222,6 +246,7 @@ public class RobotContainer {
                 new RunCommand(() -> index.setMotorSpeed(-0.05)).withTimeout(0.025))
             .andThen(
                 new ParallelCommandGroup(
+                    new InstantCommand(()->intake.setHasNote(true)),
                     new InstantCommand(() -> index.setMotorSpeed(0)),
                     new InstantCommand(() -> shooter.setMotorSpeed(0))).andThen(
                         new SequentialCommandGroup(
@@ -247,6 +272,7 @@ public class RobotContainer {
                 new RunCommand(() -> index.setMotorSpeed(-0.05)).withTimeout(0.045))
             .andThen(
                 new ParallelCommandGroup(
+                     new InstantCommand(()->intake.setHasNote(true)),
                     new InstantCommand(() -> index.setMotorSpeed(0)),
                     new InstantCommand(() -> shooter.setMotorSpeed(0)))))
         .onFalse(
@@ -262,6 +288,7 @@ public class RobotContainer {
             new InstantCommand(() -> SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value)))
         .onFalse(
             new ParallelCommandGroup(
+                new InstantCommand(()->intake.setHasNote(false)),
                 new InstantCommand(() -> shooter.shootFlywheelOnRPM(0), shooter))); // Spin Shooter OUT
 
     Driver2.a().whileTrue(
@@ -275,6 +302,7 @@ public class RobotContainer {
                 new InstantCommand(() -> Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)),
                 new InstantCommand(() -> Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)))
             .andThen(
+                 new InstantCommand(()->intake.setHasNote(true)),
                 new RunCommand(() -> index.setMotorSpeed(0.0)).withTimeout(0.0).andThen(
                     new ParallelCommandGroup(
                         new InstantCommand(() -> index.setMotorSpeed(0)),

@@ -1,5 +1,7 @@
 package frc.robot.utils;
 
+import static edu.wpi.first.units.Units.anonymous;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
@@ -83,7 +85,8 @@ public class AutoGenerator {
       return new RunCommand(()->shooter.shootFlywheelOnRPM(4000), shooter)
       .until(()->shooter.getFlywheelRPM() >= 3500)
       .andThen(new RunCommand(()->index.setMotorSpeed(0.5)).withTimeout(0.25))
-      .andThen(new InstantCommand(()->index.setMotorSpeed(0)));
+      .andThen(new InstantCommand(()->index.setMotorSpeed(0)))
+      .andThen(new InstantCommand(()->intake.setHasNote(true)));
     }
 
     public Command scoringSequence(double setpoint, int rpm){
@@ -94,6 +97,7 @@ public class AutoGenerator {
       .until(()->shooter.getFlywheelRPM() >= rpm - 500)
       .andThen(new RunCommand(()->index.setMotorSpeed(0.5)).withTimeout(0.25))
       .andThen(new InstantCommand(()->index.setMotorSpeed(0)))
+      .andThen(new InstantCommand(()->intake.setHasNote(true)))
       );
     }
 
@@ -106,6 +110,7 @@ public class AutoGenerator {
       .until(()->shooter.getFlywheelRPM() >= rpm - 250)
       .andThen(new RunCommand(()->index.setMotorSpeed(0.5)).withTimeout(0.25))
       .andThen(new InstantCommand(()->index.setMotorSpeed(0)))
+      .andThen(new InstantCommand(()->intake.setHasNote(true)))
       );
     }
 
@@ -120,7 +125,10 @@ public class AutoGenerator {
               new RunCommand(()->index.setMotorSpeed(0.5), index)
             ).withTimeout(0.5)
           ).andThen(
-            new InstantCommand(()->index.setMotorSpeed(0.0), index)
+            new ParallelCommandGroup(
+              new InstantCommand(()->intake.setHasNote(true)),
+              new InstantCommand(()->index.setMotorSpeed(0.0), index)
+            )
           )
       );
     }
@@ -158,6 +166,7 @@ public class AutoGenerator {
         new RunCommand(()->index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
         new RunCommand(()->intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
           ()->index.CurrentLimitSpike()).andThen(
+            new InstantCommand(()->intake.setHasNote(true)),
         new RunCommand(()->index.setMotorSpeed(0.1)).withTimeout(0.025).andThen(new ParallelCommandGroup(
           new InstantCommand(()->index.setMotorSpeed(0)),
           new InstantCommand(()->intake.setMotorSpeed(0))))
