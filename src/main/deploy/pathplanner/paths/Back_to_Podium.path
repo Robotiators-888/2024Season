@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.6619978954243629,
-        "y": 4.559091403897094
+        "x": 0.71,
+        "y": 4.57
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.2190572952574483,
-        "y": 4.031350919844697
+        "x": 1.2670593998330855,
+        "y": 4.042259515947603
       },
       "isLocked": false,
       "linkedName": "BottomRobotStart"

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.6619978954243629,
-        "y": 4.559091403897094
+        "x": 0.71,
+        "y": 4.57
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.0950105973165822,
-        "y": 4.309091403897094
+        "x": 1.1430127018922207,
+        "y": 4.32
       },
       "isLocked": false,
       "linkedName": "BottomRobotStart"
@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": "Mid Line Paths",
   "previewStartingState": {
-    "rotation": 120.0,
+    "rotation": 180.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

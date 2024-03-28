@@ -58,8 +58,8 @@ public class RobotContainer {
   public static SUB_Pivot pivot = SUB_Pivot.getInstance();
   public static SUB_Limelight limelight = SUB_Limelight.getInstance();
   public static SUB_LEDs led = new SUB_LEDs(9);
-  public static SUB_PhotonVision photonVision = SUB_PhotonVision.getInstance();
-  public static NoteVision noteVision = NoteVision.getInstance();
+  //public static SUB_PhotonVision photonVision = SUB_PhotonVision.getInstance();
+  //public static NoteVision noteVision = NoteVision.getInstance();
   public static SUB_Climber climber = new SUB_Climber();
 
   public static CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
@@ -126,7 +126,7 @@ public class RobotContainer {
         new InstantCommand(() -> pivot.goToAngle(50))));// Shoot From Bottom Setpoint
 
     // Driver1.start().whileTrue( new ParallelCommandGroup(
-    // //new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)),
+    // new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)),
     // new RunCommand(()->shooter.shootFlywheelOnRPM(1000), shooter),
     // new SequentialCommandGroup(
     // new WaitCommand(.75),
@@ -135,37 +135,37 @@ public class RobotContainer {
     // )).onFalse(new SequentialCommandGroup(
     // new InstantCommand(()->index.setMotorSpeed(0)),
     // new InstantCommand(()->SUB_LEDs.ledValue =
-    // BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value)
-    // //new RunCommand(()->shooter.shootFlywheelOnRPM(3000),
+    // BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value),
+    // new RunCommand(()->shooter.shootFlywheelOnRPM(3000),
     // shooter).withTimeout(0.25)
     // ));
 
-    Driver1.back().whileTrue(
-      new ParallelCommandGroup(
-        new ParallelCommandGroup(
-            new InstantCommand(() -> pivot.goToAngle(75)),
-            new InstantCommand(() -> index.starttimer()),
-            new RunCommand(() -> index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
-            new RunCommand(() -> intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
-                () -> index.CurrentLimitSpike())
-            .andThen(
-                new InstantCommand(() -> Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)),
-                new InstantCommand(() -> Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)))
-            .andThen(
-                 new InstantCommand(()->intake.setHasNote(true)),
-                new RunCommand(() -> index.setMotorSpeed(0.0)).withTimeout(0.0).andThen(
-                    new ParallelCommandGroup(
-                        new InstantCommand(() -> index.setMotorSpeed(0)),
-                        new InstantCommand(() -> shooter.setMotorSpeed(0)),
-                        new InstantCommand(() -> SUB_LEDs.ledValue = BlinkinPattern.GREEN.value)))),
-        NoteVision.getInstance().autoIntake(()-> 0.2, drivetrain, intake)
-      )  
-    );
+    // Driver1.back().whileTrue(
+    //   new ParallelCommandGroup(
+    //     new ParallelCommandGroup(
+    //         new InstantCommand(() -> pivot.goToAngle(75)),
+    //         new InstantCommand(() -> index.starttimer()),
+    //         new RunCommand(() -> index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
+    //         new RunCommand(() -> intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
+    //             () -> index.CurrentLimitSpike())
+    //         .andThen(
+    //             new InstantCommand(() -> Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)),
+    //             new InstantCommand(() -> Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)))
+    //         .andThen(
+    //              new InstantCommand(()->intake.setHasNote(true)),
+    //             new RunCommand(() -> index.setMotorSpeed(0.0)).withTimeout(0.0).andThen(
+    //                 new ParallelCommandGroup(
+    //                     new InstantCommand(() -> index.setMotorSpeed(0)),
+    //                     new InstantCommand(() -> shooter.setMotorSpeed(0)),
+    //                     new InstantCommand(() -> SUB_LEDs.ledValue = BlinkinPattern.GREEN.value)))),
+    //     NoteVision.getInstance().autoIntake(()-> 0.2, drivetrain, intake)
+    //   )  
+    // );
 
     Driver1.start().whileTrue(new ParallelCommandGroup(
         new InstantCommand(() -> pivot.goToAngle(Pivot.kSideSP)),
-        new RunCommand(() -> shooter.shootFlywheelOnRPM(3000), shooter),
-        new WaitUntilCommand(() -> shooter.getFlywheelRPM() > 2750).andThen(
+        new RunCommand(() -> shooter.shootFlywheelOnRPM(2500), shooter),
+        new WaitUntilCommand(() -> shooter.getFlywheelRPM() > 2350).andThen(
             new RunCommand(()->index.setMotorSpeed(0.5)).withTimeout(1.0)
         ).andThen(
             new InstantCommand(()->intake.setHasNote(false))
@@ -290,6 +290,22 @@ public class RobotContainer {
             new ParallelCommandGroup(
                 new InstantCommand(()->intake.setHasNote(false)),
                 new InstantCommand(() -> shooter.shootFlywheelOnRPM(0), shooter))); // Spin Shooter OUT
+
+    Driver2.back().whileTrue(
+        new ParallelCommandGroup(
+            new RunCommand(() -> shooter.shootFlywheelOnRPM(SUB_Shooter.SetpointRPM), shooter),
+            new SequentialCommandGroup(
+                new WaitUntilCommand(() -> shooter.getFlywheelRPM() >= SUB_Shooter.SetpointRPM - 150),
+                new RunCommand(() -> index.setMotorSpeed(0.5), index),
+                new InstantCommand(()->intake.setHasNote(false))))
+    ).onFalse(
+        new ParallelCommandGroup(
+            new InstantCommand(()->intake.setHasNote(false)),
+                    new InstantCommand(() -> index.setMotorSpeed(0)),
+                    new InstantCommand(() -> shooter.setMotorSpeed(0))
+        )
+    );
+
 
     Driver2.a().whileTrue(
         new ParallelCommandGroup(
@@ -425,21 +441,21 @@ public class RobotContainer {
   }
 
   public void photonPoseUpdate() {
-    SUB_PhotonVision.PosePair photonPose = photonVision.getPose2dPhotonvision();
-    if (photonPose != null) {
-    if (photonPose.pose.getX() >= 0 && photonPose.pose.getX() <= 1655.0 / 100 &&
-    photonPose.pose.getY() >= 0
-    && photonPose.pose.getY() <= 821.0 / 100) {
-    }
-    drivetrain.addVisionMeasurement(photonPose.pose, photonPose.time);
-    }
-    SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
-    SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
-    SmartDashboard.putNumber("Current Shooter Angle (Degrees)",
-    pivot.calculateDegreesRotation());
+    // SUB_PhotonVision.PosePair photonPose = photonVision.getPose2dPhotonvision();
+    // if (photonPose != null) {
+    // if (photonPose.pose.getX() >= 0 && photonPose.pose.getX() <= 1655.0 / 100 &&
+    // photonPose.pose.getY() >= 0
+    // && photonPose.pose.getY() <= 821.0 / 100) {
+    // }
+    // drivetrain.addVisionMeasurement(photonPose.pose, photonPose.time);
+    // }
+    // SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
+    // SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
+    // SmartDashboard.putNumber("Current Shooter Angle (Degrees)",
+    // pivot.calculateDegreesRotation());
 
-    SmartDashboard.putNumber("X Pose", drivetrain.getPose().getX());
-    SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
+    // SmartDashboard.putNumber("X Pose", drivetrain.getPose().getX());
+    // SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
 
   }
 }

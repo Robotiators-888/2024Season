@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Drivetrain;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.Swerve;
 import frc.robot.subsystems.Vision.*;
 import frc.robot.utils.*;
@@ -458,6 +459,9 @@ public Command pidControlledHeading(Supplier<Optional<Rotation2d>> headingSuppli
             );
         }
 
+         public static Translation2d getFORR(Translation2d pos) {
+        return AllianceFlipUtil.apply(FieldConstants.speakerAimPoint).minus(pos);
+        }
   /**
    * Allows for vision measurements to be added to drive odometry.
    * @param visionPose The pose supplied by getPose() in SUB_Limelight

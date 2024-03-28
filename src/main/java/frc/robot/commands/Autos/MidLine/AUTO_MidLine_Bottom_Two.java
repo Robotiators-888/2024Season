@@ -7,11 +7,13 @@ package frc.robot.commands.Autos.MidLine;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.Pivot;
 import frc.robot.commands.Autos.AutoPaths;
+import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.utils.AutoGenerator;
 import frc.robot.utils.PathPlannerBase;
 
@@ -36,7 +38,9 @@ public class AUTO_MidLine_Bottom_Two extends AutoPaths {
         }
 
         return new SequentialCommandGroup(
-            autos.scoringSequence(Pivot.kSpeakerAngleSP-6,4000, 0.45),
+            autos.aimAtPoint(startingPose.getTranslation(), SUB_Drivetrain.getInstance()),
+            autos.scoringSequence(Pivot.kSpeakerAngleSP-8,4000, 0.45),
+            //autos.resetOdometry(startingPose, new Rotation2d(120)),
             autos.resetOdometry(startingPose),
 
             autos.pathIntake(p1Name).withTimeout(4),

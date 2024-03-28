@@ -4,25 +4,18 @@
 
 package frc.robot;
 
-import java.util.Arrays;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 
-import static edu.wpi.first.units.Units.Centimeters;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Kilograms;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.Radians;
 
 
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -31,11 +24,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.Distance;
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.wpilibj.RobotState;
 import frc.libs.PIDGains;
-import frc.robot.subsystems.SUB_Drivetrain;
 
 
 /**
@@ -52,6 +41,26 @@ public final class Constants {
     public static final double kDriveDeadband = 0.05;
     public static final int kDriver2ControllerPort =1;
   }
+
+  public static final class FieldConstants {
+        public static final double fieldLength = Units.inchesToMeters(648);
+        public static final double fieldWidth =  Units.inchesToMeters(324);
+
+        public static final Translation2d speakerAimPoint = new Translation2d(0.240581, 5.547755);
+
+        public static final Pose2d subwooferFront =     new Pose2d(new Translation2d(1.45, 5.55), Rotation2d.fromDegrees(+180));
+        public static final Pose2d subwooferAmp =       new Pose2d(new Translation2d(0.71, 6.72), Rotation2d.fromDegrees(-120));
+        public static final Pose2d subwooferSource =    new Pose2d(new Translation2d(0.71, 4.57), Rotation2d.fromDegrees(+120));
+        
+        public static final Pose2d amp =                new Pose2d(new Translation2d(1.83, 7.61), Rotation2d.fromDegrees(-90));
+        public static final Pose2d podium =             new Pose2d(new Translation2d(2.76, 4.44), Rotation2d.fromDegrees(+157.47));
+
+        public static final Pose2d pathfindSpeaker =    new Pose2d(new Translation2d(3.45, 5.55), Rotation2d.fromDegrees(+180));
+        public static final Pose2d pathfindSource =     new Pose2d(new Translation2d(13.41, 1.54), Rotation2d.fromDegrees(+180));
+
+        public static final double podiumToSpeakerDist =    speakerAimPoint.getDistance(podium.getTranslation());
+        public static final double subwooferToSpeakerDist = speakerAimPoint.getDistance(subwooferFront.getTranslation());
+    }
 
   public static final class VortexMotorConstants{
     public static final double kFreeSpeedRpm = 6784;
