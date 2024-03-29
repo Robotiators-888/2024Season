@@ -75,8 +75,8 @@ public class SUB_Drivetrain extends SubsystemBase {
   AHRS navx = new AHRS();
   
 
-  private void setGyroRotation(){
-    navx.setAngleAdjustment(Constants.Drivetrain.kGyroRotation);
+  public void setGyroRotation(double angleDegrees){
+    navx.setAngleAdjustment(angleDegrees);
   }
 
   public double getAngle(){
@@ -467,6 +467,7 @@ public Command pidControlledHeading(Supplier<Optional<Rotation2d>> headingSuppli
    * @param visionPose The pose supplied by getPose() in SUB_Limelight
    */
   public void addVisionMeasurement(Pose2d visionPose, double latency){
+    //visionPose.rotateBy();
     m_poseEstimator.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latency);
   }
 

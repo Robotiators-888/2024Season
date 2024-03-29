@@ -58,8 +58,8 @@ public class RobotContainer {
   public static SUB_Pivot pivot = SUB_Pivot.getInstance();
   public static SUB_Limelight limelight = SUB_Limelight.getInstance();
   public static SUB_LEDs led = new SUB_LEDs(9);
-  //public static SUB_PhotonVision photonVision = SUB_PhotonVision.getInstance();
-  //public static NoteVision noteVision = NoteVision.getInstance();
+  public static SUB_PhotonVision photonVision = SUB_PhotonVision.getInstance();
+  public static NoteVision noteVision = NoteVision.getInstance();
   public static SUB_Climber climber = new SUB_Climber();
 
   public static CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
@@ -411,7 +411,7 @@ public class RobotContainer {
   }
 
   public void teleopPeriodic() {
-    // photonPoseUpdate();
+    photonPoseUpdate();
 
     limelightPoseUpdate();
   }
@@ -440,22 +440,24 @@ public class RobotContainer {
     // drivetrain.limelightVisionUpdate(); 
   }
 
-  public void photonPoseUpdate() {
-    // SUB_PhotonVision.PosePair photonPose = photonVision.getPose2dPhotonvision();
-    // if (photonPose != null) {
-    // if (photonPose.pose.getX() >= 0 && photonPose.pose.getX() <= 1655.0 / 100 &&
-    // photonPose.pose.getY() >= 0
-    // && photonPose.pose.getY() <= 821.0 / 100) {
-    // }
-    // drivetrain.addVisionMeasurement(photonPose.pose, photonPose.time);
-    // }
-    // SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
-    // SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
-    // SmartDashboard.putNumber("Current Shooter Angle (Degrees)",
-    // pivot.calculateDegreesRotation());
+  public static void photonPoseUpdate() {
+    SUB_PhotonVision.PosePair photonPose = photonVision.getPose2dPhotonvision();
+    
+    if (photonPose != null) {
+    if (photonPose.pose.getX() >= 0 && photonPose.pose.getX() <= 1655.0 / 100 &&
+    photonPose.pose.getY() >= 0
+    && photonPose.pose.getY() <= 821.0 / 100) {
+    }
+    //photonPose.pose.
+    drivetrain.addVisionMeasurement(photonPose.pose, photonPose.time);
+    }
+    SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
+    SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
+    SmartDashboard.putNumber("Current Shooter Angle (Degrees)",
+    pivot.calculateDegreesRotation());
 
-    // SmartDashboard.putNumber("X Pose", drivetrain.getPose().getX());
-    // SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
+    SmartDashboard.putNumber("X Pose", drivetrain.getPose().getX());
+    SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
 
   }
 }

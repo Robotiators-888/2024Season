@@ -264,7 +264,7 @@ public final class Constants {
   
     public static enum Camera {
             NoteVision(
-                "Note Cam",
+                "NoteCamera",
                 new Transform3d(
                     new Translation3d(
                         Inches.of(-Drivetrain.kWheelBase/2),
