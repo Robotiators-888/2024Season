@@ -51,6 +51,7 @@ public class SUB_PhotonVision extends SubsystemBase {
     
     poseEstimator = new PhotonPoseEstimator(at_field,
                     PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cam, robotToCam);
+    poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
   }
   
   public PhotonTrackedTarget getBestTarget() {
