@@ -32,6 +32,9 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -419,8 +422,7 @@ public class RobotContainer {
 
   public void teleopPeriodic() {
     photonPoseUpdate();
-
-    limelightPoseUpdate();
+    // limelightPoseUpdate();
   }
 
   public void robotPeriodic() {
@@ -459,8 +461,18 @@ public class RobotContainer {
         }
         //photonPose.pose.
         SmartDashboard.putNumberArray("PHOTON/Pose", new Double[]{photonPose.toPose2d().getX(), photonPose.toPose2d().getY(), photonPose.toPose2d().getRotation().getDegrees()});
+        
+        SmartDashboard.putNumberArray("PHOTON/Pose3d", new Double[]{photonPose.getX(), photonPose.getY(), photonPose.getZ(), photonPose.getRotation().getQuaternion().getW(), photonPose.getRotation().getQuaternion().getX(), photonPose.getRotation().getQuaternion().getY(), photonPose.getRotation().getQuaternion().getZ()});
         drivetrain.addVisionMeasurement(photonPose.toPose2d(), photonPoseOptional.get().timestampSeconds);    
     //photonPose.pose.
+
+    // double rotStddev = Units.degreesToRadians(40.0);
+    // Pose2d closestTag = drivetrain.at_field.getTagPose(photonVision.getBestTarget().getFiducialId()).get().toPose2d();
+    // Translation2d translate = closestTag.minus(photonPose.toPose2d()).getTranslation();
+    // // distance/4 
+
+    //Math.sqrt(Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2);
+    
 
     }
   }
