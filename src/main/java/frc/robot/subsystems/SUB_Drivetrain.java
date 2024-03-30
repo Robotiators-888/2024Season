@@ -463,7 +463,6 @@ public Command pidControlledHeading(Supplier<Optional<Rotation2d>> headingSuppli
    */
   public void addVisionMeasurement(Pose2d visionPose, double timestampSeconds){
     //visionPose.rotateBy();
-    m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
     m_poseEstimator.addVisionMeasurement(visionPose, timestampSeconds);
   }
 

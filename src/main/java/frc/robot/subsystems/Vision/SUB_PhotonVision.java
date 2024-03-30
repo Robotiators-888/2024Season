@@ -29,8 +29,8 @@ public class SUB_PhotonVision extends SubsystemBase {
   private PhotonCamera cam = new PhotonCamera(PhotonVision.kCamName);
   private PhotonTrackedTarget bestTarget;
   public PhotonPoseEstimator poseEstimator;
-  Transform3d robotToCam = new Transform3d(Units.inchesToMeters(-15.5 + 2.25), Units.inchesToMeters(-(12.0 - 3.75)), Units.inchesToMeters(17.0), new Rotation3d(0,Units.degreesToRadians(-14),0));
-  AprilTagFieldLayout at_field;
+  Transform3d robotToCam = new Transform3d(Units.inchesToMeters(-(-15.5 + 2.25)), Units.inchesToMeters(-(12.0 - 3.75)), Units.inchesToMeters(17.0), new Rotation3d(0,Units.degreesToRadians(-14),0));
+  public AprilTagFieldLayout at_field;
 
   public static SUB_PhotonVision getInstance(){
     if (INSTANCE == null){
@@ -85,5 +85,10 @@ public class SUB_PhotonVision extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    var result = cam.getLatestResult();
+
+    if (result.hasTargets()){
+      bestTarget = result.getBestTarget();
+    }
   }
 }
