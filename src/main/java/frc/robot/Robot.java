@@ -57,7 +57,7 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().run();
    // m_robotContainer.teleopPeriodic();
     m_robotContainer.robotPeriodic();
-    RobotContainer.photonPoseUpdate();
+    //RobotContainer.photonPoseUpdate();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

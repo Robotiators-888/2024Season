@@ -40,10 +40,10 @@ public class AUTO_3P_Mid extends AutoPaths{
             autos.scoringSequence(Pivot.kSpeakerAngleSP-6,4000, 0.45),
             autos.resetOdometry(startingPose),
 
-            autos.pathIntake(p2Name).withTimeout(4),
+            autos.pathIntake(p1Name).withTimeout(4),
             //autos.autoAimShot(0.25),
              
-           autos.scoringSequence(Pivot.kLowAngleSP-4, 4500, 0.5),
+           autos.scoringSequence(Pivot.kLowAngleSP+3, 4500, 0.5),
 
             autos.pathIntake(p2Name).withTimeout(4),
             //autos.autoAimShot(0.25)

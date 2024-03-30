@@ -458,16 +458,11 @@ public class RobotContainer {
         && photonPose.getY() <= 821.0 / 100) {
         }
         //photonPose.pose.
-        drivetrain.addVisionMeasurement(photonPose.toPose2d(), photonPoseOptional.get().timestampSeconds);
+        SmartDashboard.putNumberArray("PHOTON/Pose", new Double[]{photonPose.toPose2d().getX(), photonPose.toPose2d().getY(), photonPose.toPose2d().getRotation().getDegrees()});
+        drivetrain.addVisionMeasurement(photonPose.toPose2d(), photonPoseOptional.get().timestampSeconds);    
+    //photonPose.pose.
+
     }
-    SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
-    SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
-    SmartDashboard.putNumber("Current Shooter Angle (Degrees)",
-    pivot.calculateDegreesRotation());
-
-    SmartDashboard.putNumber("X Pose", drivetrain.getPose().getX());
-    SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
-
   }
 
 // public void updatePoseEstimatorWithVisionBotPose() {

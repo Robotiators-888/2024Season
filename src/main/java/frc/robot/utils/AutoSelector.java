@@ -40,7 +40,7 @@ public class AutoSelector {
         //chooser.addOption("3P_MidLine_3_2nd", new AUTO_MidLine_FourP_Two());
 
         chooser.addOption("4P_Top", new AUTO_4P_Top());
-        //chooser.addOption("4P_Middle", new AUTO_4P_Mid());
+        chooser.addOption("4P_Middle", new AUTO_4P_Mid());
 
         //chooser.addOption("Beline", new AUTO_MidLine_Beline());
         chooser.addOption("Gerstner Auto", new AUTO_Silly_GERSTNER());

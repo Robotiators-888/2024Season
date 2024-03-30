@@ -44,6 +44,9 @@
   },
   "reversed": false,
   "folder": "Mid Line Paths",
-  "previewStartingState": null,
+  "previewStartingState": {
+    "rotation": 120.0,
+    "velocity": 0
+  },
   "useDefaultConstraints": true
 }

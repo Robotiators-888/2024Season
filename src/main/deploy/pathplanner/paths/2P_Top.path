@@ -50,6 +50,9 @@
   },
   "reversed": false,
   "folder": "2 Piece Path",
-  "previewStartingState": null,
+  "previewStartingState": {
+    "rotation": -120.0,
+    "velocity": 0
+  },
   "useDefaultConstraints": true
 }
