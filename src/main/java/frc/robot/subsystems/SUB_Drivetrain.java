@@ -12,6 +12,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -110,8 +111,6 @@ public class SUB_Drivetrain extends SubsystemBase {
             backRight.getPosition()
           },
           new Pose2d(0, 0, new Rotation2d(0)));
-
-  SwerveDriveOdometry auto_odometry = new SwerveDriveOdometry(Drivetrain.kDriveKinematics, navx.getRotation2d(), getPositions());
   
   public static SUB_Drivetrain getInstance(){
     if (INSTANCE == null){
@@ -361,10 +360,6 @@ public Rotation2d getRotation2d(){
     return Drivetrain.kDriveKinematics.toChassisSpeeds(getModuleStates());
   }
 
-  public Pose2d getPose2d(){
-    return auto_odometry.getPoseMeters();
-  }
-
   public void resetPose(Pose2d pose){
     m_poseEstimator.resetPosition(getRotation2d(), getPositions(), pose);
 
@@ -372,7 +367,7 @@ public Rotation2d getRotation2d(){
   }
 
   public void driveFieldRelative(ChassisSpeeds fieldRelativeSpeeds){
-    driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getPose2d().getRotation()));
+    driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getPose().getRotation()));
   }
 
   public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds){
@@ -415,7 +410,7 @@ public Command pidControlledHeading(Supplier<Optional<Rotation2d>> headingSuppli
                     var heading = headingSupplier.get();
                     headingSet = heading.isPresent();
                     heading.ifPresent((r) -> desiredHeading = r);
-                    double turnInput = headingPID.calculate(getPose2d().getRotation().getRadians(), desiredHeading.getRadians());
+                    double turnInput = headingPID.calculate(getPose().getRotation().getRadians(), desiredHeading.getRadians());
                     turnInput = headingPID.atSetpoint() ? 0 : turnInput;
                     turnInput = MathUtil.clamp(turnInput, -0.5, +0.5);
                     driveVelocity(turnInput * Swerve.kMaxRotationalSpeed);
@@ -440,7 +435,7 @@ public Command pidControlledHeading(Supplier<Optional<Rotation2d>> headingSuppli
                 }
                 @Override
                 public void execute() {
-                    driveVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(speeds.get(), getPose2d().getRotation()));
+                    driveVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(speeds.get(), getPose().getRotation()));
                 }
                 @Override
                 public void end(boolean interrupted) {
@@ -468,6 +463,7 @@ public Command pidControlledHeading(Supplier<Optional<Rotation2d>> headingSuppli
    */
   public void addVisionMeasurement(Pose2d visionPose, double latency){
     //visionPose.rotateBy();
+    m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
     m_poseEstimator.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latency);
   }
 
