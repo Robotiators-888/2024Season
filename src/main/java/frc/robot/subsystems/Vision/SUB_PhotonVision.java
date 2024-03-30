@@ -5,11 +5,19 @@
 package frc.robot.subsystems.Vision;
 
 import java.io.IOException;
+import java.util.Optional;
+
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,18 +29,8 @@ public class SUB_PhotonVision extends SubsystemBase {
   private PhotonCamera cam = new PhotonCamera(PhotonVision.kCamName);
   private PhotonTrackedTarget bestTarget;
   public PhotonPoseEstimator poseEstimator;
+  Transform3d robotToCam = new Transform3d(Units.inchesToMeters(-15.5 + 2.25), Units.inchesToMeters(12.0 - 3.75), Units.inchesToMeters(15.5), new Rotation3d(0,-14,0));
   AprilTagFieldLayout at_field;
-
-  public class PosePair{
-    public Pose2d pose;
-    public double time;
-    public Object pose2d;
-    public PosePair(Pose2d pose, double time){
-      this.pose = pose;
-      this.time = time;
-    }
-
-  }
 
   public static SUB_PhotonVision getInstance(){
     if (INSTANCE == null){
@@ -49,26 +47,20 @@ public class SUB_PhotonVision extends SubsystemBase {
       SmartDashboard.putBoolean("FILE FOUND?", true);   
     } catch (IOException e){
       SmartDashboard.putBoolean("FILE FOUND?", false);      
-    }      
+    }
+    
+    poseEstimator = new PhotonPoseEstimator(at_field,
+                    PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cam, robotToCam);
   }
   
   public PhotonTrackedTarget getBestTarget() {
     return bestTarget;
   }
 
-  public PosePair getPose2dPhotonvision(){
-    var res = cam.getLatestResult();
-    if (res.hasTargets()) {
-        double imageCaptureTime = res.getTimestampSeconds();
-        var camToTargetTrans = res.getBestTarget().getBestCameraToTarget();
-        int id = res.getBestTarget().getFiducialId();
-        var camPose = at_field.getTagPose(id).get().transformBy(camToTargetTrans.inverse());
-        return new PosePair(camPose.transformBy(PhotonVision.kCameraToRobot).toPose2d(), imageCaptureTime);
-
-    }
-    return null;
+  public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
+      poseEstimator.setReferencePose(prevEstimatedRobotPose);
+      return poseEstimator.update();
   }
-
 
   public double getTargetYaw(PhotonTrackedTarget target) {
     return target.getYaw();
@@ -85,6 +77,8 @@ public class SUB_PhotonVision extends SubsystemBase {
   public int getId(PhotonTrackedTarget target) {
     return target.getFiducialId();
   }
+
+
 
 
   @Override

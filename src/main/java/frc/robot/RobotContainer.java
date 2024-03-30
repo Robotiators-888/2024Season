@@ -23,9 +23,14 @@ import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.utils.AutoSelector;
 import frc.robot.subsystems.*;
 
+import java.util.Optional;
+
+import org.photonvision.EstimatedRobotPose;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -39,6 +44,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -435,22 +441,24 @@ public class RobotContainer {
       Transform2d t2d = visionPose.minus(drivetrain.getPose());
       double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
       double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
-      drivetrain.addVisionMeasurement(visionPose, latencySec / 1000);
+      drivetrain.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latencySec / 1000);
 
     }
     // drivetrain.limelightVisionUpdate(); 
   }
 
   public static void photonPoseUpdate() {
-    SUB_PhotonVision.PosePair photonPose = photonVision.getPose2dPhotonvision();
+    Optional<EstimatedRobotPose> photonPoseOptional = photonVision.getEstimatedGlobalPose(drivetrain.getPose());
+
     
-    if (photonPose != null) {
-    if (photonPose.pose.getX() >= 0 && photonPose.pose.getX() <= 1655.0 / 100 &&
-    photonPose.pose.getY() >= 0
-    && photonPose.pose.getY() <= 821.0 / 100) {
-    }
-    //photonPose.pose.
-    drivetrain.addVisionMeasurement(photonPose.pose, photonPose.time);
+    if (photonPoseOptional.isPresent()) {
+        Pose3d photonPose = photonPoseOptional.get().estimatedPose;
+        if (photonPose.getX() >= 0 && photonPose.getX() <= 1655.0 / 100 &&
+        photonPose.getY() >= 0
+        && photonPose.getY() <= 821.0 / 100) {
+        }
+        //photonPose.pose.
+        drivetrain.addVisionMeasurement(photonPose.toPose2d(), photonPoseOptional.get().timestampSeconds);
     }
     SmartDashboard.putNumber("Current RPM", shooter.getFlywheelRPM());
     SmartDashboard.putNumber("Current Setpoint RPM", shooter.MANUAL_RPM);
@@ -461,4 +469,43 @@ public class RobotContainer {
     SmartDashboard.putNumber("Y Pose", drivetrain.getPose().getY());
 
   }
+
+// public void updatePoseEstimatorWithVisionBotPose() {
+//     SUB_PhotonVision.PosePair ppair = photonVision.getPose2dPhotonvision();
+    
+//     if (ppair == null){
+//         return;
+//     }
+
+//     // distance from current pose to vision estimated pose
+//     double poseDifference = drivetrain.m_poseEstimator.getEstimatedPosition().getTranslation()
+//         .getDistance(ppair.pose.getTranslation());
+
+//     double xyStds;
+//     double degStds;
+//     // multiple targets detected
+//     if (m_visionSystem.getNumberOfTargetsVisible() >= 2) {
+//         xyStds = 0.5;
+//         degStds = 6;
+//     }
+//     // 1 target with large area and close to estimated pose
+//     else if (photonVision.getBestTarget().getArea() > 0.8 && poseDifference < 0.5) {
+//         xyStds = 1.0;
+//         degStds = 12;
+//     }
+//     // 1 target farther away and estimated pose is close
+//     else if (photonVision.getBestTarget().getArea() > 0.1 && poseDifference < 0.3) {
+//     xyStds = 2.0;
+//     degStds = 30;
+//     }
+//     // conditions don't match to add a vision measurement
+//     else {
+//     return;
+//     }
+
+//     m_poseEstimator.setVisionMeasurementStdDevs(
+//         VecBuilder.fill(xyStds, xyStds, Units.degreesToRadians(degStds)));
+//     m_poseEstimator.addVisionMeasurement(visionBotPose.pose2d,
+//         Timer.getFPGATimestamp() - visionBotPose.latencySeconds);
+//   }
 }

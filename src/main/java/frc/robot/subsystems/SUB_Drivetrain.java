@@ -101,7 +101,7 @@ public class SUB_Drivetrain extends SubsystemBase {
 
   Pose2d pose = new Pose2d();
   // Odometry class for tracking robot pose
-  SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
+  public SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
           Constants.Drivetrain.kDriveKinematics,
           Rotation2d.fromDegrees(getAngle()),
           new SwerveModulePosition[] {
@@ -461,10 +461,10 @@ public Command pidControlledHeading(Supplier<Optional<Rotation2d>> headingSuppli
    * Allows for vision measurements to be added to drive odometry.
    * @param visionPose The pose supplied by getPose() in SUB_Limelight
    */
-  public void addVisionMeasurement(Pose2d visionPose, double latency){
+  public void addVisionMeasurement(Pose2d visionPose, double timestampSeconds){
     //visionPose.rotateBy();
     m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-    m_poseEstimator.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latency);
+    m_poseEstimator.addVisionMeasurement(visionPose, timestampSeconds);
   }
 
   public FieldRelativeSpeed getFieldRelativeSpeed() {
