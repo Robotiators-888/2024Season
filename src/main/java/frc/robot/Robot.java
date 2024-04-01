@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.SUB_Drivetrain;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -68,9 +69,9 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledPeriodic() {
     
-    SmartDashboard.putNumber("STARTING POSE/ABSOLUTE X meters", (m_robotContainer.drivetrain.getPose().getX()));
-    SmartDashboard.putNumber("STARTING POSE/ABSOLUTE Y meters", (m_robotContainer.drivetrain.getPose().getY()));
-    SmartDashboard.putNumber("STARTING POSE/ABSOLUTE ROTATION degrees", m_robotContainer.drivetrain.getPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("STARTING POSE/ABSOLUTE X meters", (SUB_Drivetrain.getInstance().getPose().getX()));
+    SmartDashboard.putNumber("STARTING POSE/ABSOLUTE Y meters", (SUB_Drivetrain.getInstance().getPose().getY()));
+    SmartDashboard.putNumber("STARTING POSE/ABSOLUTE ROTATION degrees", SUB_Drivetrain.getInstance().getPose().getRotation().getDegrees());
     RobotContainer.photonPoseUpdate();
   }
 
