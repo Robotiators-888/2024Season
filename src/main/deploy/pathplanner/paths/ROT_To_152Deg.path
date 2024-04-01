@@ -4,40 +4,24 @@
     {
       "anchor": {
         "x": 1.52,
-        "y": 4.023876956519567
+        "y": 4.02
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9530127018922199,
-        "y": 3.773876956519567
-      },
-      "isLocked": false,
-      "linkedName": "BottomRobotStart"
-    },
-    {
-      "anchor": {
-        "x": 3.130267727440643,
-        "y": 2.5846800888592836
-      },
-      "prevControl": {
-        "x": 2.572211799164207,
-        "y": 2.8930794176436305
-      },
-      "nextControl": {
-        "x": 3.8144082830840214,
-        "y": 2.2066024133721527
+        "x": 1.62,
+        "y": 4.02
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.284942222836145,
-        "y": 0.7930268454454622
+        "x": 1.52,
+        "y": 4.02
       },
       "prevControl": {
-        "x": 7.22757309557553,
-        "y": 0.6461700222148214
+        "x": 1.42,
+        "y": 4.02
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,11 +39,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -179.6416782997656,
-    "rotateFast": false
+    "rotation": 130.0,
+    "rotateFast": true
   },
   "reversed": false,
   "folder": "Mid Line Paths",
-  "previewStartingState": null,
+  "previewStartingState": {
+    "rotation": 180.0,
+    "velocity": 0
+  },
   "useDefaultConstraints": true
 }

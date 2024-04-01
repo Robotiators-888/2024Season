@@ -20,12 +20,13 @@ public class AUTO_MidLine_Bottom_Three extends AutoPaths {
 
     @Override
     public Command load(AutoGenerator autos) {
+        String p0Name = "ROT_To_152Deg";
         String p1Name = "BottomStart_5GP";
         String p2Name = "5th_to_BottomGP";
         String p3Name = "Bottom_to_4GP";
         String p4Name = "4th_to_BottomGP";
         
-        PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
+        PathPlannerPath p1 = PathPlannerPath.fromPathFile(p0Name);
         var alliance = DriverStation.getAlliance();
         
         // 3.07, 3.09, 147.99
@@ -40,8 +41,10 @@ public class AUTO_MidLine_Bottom_Three extends AutoPaths {
         }
 
         return new SequentialCommandGroup(
-            autos.scoringSequence(Pivot.kSpeakerAngleSP-6,4000, 0.45),
-            autos.resetOdometry(startingPose),
+            autos.resetOdometry(startingPose), 
+            PathPlannerBase.followTrajectory(p0Name).withTimeout(1),
+            autos.scoringSequence(Pivot.kLowAngleSP-1,4000, 0.45),
+            
 
             autos.pathIntake(p1Name).withTimeout(4),
             PathPlannerBase.followTrajectory(p2Name).withTimeout(4),

@@ -11,6 +11,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -93,7 +94,13 @@ public class AutoGenerator {
   // ====================================================================
 
   public Command resetOdometry(Pose2d pose) {
-    if(!RobotContainer.standardPosChecker.getSelected()){
+    if(!RobotContainer.standardPosChecker.getSelected().booleanValue()){
+      //drivetrain.getPose().rotateBy(Rotation2d.fromDegrees(180));
+        // drivetrain.resetOdometry(
+        //   new Pose2d(
+        //     SmartDashboard.getNumber("STARTING POSE/ABSOLUTE X meters", 0), 
+        //     SmartDashboard.getNumber("STARTING POSE/ABSOLUTE Y meters", 0), 
+        //     Rotation2d.fromDegrees(SmartDashboard.getNumber("STARTING POSE/ABSOLUTE ROTATION degrees", 0))));
           return new InstantCommand(
         () -> drivetrain.resetOdometry(drivetrain.getPose()));
     }  

@@ -80,8 +80,9 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    standardPosChecker.addOption("True", true);
-    standardPosChecker.setDefaultOption("False", false);
+    standardPosChecker.addOption("True", Boolean.TRUE);
+    standardPosChecker.setDefaultOption("False", Boolean.FALSE);
+    SmartDashboard.putData(standardPosChecker);
     // Configure the trigger bindings
     configureBindings();
 
@@ -468,11 +469,11 @@ public class RobotContainer {
         Pose2d closestTag = photonVision.at_field.getTagPose(photonVision.getBestTarget().getFiducialId()).get().toPose2d();
         Translation2d translate = closestTag.minus(photonPose.toPose2d()).getTranslation();
         // distance/4 
-        double xStddev = Math.sqrt(Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2))/0.5;
+        double xStddev = (Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2))/0.5;
 
-        double yStddev = xStddev * 600;
+        double yStddev = xStddev * 7;
         if(translate.getX() > 8){
-            xStddev = Math.sqrt(Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2))/0.001;
+            xStddev =(Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2))/0.001;
         }
         //photonPose.pose.
         SmartDashboard.putNumberArray("PHOTON/Pose", new Double[]{photonPose.toPose2d().getX(), photonPose.toPose2d().getY(), photonPose.toPose2d().getRotation().getDegrees()});
