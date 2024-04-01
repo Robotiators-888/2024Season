@@ -75,7 +75,6 @@ public class CMD_TeleopAimOnDist extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    currentPose = drivetrain.getPose();
     positionError = Math.sqrt(Math.pow(tagPose.getX() - currentPose.getX(), 2)
                            + Math.pow(tagPose.getY() - currentPose.getY(), 2));
 
@@ -89,13 +88,13 @@ public class CMD_TeleopAimOnDist extends Command {
     SmartDashboard.putNumber("X Error", xError);
     SmartDashboard.putNumber("Y Error", yError);
     SmartDashboard.putNumber("Angle", angle);
-    SmartDashboard.putNumber("Cur Rotation Radians", currentPose.getRotation().getRadians());
+    SmartDashboard.putNumber("Cur Rotation Radians", MathUtil.angleModulus(drivetrain.getRotation2d().getRadians()));
     SmartDashboard.putNumber("Distance error", positionError);
 
     drivetrain.drive(
     -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(1), 2), driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
     -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(0), 2), driverController.getRawAxis(0)), OIConstants.kDriveDeadband), 
-    robotAngleController.calculate(currentPose.getRotation().getRadians(), angle),
+    robotAngleController.calculate(MathUtil.angleModulus(drivetrain.getRotation2d().getRadians()), angle),
   true, true);
     
 
