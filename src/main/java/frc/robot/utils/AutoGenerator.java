@@ -1,12 +1,9 @@
 package frc.robot.utils;
 
-import static edu.wpi.first.units.Units.anonymous;
-
 import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -14,18 +11,17 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.RobotContainer;
 import frc.robot.commands.AutoActions.CMD_Shoot;
 import frc.robot.commands.AutoActions.CMD_ShootSEQ;
 import frc.robot.commands.Limelight.CMD_AutoAimOnDist;
@@ -97,8 +93,14 @@ public class AutoGenerator {
   // ====================================================================
 
   public Command resetOdometry(Pose2d pose) {
+    if(!RobotContainer.standardPosChecker.getSelected()){
+          return new InstantCommand(
+        () -> drivetrain.resetOdometry(drivetrain.getPose()));
+    }  
+    else{
     return new InstantCommand(
         () -> drivetrain.resetOdometry(pose));
+    }
   }
 
   public Command resetOdometry(Pose2d pose, Rotation2d rot) {

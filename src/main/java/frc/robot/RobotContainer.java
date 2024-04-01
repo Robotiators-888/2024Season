@@ -5,7 +5,6 @@
 package frc.robot;
 
 import frc.robot.Constants.*;
-import frc.robot.Constants.PhotonVision.Camera;
 import frc.robot.commands.Limelight.CMD_TeleopAimOnDist;
 import frc.robot.commands.Limelight.CMD_AlignSource;
 import frc.robot.subsystems.SUB_Climber;
@@ -16,13 +15,10 @@ import frc.robot.subsystems.SUB_LEDs.BlinkinPattern;
 import frc.robot.subsystems.Vision.SUB_Limelight;
 import frc.robot.subsystems.Vision.SUB_PhotonVision;
 import frc.robot.subsystems.Vision.NoteDetect.NoteVision;
-import frc.robot.subsystems.Vision.NoteDetect.NoteVisionIOPhotonVision;
 import frc.robot.subsystems.SUB_Intake;
 import frc.robot.subsystems.SUB_LEDs;
 import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.utils.AutoSelector;
-import frc.robot.subsystems.*;
-
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
@@ -32,10 +28,10 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -75,12 +71,17 @@ public class RobotContainer {
   public static CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
   public static CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort);
 
+  public static SendableChooser<Boolean> standardPosChecker = new SendableChooser<Boolean>();
+  
+
   public static AutoSelector autoSelector = new AutoSelector(Driver1);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    standardPosChecker.addOption("True", true);
+    standardPosChecker.setDefaultOption("False", false);
     // Configure the trigger bindings
     configureBindings();
 
@@ -471,7 +472,7 @@ public class RobotContainer {
 
         double yStddev = xStddev * 600;
         if(translate.getX() > 8){
-            xStddev = Math.sqrt(Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2))/0.000001;
+            xStddev = Math.sqrt(Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2))/0.001;
         }
         //photonPose.pose.
         SmartDashboard.putNumberArray("PHOTON/Pose", new Double[]{photonPose.toPose2d().getX(), photonPose.toPose2d().getY(), photonPose.toPose2d().getRotation().getDegrees()});
