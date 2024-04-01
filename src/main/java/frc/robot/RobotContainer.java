@@ -467,9 +467,12 @@ public class RobotContainer {
         Pose2d closestTag = photonVision.at_field.getTagPose(photonVision.getBestTarget().getFiducialId()).get().toPose2d();
         Translation2d translate = closestTag.minus(photonPose.toPose2d()).getTranslation();
         // distance/4 
+        double xStddev = Math.sqrt(Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2))/0.5;
 
-        double xStddev = Math.sqrt(Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2))/2.0;
-        double yStddev = xStddev * 6;
+        double yStddev = xStddev * 600;
+        if(translate.getX() > 8){
+            xStddev = Math.sqrt(Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2))/0.000001;
+        }
         //photonPose.pose.
         SmartDashboard.putNumberArray("PHOTON/Pose", new Double[]{photonPose.toPose2d().getX(), photonPose.toPose2d().getY(), photonPose.toPose2d().getRotation().getDegrees()});
         SmartDashboard.putNumberArray("PHOTON/Pose3d", new Double[]{photonPose.getX(), photonPose.getY(), photonPose.getZ(), photonPose.getRotation().getQuaternion().getW(), photonPose.getRotation().getQuaternion().getX(), photonPose.getRotation().getQuaternion().getY(), photonPose.getRotation().getQuaternion().getZ()});
