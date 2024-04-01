@@ -59,7 +59,6 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().run();
    // m_robotContainer.teleopPeriodic();
     m_robotContainer.robotPeriodic();
-    //RobotContainer.photonPoseUpdate();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -89,7 +88,7 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    //RobotContainer.photonPoseUpdate();
+    RobotContainer.photonPoseUpdate();
   }
 
   @Override
@@ -109,6 +108,8 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopPeriodic() {
     m_robotContainer.teleopPeriodic();
+        RobotContainer.photonPoseUpdate();
+
   }
 
   @Override

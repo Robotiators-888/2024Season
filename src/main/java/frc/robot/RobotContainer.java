@@ -469,7 +469,7 @@ public class RobotContainer {
         Pose2d closestTag = photonVision.at_field.getTagPose(photonVision.getBestTarget().getFiducialId()).get().toPose2d();
         Translation2d translate = closestTag.minus(photonPose.toPose2d()).getTranslation();
         // distance/4 
-        double xStddev = (Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2))/0.5;
+        double xStddev = (Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2))/2.0;
 
         double yStddev = xStddev * 7;
         if(translate.getX() > 8){

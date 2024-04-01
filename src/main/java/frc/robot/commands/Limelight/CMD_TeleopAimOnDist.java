@@ -24,8 +24,6 @@ public class CMD_TeleopAimOnDist extends Command {
   
   Pose2d tagPose;
   Integer targetId;
-
-  Pose2d currentPose;
   Double positionError;
 
   double xError;
@@ -75,6 +73,7 @@ public class CMD_TeleopAimOnDist extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    Pose2d currentPose = drivetrain.getPose();
     positionError = Math.sqrt(Math.pow(tagPose.getX() - currentPose.getX(), 2)
                            + Math.pow(tagPose.getY() - currentPose.getY(), 2));
 
@@ -111,6 +110,6 @@ public class CMD_TeleopAimOnDist extends Command {
   @Override
   public boolean isFinished() {
     return Math.abs(pivot.calculateDegreesRotation()-pivot.distToPivotAngle.get(positionError)) < 5 
-    && (Math.abs(currentPose.getRotation().getRadians()-angle) <= 0.04);
+    && (Math.abs(drivetrain.getRotation2d().getRadians()-angle) <= 0.04);
   }
 }

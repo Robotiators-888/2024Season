@@ -214,7 +214,7 @@ public final class Constants {
       //Setpoints:
       public static double khome = 0;
 
-      public static final double kPivotOffset = 301.86600029468536;
+      public static final double kPivotOffset = 241.6031957;
 
       public static final double kAngularEncoderOffsetInDeg = 0;
       public static final double kMaxArmAngle = 106;

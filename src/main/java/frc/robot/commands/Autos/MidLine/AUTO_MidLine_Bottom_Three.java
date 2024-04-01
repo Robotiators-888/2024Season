@@ -43,7 +43,7 @@ public class AUTO_MidLine_Bottom_Three extends AutoPaths {
         return new SequentialCommandGroup(
             autos.resetOdometry(startingPose), 
             PathPlannerBase.followTrajectory(p0Name).withTimeout(1),
-            autos.scoringSequence(Pivot.kLowAngleSP-1,4000, 0.45),
+            autos.scoringSequence(Pivot.kSpeakerAngleSP-6,4000, 0.45),
             
 
             autos.pathIntake(p1Name).withTimeout(4),
@@ -53,7 +53,7 @@ public class AUTO_MidLine_Bottom_Three extends AutoPaths {
 
             autos.pathIntake(p3Name).withTimeout(4),
             PathPlannerBase.followTrajectory(p4Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP-1, 4500, 0.5)
+            autos.scoringSequence(Pivot.kLowAngleSP-1, 4500, 0.75)
 
             //autos.autoAimShot(0.0)
 
