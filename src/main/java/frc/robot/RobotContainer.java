@@ -80,8 +80,8 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    standardPosChecker.addOption("True", Boolean.TRUE);
-    standardPosChecker.setDefaultOption("False", Boolean.FALSE);
+    standardPosChecker.addOption("Odometery Init", Boolean.TRUE);
+    standardPosChecker.setDefaultOption("ATag Init", Boolean.FALSE);
     SmartDashboard.putData(standardPosChecker);
     // Configure the trigger bindings
     configureBindings();
@@ -98,19 +98,7 @@ public class RobotContainer {
             drivetrain));
 
     shooter.setDefaultCommand(new RunCommand(() -> shooter.shootFlywheelOnRPM(0), shooter));
-    // index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
-    // intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0),
-    // intake));
-    pivot.setDefaultCommand(new RunCommand(() -> pivot.runAutomatic(), pivot));
-    climber.setDefaultCommand(new RunCommand(() -> {
-      climber.runLeft(0);
-      climber.runRight(0);
-    }, climber));
-
-    shooter.setDefaultCommand(new RunCommand(() -> shooter.shootFlywheelOnRPM(0), shooter));
-    // index.setDefaultCommand(new RunCommand(()->index.setMotorSpeed(0), index));
-    // intake.setDefaultCommand(new RunCommand(()->intake.setMotorSpeed(0),
-    // intake));
+    
     pivot.setDefaultCommand(new RunCommand(() -> pivot.runAutomatic(), pivot));
     climber.setDefaultCommand(new RunCommand(() -> {
       climber.runLeft(0);
@@ -174,6 +162,7 @@ public class RobotContainer {
     //   )  
     // );
 
+    //Lob Shot
     Driver1.start().whileTrue(new ParallelCommandGroup(
         new InstantCommand(() -> pivot.goToAngle(Pivot.kSideSP)),
         new RunCommand(() -> shooter.shootFlywheelOnRPM(2500), shooter),
@@ -190,11 +179,13 @@ public class RobotContainer {
     // shooter).withTimeout(0.25)
     ));
 
-    Driver1.back().whileTrue(new InstantCommand(() -> pivot.goToAngle(Pivot.kSideSP)));
+    //Driver1.back().whileTrue(new InstantCommand(() -> pivot.goToAngle(Pivot.kSideSP)));
 
+    //Align to source
     Driver1.a().whileTrue(
         new CMD_AlignSource(pivot, limelight, drivetrain, Driver1));
 
+    // Manual Auto shot
     Driver1.b().whileTrue(
         new ParallelCommandGroup(
             new RunCommand(() -> shooter.shootFlywheelOnRPM(4000), shooter),
@@ -208,6 +199,7 @@ public class RobotContainer {
             new InstantCommand(() -> index.setMotorSpeed(0)),
             new InstantCommand(() -> shooter.setMotorSpeed(0)))); // Spin Shooter OUT
 
+    //Align to Source Intake
     Driver1.y().whileTrue(new ParallelCommandGroup(
         new CMD_AlignSource(pivot, limelight, drivetrain, Driver1),
         new ParallelCommandGroup(
@@ -227,6 +219,7 @@ public class RobotContainer {
                 new InstantCommand(() -> index.setMotorSpeed(0)),
                 new InstantCommand(() -> shooter.shootFlywheelOnRPM(1500))));
 
+    //Robot relative drive
     Driver1.povLeft().whileTrue(
         new RunCommand(
             () -> drivetrain.drive(
@@ -238,16 +231,17 @@ public class RobotContainer {
                 false, true),
             drivetrain));
 
-    /*
-     * ================== *\
-     * Driver Two
-     * \* ==================
-     */
+    /*==================*\
+     *    Driver Two    *
+    \*==================*/
+
+    //Manual setpoint shooter Up and Down
     Driver2.leftBumper().onTrue(new InstantCommand(() -> SUB_Shooter.MANUAL_RPM -= 250)); // Decrease manual RPM by 250
 
     Driver2.rightBumper().onTrue(
         new InstantCommand(() -> SUB_Shooter.MANUAL_RPM += 250)); // Increase manual RPM by 250
 
+    // Manual Source intake 
     Driver2.rightTrigger().whileTrue(
         new ParallelCommandGroup(
             new InstantCommand(() -> index.starttimer()),
@@ -274,24 +268,7 @@ public class RobotContainer {
                 new RunCommand(() -> shooter.setMotorSpeed(0.0), shooter),
                 new RunCommand(() -> index.setMotorSpeed(0.0), index))); // Spin Shooter IN
 
-    Driver2.rightTrigger().whileTrue(
-        new ParallelCommandGroup(
-            new InstantCommand(() -> index.starttimer()),
-            new RunCommand(() -> index.setMotorSpeed(-Constants.Intake.kIndexSpeed), index),
-            new RunCommand(() -> shooter.shootFlywheelOnRPM(-1000), shooter)).until(
-                () -> index.CurrentLimitSpike())
-            .andThen(
-                new RunCommand(() -> index.setMotorSpeed(-0.05)).withTimeout(0.045))
-            .andThen(
-                new ParallelCommandGroup(
-                     new InstantCommand(()->intake.setHasNote(true)),
-                    new InstantCommand(() -> index.setMotorSpeed(0)),
-                    new InstantCommand(() -> shooter.setMotorSpeed(0)))))
-        .onFalse(
-            new ParallelCommandGroup(
-                new RunCommand(() -> shooter.setMotorSpeed(0.0), shooter),
-                new RunCommand(() -> index.setMotorSpeed(0.0), index))); // Spin Shooter IN
-
+    // Auto Aim shot
     Driver2.b().whileTrue(
         new ParallelCommandGroup(
             new ParallelCommandGroup(
@@ -303,6 +280,7 @@ public class RobotContainer {
                 new InstantCommand(()->intake.setHasNote(false)),
                 new InstantCommand(() -> shooter.shootFlywheelOnRPM(0), shooter))); // Spin Shooter OUT
 
+    //Spin manual shooter
     Driver2.back().whileTrue(
         new ParallelCommandGroup(
             new RunCommand(() -> shooter.shootFlywheelOnRPM(SUB_Shooter.SetpointRPM), shooter),
@@ -318,7 +296,7 @@ public class RobotContainer {
         )
     );
 
-
+    // Intake button
     Driver2.a().whileTrue(
         new ParallelCommandGroup(
             new InstantCommand(() -> pivot.goToAngle(75)),
@@ -368,6 +346,7 @@ public class RobotContainer {
     // new InstantCommand(()->intake.setMotorSpeed(0))
     // )); // Suspicious if it will work or not, if it doesn't, just put onTrue();
 
+    //Outtake button
     Driver2.x().whileTrue(
         new ParallelCommandGroup(
             new RunCommand(() -> index.setMotorSpeed(-0.6), index),
@@ -473,15 +452,12 @@ public class RobotContainer {
 
         double yStddev = xStddev * 7;
         if(translate.getX() > 8){
-            xStddev =(Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2))/0.001;
+            xStddev =(Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2))/0.1;
         }
-        //photonPose.pose.
         SmartDashboard.putNumberArray("PHOTON/Pose", new Double[]{photonPose.toPose2d().getX(), photonPose.toPose2d().getY(), photonPose.toPose2d().getRotation().getDegrees()});
         SmartDashboard.putNumberArray("PHOTON/Pose3d", new Double[]{photonPose.getX(), photonPose.getY(), photonPose.getZ(), photonPose.getRotation().getQuaternion().getW(), photonPose.getRotation().getQuaternion().getX(), photonPose.getRotation().getQuaternion().getY(), photonPose.getRotation().getQuaternion().getZ()});
         drivetrain.m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(xStddev, yStddev, rotStddev));
         drivetrain.addVisionMeasurement(photonPose.toPose2d(), photonPoseOptional.get().timestampSeconds);    
-    //photonPose.pose.
-
     }
   }
 

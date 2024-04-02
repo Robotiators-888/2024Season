@@ -78,7 +78,7 @@ public final class Constants {
 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double kDrivingMotorFreeSpeedRps = VortexMotorConstants.kFreeSpeedRpm / 60;
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(2.85);
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(2.90);
     // Thrifty tread 2.95in
     // Orange Tread 2.70
     // Black Rev 2.95
