@@ -24,6 +24,7 @@ public class AUTO_MidLine_FiveP extends AutoPaths {
         String p2Name = "3P_Middle_to_TopGP";
         String p3Name = "TopGP_to_1stGP";
         String p4Name = "1st2nd_ReturnToShoot";
+        String p5name = "TopGP_to_2ndGP";
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
         var alliance = DriverStation.getAlliance();
         
@@ -49,7 +50,9 @@ public class AUTO_MidLine_FiveP extends AutoPaths {
             autos.pathIntake(p3Name).withTimeout(4),
             PathPlannerBase.followTrajectory(p4Name),
 
-            autos.scoringSequence(Pivot.kLowAngleSP-3, 4000)
+            autos.scoringSequence(Pivot.kLowAngleSP-3, 4000),
+
+            autos.pathIntake(p5name)
         );
     }
     

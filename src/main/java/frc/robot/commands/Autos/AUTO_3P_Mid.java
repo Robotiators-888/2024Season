@@ -10,7 +10,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.Constants.*;
+import frc.robot.commands.Limelight.CMD_AutoAimOnDist;
 import frc.robot.utils.AutoGenerator;
 import frc.robot.utils.PathPlannerBase;
 
@@ -35,14 +37,18 @@ public class AUTO_3P_Mid extends AutoPaths{
         } 
 
         return Commands.sequence(
-            autos.scoringSequence(Pivot.kSpeakerAngleSP-2,2500),
+            autos.scoringSequence(Pivot.kSpeakerAngleSP-6,4000, 0.45),
             autos.resetOdometry(startingPose),
 
             autos.pathIntake(p1Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP, 4000),
+            //autos.autoAimShot(0.25),
+             
+           autos.scoringSequence(Pivot.kLowAngleSP+3, 4500, 0.5),
 
             autos.pathIntake(p2Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP-5, 4500)
+            //autos.autoAimShot(0.25)
+                       autos.scoringSequence(Pivot.kLowAngleSP-4, 4500, 0.5)
+
         );
     }
     

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SUB_Index extends SubsystemBase {
 
+  private static SUB_Index INSTANCE = null;
   CANSparkMax indexLeft;
   CANSparkMax indexRight;
   DigitalInput dio9 = new DigitalInput(9);
@@ -30,17 +31,27 @@ public class SUB_Index extends SubsystemBase {
   }
 
   public boolean CurrentLimitSpike(){
-    return (currentTimer.hasElapsed(.2) && indexLeft.getOutputCurrent() > 20);
+    double avg = (indexLeft.getOutputCurrent()+indexRight.getOutputCurrent())/2.0;
+
+    SmartDashboard.putNumber("Index/OutputCurrent", avg);
+    return (currentTimer.hasElapsed(.25) && avg > 15.0);
+  }
+
+  public static SUB_Index getInstance(){
+    if (INSTANCE == null){
+      INSTANCE = new SUB_Index();
+    } 
+
+    return INSTANCE;
   }
 
   /** Creates a new SUB_Index. */
-  public SUB_Index() {
+  private SUB_Index() {
     this.indexLeft = new CANSparkMax(32, MotorType.kBrushless);
     this.indexRight = new CANSparkMax(33, MotorType.kBrushless);
 
     indexLeft.restoreFactoryDefaults();
     indexRight.restoreFactoryDefaults();
-    for(int i =0; i<5 ; i++){
     indexLeft.setInverted(true);
     indexRight.setInverted(false);
 
@@ -52,7 +63,7 @@ public class SUB_Index extends SubsystemBase {
     indexLeft.setIdleMode(IdleMode.kBrake);
     indexRight.setIdleMode(IdleMode.kBrake);
     Timer.delay(.1);
-    }
+    
     indexLeft.burnFlash();
     indexRight.burnFlash();
     //Timer.delay(0.2);
@@ -62,11 +73,11 @@ public class SUB_Index extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     //SmartDashboard.putNumber("Index RPM", indexLeft.getEncoder().getVelocity());
-    SmartDashboard.putBoolean("Banner", getTopBannerSensor());
-    SmartDashboard.putNumber("LeftIndexCurrent", indexLeft.getOutputCurrent());
-    SmartDashboard.putNumber("RightIndexCurrent", indexRight.getOutputCurrent());
-    SmartDashboard.putNumber("LeftIndexVelocity", indexLeft.getEncoder().getVelocity());
-    SmartDashboard.putNumber("RightIndexVelocity", indexRight.getEncoder().getVelocity());
+    SmartDashboard.putBoolean("Index/Banner", getTopBannerSensor());
+    SmartDashboard.putNumber("Index/LeftIndexCurrent", indexLeft.getOutputCurrent());
+    SmartDashboard.putNumber("Index/RightIndexCurrent", indexRight.getOutputCurrent());
+    SmartDashboard.putNumber("Index/LeftIndexVelocity", indexLeft.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Index/RightIndexVelocity", indexRight.getEncoder().getVelocity());
   }
 
   public void setMotorSpeed(double speed){

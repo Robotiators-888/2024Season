@@ -4,14 +4,28 @@
 
 package frc.robot;
 
+import java.util.function.Supplier;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Radians;
+
+
+
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.libs.PIDGains;
+
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -24,13 +38,29 @@ import frc.libs.PIDGains;
 public final class Constants {
   public static final class OIConstants {
     public static final int kDriver1ontrollerPort = 0;
-    public static final double kDriveDeadband = 0.025;
+    public static final double kDriveDeadband = 0.05;
     public static final int kDriver2ControllerPort =1;
   }
 
-  public static final class NeoMotorConstants {
-    public static final double kFreeSpeedRpm = 5676;
-  }
+  public static final class FieldConstants {
+        public static final double fieldLength = Units.inchesToMeters(648);
+        public static final double fieldWidth =  Units.inchesToMeters(324);
+
+        public static final Translation2d speakerAimPoint = new Translation2d(0.240581, 5.547755);
+
+        public static final Pose2d subwooferFront =     new Pose2d(new Translation2d(1.45, 5.55), Rotation2d.fromDegrees(+180));
+        public static final Pose2d subwooferAmp =       new Pose2d(new Translation2d(0.71, 6.72), Rotation2d.fromDegrees(-120));
+        public static final Pose2d subwooferSource =    new Pose2d(new Translation2d(0.71, 4.57), Rotation2d.fromDegrees(+120));
+        
+        public static final Pose2d amp =                new Pose2d(new Translation2d(1.83, 7.61), Rotation2d.fromDegrees(-90));
+        public static final Pose2d podium =             new Pose2d(new Translation2d(2.76, 4.44), Rotation2d.fromDegrees(+157.47));
+
+        public static final Pose2d pathfindSpeaker =    new Pose2d(new Translation2d(3.45, 5.55), Rotation2d.fromDegrees(+180));
+        public static final Pose2d pathfindSource =     new Pose2d(new Translation2d(13.41, 1.54), Rotation2d.fromDegrees(+180));
+
+        public static final double podiumToSpeakerDist =    speakerAimPoint.getDistance(podium.getTranslation());
+        public static final double subwooferToSpeakerDist = speakerAimPoint.getDistance(subwooferFront.getTranslation());
+    }
 
   public static final class VortexMotorConstants{
     public static final double kFreeSpeedRpm = 6784;
@@ -47,8 +77,11 @@ public final class Constants {
     public static final boolean kTurningEncoderInverted = true;
 
     // Calculations required for driving motor conversion factors and feed forward
-    public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(2.80);
+    public static final double kDrivingMotorFreeSpeedRps = VortexMotorConstants.kFreeSpeedRpm / 60;
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(2.90);
+    // Thrifty tread 2.95in
+    // Orange Tread 2.70
+    // Black Rev 2.95
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
     // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the
     // bevel pinion
@@ -86,10 +119,14 @@ public final class Constants {
     public static final double kTurningMinOutput = -1;
     public static final double kTurningMaxOutput = 1;
 
+    public static final double headingTolerance = Degrees.of(1).in(Radians);
+    // Max Rot = Max Linear ((meters/sec)/60 (m/s)) / radius
+    public static final double kMaxRotationalSpeed = (kDrivingMotorFreeSpeedRps/60) / Drivetrain.kTrackRadius;
+
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
-    public static final int kDrivingMotorCurrentLimit = 50; // amps
+    public static final int kDrivingMotorCurrentLimit = 60; // amps
     public static final int kTurningMotorCurrentLimit = 20; // amps
 
     
@@ -116,10 +153,12 @@ public final class Constants {
     // public static final int kBACK_RIGHT_DRIVE_MOTOR_CANID = 26;
     // public static final int kBACK_RIGHT_STEER_MOTOR_CANID = 27;
 
+    public static final Rotation2d shooterSide = new Rotation2d(0);
+    public static final Rotation2d intakeSide = new Rotation2d(180);
 
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 4.8;
+    public static final double kMaxSpeedMetersPerSecond = 5.74;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 100000; // radians per second
@@ -158,7 +197,7 @@ public final class Constants {
 
       public static final double kIndexSpeed = 0.3;
       public static final double kOutakeSpeed = -0.5;
-      public static final double kOutakeRPM = NeoMotorConstants.kFreeSpeedRpm;
+      public static final double kOutakeRPM = VortexMotorConstants.kFreeSpeedRpm;
       public static final double kIntakingSpeed = 0.35;
     }
     public static final class Climber{
@@ -175,7 +214,7 @@ public final class Constants {
       //Setpoints:
       public static double khome = 0;
 
-      public static final double kPivotOffset = 301.86600029468536;
+      public static final double kPivotOffset = 241.6031957;
 
       public static final double kAngularEncoderOffsetInDeg = 0;
       public static final double kMaxArmAngle = 106;
@@ -207,6 +246,80 @@ public final class Constants {
 
         
     }
+
+  public static class PhotonVision{
+    public static final double targetWidth = 0;
+    public static final double targetHeight = 0;
+    public static final String kCamName = "AprilTagCam";
+
+    //Camera Specs
+    public static final double camDiagFOV = 0; // degrees
+    public static final double camPitch = 0; // degrees
+    public static final double camHeightOffGround = 0; // meters
+    public static final int camResolutionWidth = 0; // pixels
+    public static final int camResolutionHeight = 0; // pixels
+    public static final double minTargetArea = 0; // square pixels
+    public static final Rotation3d cameraRotation = new Rotation3d(0,-14,0);
+    public static final Transform3d kCameraToRobot = new Transform3d(Units.inchesToMeters(-15.5 + 2.25), Units.inchesToMeters(12.0 - 3.75), Units.inchesToMeters(15.5),cameraRotation);
+  
+    public static enum Camera {
+            NoteVision(
+                "NoteCamera",
+                new Transform3d(
+                    new Translation3d(
+                        Inches.of(-Drivetrain.kWheelBase/2),
+                        Inches.of(+3.5),
+                        Inches.of(+Drivetrain.kTrackWidth/2)
+                    ),
+                    new Rotation3d(
+                        0,
+                        0,
+                        Math.PI
+                    )
+                )
+            ),
+
+            AprilTagShooterSide(
+              "AprilTagCam",
+              new Transform3d(
+                new Translation3d(
+                  Inches.of(-15.5 + 2.25),
+                  Inches.of(12.0 - 3.75),
+                  Inches.of(15.5)
+                ),
+                new Rotation3d(
+                  0,
+                  -14,
+                  0
+                )
+              )
+            )
+            ;
+            public final String hardwareName;
+            private final Transform3d intermediateToCamera;
+            private Supplier<Transform3d> robotToIntermediate;
+            Camera(String hardwareName, Transform3d finalToCamera) {
+                this.hardwareName = hardwareName;
+                this.intermediateToCamera = finalToCamera;
+                this.robotToIntermediate = Transform3d::new;
+            }
+            @SuppressWarnings("unused")
+            private static Transform3d robotToCameraFromCalibTag(Transform3d robotToCalibTag, Transform3d cameraToCalibTag) {
+                return robotToCalibTag.plus(cameraToCalibTag.inverse());
+            }
+            public Camera withRobotToIntermediate(Supplier<Transform3d> robotToFinal) {
+                this.robotToIntermediate = robotToFinal;
+                return this;
+            }
+
+            public Transform3d getRobotToCam() {
+                return robotToIntermediate.get().plus(intermediateToCamera);
+            }
+        }
+  
+  }
+
+
 
   public static class Limelight{
     public static final String LIMELIGHT_NAME = "limelight";

@@ -16,19 +16,30 @@
     },
     {
       "anchor": {
-        "x": 2.934213868427737,
-        "y": 6.875285750571502
+        "x": 2.9928516999891146,
+        "y": 7.1391559925977
       },
       "prevControl": {
-        "x": 1.6337246190270946,
-        "y": 6.526820706429243
+        "x": 1.8473684787901141,
+        "y": 6.96292780472093
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "TopHomeGamePiece"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.2,
+      "rotationDegrees": -120.0,
+      "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 0.8,
+      "rotationDegrees": -164.74,
+      "rotateFast": true
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -39,8 +50,8 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -152.44718842328223,
-    "rotateFast": true
+    "rotation": -154.65382405805315,
+    "rotateFast": false
   },
   "reversed": false,
   "folder": "3 Piece Path",

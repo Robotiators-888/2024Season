@@ -1,5 +1,5 @@
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.Vision;
 
 import frc.robot.LimelightHelpers;
 import frc.robot.LimelightHelpers.*;
@@ -11,14 +11,24 @@ import static frc.robot.Constants.Limelight.*;
 
 public class SUB_Limelight extends SubsystemBase {
 
+  public static SUB_Limelight INSTANCE = null;
+
   public enum LED_Mode {
     FORCE_OFF,
     FORCE_ON,
     FORCE_BLINK
   }
 
+  public static SUB_Limelight getInstance(){
+    if(INSTANCE == null){
+      INSTANCE = new SUB_Limelight();
+    }
+
+    return INSTANCE;
+  }
+
   /** Creates a new SUB_Limelight. */
-  public SUB_Limelight() {
+  private SUB_Limelight() {
 
   }
 

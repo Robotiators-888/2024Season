@@ -5,33 +5,40 @@
 package frc.robot.subsystems;
 
 import java.io.IOException;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Drivetrain;
+import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.Swerve;
+import frc.robot.subsystems.Vision.*;
 import frc.robot.utils.*;
 //import org.littletonrobotics.junction.Logger;
 
 public class SUB_Drivetrain extends SubsystemBase {
   public final Field2d m_field = new Field2d();
+  private static SUB_Drivetrain INSTANCE = null;
   /** Creates a new Drivetrain. */
 
   private final MAXSwerveModule frontLeft 
@@ -52,6 +59,8 @@ public class SUB_Drivetrain extends SubsystemBase {
   
     private MAXSwerveModule[] modules = new MAXSwerveModule[]{frontLeft, frontRight, backLeft, backRight};
     private SwerveModuleState[] moduleStates = getModuleStates();
+    private ChassisSpeeds setpoint = new ChassisSpeeds();
+
 
   public AprilTagFieldLayout at_field;
 
@@ -63,8 +72,8 @@ public class SUB_Drivetrain extends SubsystemBase {
   AHRS navx = new AHRS();
   
 
-  private void setGyroRotation(){
-    navx.setAngleAdjustment(Constants.Drivetrain.kGyroRotation);
+  public void setGyroRotation(double angleDegrees){
+    navx.setAngleAdjustment(angleDegrees);
   }
 
   public double getAngle(){
@@ -83,10 +92,12 @@ public class SUB_Drivetrain extends SubsystemBase {
   private SlewRateLimiter m_rotLimiter =
       new SlewRateLimiter(Constants.Drivetrain.kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
+  public static SUB_PhotonVision photonVision = SUB_PhotonVision.getInstance();
+  public static SUB_Limelight limelight = SUB_Limelight.getInstance();
 
   Pose2d pose = new Pose2d();
   // Odometry class for tracking robot pose
-  SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
+  public SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
           Constants.Drivetrain.kDriveKinematics,
           Rotation2d.fromDegrees(getAngle()),
           new SwerveModulePosition[] {
@@ -96,11 +107,16 @@ public class SUB_Drivetrain extends SubsystemBase {
             backRight.getPosition()
           },
           new Pose2d(0, 0, new Rotation2d(0)));
+  
+  public static SUB_Drivetrain getInstance(){
+    if (INSTANCE == null){
+      INSTANCE = new SUB_Drivetrain();
+    } 
 
-  SwerveDriveOdometry auto_odometry = new SwerveDriveOdometry(Drivetrain.kDriveKinematics, navx.getRotation2d(), getPositions());
-  
-  
-  public SUB_Drivetrain() {
+    return INSTANCE;
+  }
+
+  private SUB_Drivetrain() {
     
     try {
       at_field = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("2024_at_field.json"));
@@ -109,7 +125,7 @@ public class SUB_Drivetrain extends SubsystemBase {
       SmartDashboard.putBoolean("FILE FOUND?", false);      
     }      
   }
-
+  
   @Override
   public void periodic() {
     m_poseEstimator.update(
@@ -132,17 +148,18 @@ public class SUB_Drivetrain extends SubsystemBase {
     m_lastFieldRelVel = m_fieldRelVel;
 
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("rotation", getPose().getRotation().getDegrees());
-    //SmartDashboard.putNumber("Speed", m_poseEstimator);
-    SmartDashboard.putData("Field", m_field);
+    //SmartDashboard.putNumber("Drive/rotation", getPose().getRotation().getDegrees());
+    SmartDashboard.putNumberArray("Drive/PoseEstimator", new double[]{m_poseEstimator.getEstimatedPosition().getX(), m_poseEstimator.getEstimatedPosition().getY(), 
+        m_poseEstimator.getEstimatedPosition().getRotation().getDegrees()});
+    SmartDashboard.putData("Drive/Field", m_field);
     SmartDashboard.putNumberArray(
         "Odometry",
         new double[] {getPose().getX(), getPose().getY(), getPose().getRotation().getDegrees()});
 
-    SmartDashboard.putNumber("Robot Pose X ft", Units.metersToInches(getPose().getX()));
-    SmartDashboard.putNumber("Robot Pose Y ft", Units.metersToInches(getPose().getY()));
-
-    SmartDashboard.putNumber("Robot Speed", modules[0].getVelocityDrive());
+    SmartDashboard.putNumber("Drive/Robot Pose X meters", (getPose().getX()));
+    SmartDashboard.putNumber("Drive/Robot Pose Y meters", (getPose().getY()));
+    SmartDashboard.putNumber("Drive/rotation", getPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("Drive/Robot Speed", modules[0].getVelocityDrive());
   }
 
   /**
@@ -339,10 +356,6 @@ public Rotation2d getRotation2d(){
     return Drivetrain.kDriveKinematics.toChassisSpeeds(getModuleStates());
   }
 
-  public Pose2d getPose2d(){
-    return auto_odometry.getPoseMeters();
-  }
-
   public void resetPose(Pose2d pose){
     m_poseEstimator.resetPosition(getRotation2d(), getPositions(), pose);
 
@@ -350,7 +363,7 @@ public Rotation2d getRotation2d(){
   }
 
   public void driveFieldRelative(ChassisSpeeds fieldRelativeSpeeds){
-    driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getPose2d().getRotation()));
+    driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getPose().getRotation()));
   }
 
   public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds){
@@ -360,12 +373,93 @@ public Rotation2d getRotation2d(){
     setModuleStates(targetStates);
   }
 
+  public void driveVelocity(ChassisSpeeds speeds) {
+    setpoint.vxMetersPerSecond = speeds.vxMetersPerSecond;
+    setpoint.vyMetersPerSecond = speeds.vyMetersPerSecond;
+}
+public void driveVelocity(double omega) {
+  setpoint.omegaRadiansPerSecond = omega;
+}
+
+public void stop() {
+    driveVelocity(new ChassisSpeeds());
+}
+
+public Command pidControlledHeading(Supplier<Optional<Rotation2d>> headingSupplier) {
+            var subsystem = this;
+            return new Command() {
+                private final PIDController headingPID = new PIDController(Swerve.kDrivingP, Swerve.kDrivingI, Swerve.kDrivingD);
+                {
+                    addRequirements(subsystem);
+                    setName("PID Controlled Heading");
+                    headingPID.enableContinuousInput(-Math.PI, Math.PI);  // since gyro angle is not limited to [-pi, pi]
+                    headingPID.setTolerance(Swerve.headingTolerance);
+                }
+                private Rotation2d desiredHeading;
+                private boolean headingSet;
+                @Override
+                public void initialize() {
+                    desiredHeading = getPose().getRotation();
+                }
+                @Override
+                public void execute() {
+                    var heading = headingSupplier.get();
+                    headingSet = heading.isPresent();
+                    heading.ifPresent((r) -> desiredHeading = r);
+                    double turnInput = headingPID.calculate(getPose().getRotation().getRadians(), desiredHeading.getRadians());
+                    turnInput = headingPID.atSetpoint() ? 0 : turnInput;
+                    turnInput = MathUtil.clamp(turnInput, -0.5, +0.5);
+                    driveVelocity(turnInput * Swerve.kMaxRotationalSpeed);
+                }
+                @Override
+                public void end(boolean interrupted) {
+                    stop();
+                }
+                @Override
+                public boolean isFinished() {
+                    return !headingSet && headingPID.atSetpoint();
+                }
+            };
+        }
+
+  public Command fieldRelative(Supplier<ChassisSpeeds> speeds) {
+            var subsystem = this;
+            return new Command() {
+                {
+                    addRequirements(subsystem);
+                    setName("Field Relative");
+                }
+                @Override
+                public void execute() {
+                    driveVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(speeds.get(), getPose().getRotation()));
+                }
+                @Override
+                public void end(boolean interrupted) {
+                    stop();
+                }
+            };
+        }
+
+
+        public Command pointTo(Supplier<Optional<Translation2d>> posToPointTo, Supplier<Rotation2d> forward) {
+            return pidControlledHeading(
+                () -> posToPointTo.get().map((pointTo) -> {
+                    var FORR = pointTo.minus(getPose().getTranslation());
+                    return new Rotation2d(FORR.getX(), FORR.getY()).minus(forward.get());
+                })
+            );
+        }
+
+         public static Translation2d getFORR(Translation2d pos) {
+        return AllianceFlipUtil.apply(FieldConstants.speakerAimPoint).minus(pos);
+        }
   /**
    * Allows for vision measurements to be added to drive odometry.
    * @param visionPose The pose supplied by getPose() in SUB_Limelight
    */
-  public void addVisionMeasurement(Pose2d visionPose, double latency){
-    m_poseEstimator.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latency);
+  public void addVisionMeasurement(Pose2d visionPose, double timestampSeconds){
+    //visionPose.rotateBy();
+    m_poseEstimator.addVisionMeasurement(visionPose, timestampSeconds);
   }
 
   public FieldRelativeSpeed getFieldRelativeSpeed() {

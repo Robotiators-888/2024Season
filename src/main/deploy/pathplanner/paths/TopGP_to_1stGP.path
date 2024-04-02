@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.934213868427737,
-        "y": 6.875285750571502
+        "x": 2.9928516999891146,
+        "y": 7.1391559925977
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8594118547807756,
-        "y": 6.816543021279245
+        "x": 4.216903321616508,
+        "y": 7.224883663158587
       },
       "isLocked": false,
       "linkedName": "TopHomeGamePiece"
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 8.29957545629377,
-        "y": 7.241772197830111
+        "y": 7.417685692514242
       },
       "prevControl": {
-        "x": 7.389063152263794,
-        "y": 7.329886291768496
+        "x": 7.345006105294602,
+        "y": 7.329571598575857
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -178.24822952617853,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,

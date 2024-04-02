@@ -12,7 +12,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 public class PathPlannerBase {
 
   static final SUB_Drivetrain drivetrain = RobotContainer.drivetrain;
-  static final PathConstraints constraints = new PathConstraints(.5, 0.5, 1, 0.5);
+  static final PathConstraints constraints = new PathConstraints(1, 0.5, 1, 0.5);
 
   public Command followPathCommand(String pathName){
     PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
@@ -22,6 +22,7 @@ public class PathPlannerBase {
   }
 
   public static Command followTrajectory(String PathName){
+    
     PathPlannerPath path = PathPlannerPath.fromPathFile(PathName);
     return AutoBuilder.pathfindThenFollowPath(path, constraints);
   }

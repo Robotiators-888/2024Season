@@ -13,18 +13,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.SUB_Drivetrain;
-import frc.robot.subsystems.SUB_Limelight;
+import frc.robot.subsystems.*;
 import frc.robot.subsystems.SUB_Pivot;
+import frc.robot.subsystems.Vision.*;
 
-public class CMD_AimOnDist extends Command {
+public class CMD_TeleopAimOnDist extends Command {
   SUB_Pivot pivot;
   SUB_Limelight limelight;
   SUB_Drivetrain drivetrain;
   
   Pose2d tagPose;
   Integer targetId;
-
-  Pose2d currentPose;
   Double positionError;
 
   double xError;
@@ -33,11 +32,11 @@ public class CMD_AimOnDist extends Command {
 
   CommandXboxController driverController;
 
-  private final PIDController robotAngleController = new PIDController( 0.5, 0.01, 0); // 0.25, 0, 0
+  private final PIDController robotAngleController = new PIDController( 0.5, 0, 0.05); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
-  public CMD_AimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain, CommandXboxController driverController) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public CMD_TeleopAimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain, CommandXboxController driverController) {
+    // Use addRequirements() here to declare subsystem dependencies.  
     this.pivot = pivot;
     this.limelight = limelight;
     this.drivetrain = drivetrain;
@@ -48,6 +47,8 @@ public class CMD_AimOnDist extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    robotAngleController.reset();
+    
     var alliance = DriverStation.getAlliance();
     if (alliance.isPresent()){
       if (alliance.get() == DriverStation.Alliance.Red){
@@ -61,40 +62,41 @@ public class CMD_AimOnDist extends Command {
       SmartDashboard.putBoolean("Alliance Error", true);
       end(true);
     }
-  
 
-    robotAngleController.setTolerance(0.07);
-    robotAngleController.setSetpoint(angle);
+    SmartDashboard.putBoolean("SPEAKER LOCK?", false);
+
+    robotAngleController.setTolerance(0.04);
+    robotAngleController.enableContinuousInput(-Math.PI, Math.PI);
 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putBoolean("SPEAKER LOCK?", false);
-    currentPose = drivetrain.getPose();
+    Pose2d currentPose = drivetrain.getPose();
     positionError = Math.sqrt(Math.pow(tagPose.getX() - currentPose.getX(), 2)
                            + Math.pow(tagPose.getY() - currentPose.getY(), 2));
 
     xError = tagPose.getX() - currentPose.getX();
     yError = tagPose.getY() - currentPose.getY();
-    angle = Math.atan2(yError, xError); // x and y are not flipped???
-
-    pivot.goToAngle(pivot.distToPivotAngle.get(positionError) + 27);
+    angle = Math.atan2(yError, xError);
+    
+    pivot.goToAngle((pivot.distToPivotAngle.get(positionError) + 27));
     pivot.runAutomatic();
 
     SmartDashboard.putNumber("X Error", xError);
     SmartDashboard.putNumber("Y Error", yError);
     SmartDashboard.putNumber("Angle", angle);
-    SmartDashboard.putNumber("Cur Rotation Radians", currentPose.getRotation().getRadians());
+    SmartDashboard.putNumber("Cur Rotation Radians", MathUtil.angleModulus(currentPose.getRotation().getRadians()));
     SmartDashboard.putNumber("Distance error", positionError);
 
-
     drivetrain.drive(
-      -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(1), 2), driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
-      -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(0), 2), driverController.getRawAxis(0)), OIConstants.kDriveDeadband), 
-      robotAngleController.calculate(currentPose.getRotation().getRadians(), angle),
-     true, true);
+    -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(1), 2), driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
+    -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(0), 2), driverController.getRawAxis(0)), OIConstants.kDriveDeadband), 
+    robotAngleController.calculate(MathUtil.angleModulus(currentPose.getRotation().getRadians()), angle),
+  true, true);
+    
+
   }
 
   // Called once the command ends or is interrupted.
@@ -108,6 +110,6 @@ public class CMD_AimOnDist extends Command {
   @Override
   public boolean isFinished() {
     return Math.abs(pivot.calculateDegreesRotation()-pivot.distToPivotAngle.get(positionError)) < 5 
-    && (currentPose.getRotation().getRadians()-angle <= 0.07);
+    && (Math.abs(drivetrain.getRotation2d().getRadians()-angle) <= 0.04);
   }
 }
