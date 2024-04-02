@@ -403,7 +403,6 @@ public class RobotContainer {
 
   public void teleopPeriodic() {
     photonPoseUpdate();
-    // limelightPoseUpdate();
   }
 
   public void robotPeriodic() {
@@ -432,9 +431,9 @@ public class RobotContainer {
 
   public static void photonPoseUpdate() {
     Optional<EstimatedRobotPose> photonPoseOptional = photonVision.getEstimatedGlobalPose(drivetrain.getPose());
-
     
     if (photonPoseOptional.isPresent()) {
+        SmartDashboard.putNumber("sdfjisda", 2);
         Pose3d photonPose = photonPoseOptional.get().estimatedPose;
         if (photonPose.getX() >= 0 && photonPose.getX() <= 1655.0 / 100 &&
         photonPose.getY() >= 0

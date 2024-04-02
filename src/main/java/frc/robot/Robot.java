@@ -57,7 +57,6 @@ public class Robot extends LoggedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-   // m_robotContainer.teleopPeriodic();
     m_robotContainer.robotPeriodic();
   }
 
@@ -67,7 +66,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledPeriodic() {
-    
     SmartDashboard.putNumber("STARTING POSE/ABSOLUTE X meters", (SUB_Drivetrain.getInstance().getPose().getX()));
     SmartDashboard.putNumber("STARTING POSE/ABSOLUTE Y meters", (SUB_Drivetrain.getInstance().getPose().getY()));
     SmartDashboard.putNumber("STARTING POSE/ABSOLUTE ROTATION degrees", SUB_Drivetrain.getInstance().getPose().getRotation().getDegrees());
@@ -108,8 +106,6 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopPeriodic() {
     m_robotContainer.teleopPeriodic();
-        RobotContainer.photonPoseUpdate();
-
   }
 
   @Override
