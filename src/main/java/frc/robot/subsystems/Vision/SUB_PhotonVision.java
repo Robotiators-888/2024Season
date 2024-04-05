@@ -30,6 +30,11 @@ public class SUB_PhotonVision extends SubsystemBase {
   private PhotonTrackedTarget bestTarget;
   public PhotonPoseEstimator poseEstimator;
   Transform3d robotToCam = new Transform3d(Units.inchesToMeters(-(-15.5 + 2.25)), Units.inchesToMeters(-(12.0 - 3.75)), Units.inchesToMeters(17.0), new Rotation3d(0,Units.degreesToRadians(-14),0));
+  
+  private PhotonCamera noteCam = new PhotonCamera("NoteDetect");
+  private PhotonTrackedTarget note;
+  public boolean hasResults = false;
+
   public AprilTagFieldLayout at_field;
 
   public static SUB_PhotonVision getInstance(){
@@ -79,7 +84,9 @@ public class SUB_PhotonVision extends SubsystemBase {
     return target.getFiducialId();
   }
 
-
+  public PhotonTrackedTarget getBestNote(){
+    return note;
+  }
 
 
   @Override
@@ -89,6 +96,17 @@ public class SUB_PhotonVision extends SubsystemBase {
 
     if (result.hasTargets()){
       bestTarget = result.getBestTarget();
+    }
+    
+    // COMMENT OUT BELOW IF IT DOESN'T WORK
+    // DO NOT COMMENT OUT ABOVE
+    var intakeResults = noteCam.getLatestResult();
+
+    if (intakeResults.hasTargets()){
+      hasResults = true;
+      note = intakeResults.getBestTarget();
+    } else {
+      hasResults = false;
     }
   }
 }

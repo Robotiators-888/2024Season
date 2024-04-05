@@ -7,16 +7,11 @@ package frc.robot.commands.Autos.MidLine;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.Pivot;
 import frc.robot.commands.Autos.AutoPaths;
-import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.utils.AutoGenerator;
 import frc.robot.utils.PathPlannerBase;
 
@@ -25,12 +20,16 @@ public class AUTO_MidLine_Bottom_Two extends AutoPaths {
 
     @Override
     public Command load(AutoGenerator autos) {
+        String p0Name = "ROT_To_152Deg";
         String p1Name = "BottomStart_5GP";
         String p2Name = "5th_to_BottomGP";
+       
         
-        PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
+        PathPlannerPath p1 = PathPlannerPath.fromPathFile(p0Name);
         var alliance = DriverStation.getAlliance();
         
+        // 3.07, 3.09, 147.99
+
         Pose2d startingPose = null;
         if (alliance.isPresent()) {
             if (alliance.get() == DriverStation.Alliance.Red){
@@ -41,11 +40,10 @@ public class AUTO_MidLine_Bottom_Two extends AutoPaths {
         }
 
         return new SequentialCommandGroup(
-            //autos.aimAtPoint(startingPose.getTranslation(), SUB_Drivetrain.getInstance()),
-            autos.scoringSequence(Pivot.kSpeakerAngleSP-8,4000, 0.45).withTimeout(3.5),
-            //autos.resetOdometry(startingPose, new Rotation2d(120)),
-            autos.resetOdometry(startingPose),
-            new RunCommand(()->RobotContainer.photonPoseUpdate()).withTimeout(0.5),
+            autos.resetOdometry(startingPose), 
+            PathPlannerBase.followTrajectory(p0Name).withTimeout(1),
+            autos.scoringSequence(Pivot.kSpeakerAngleSP-10,4000, 0.45),
+            
 
             autos.pathIntake(p1Name).withTimeout(4),
             PathPlannerBase.followTrajectory(p2Name).withTimeout(4),

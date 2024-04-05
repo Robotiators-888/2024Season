@@ -32,10 +32,9 @@ public class CMD_AutoAimOnDist extends Command {
   private final PIDController robotAngleController = new PIDController( 1.2, 0, 0); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
-  public CMD_AutoAimOnDist(SUB_Pivot pivot, SUB_Limelight limelight, SUB_Drivetrain drivetrain) {
+  public CMD_AutoAimOnDist(SUB_Pivot pivot, SUB_Drivetrain drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pivot = pivot;
-    this.limelight = limelight;
     this.drivetrain = drivetrain;
     //addRequirements(pivot, limelight, drivetrain);
   }

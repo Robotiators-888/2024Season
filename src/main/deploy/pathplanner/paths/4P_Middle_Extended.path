@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.52,
-        "y": 4.023876956519567
+        "x": 2.3372408819951813,
+        "y": 4.581932884796002
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9530127018922199,
-        "y": 3.773876956519567
+        "x": 3.1541057367829026,
+        "y": 5.130810261620524
       },
       "isLocked": false,
-      "linkedName": "BottomRobotStart"
+      "linkedName": "4P_MiddleEnd"
     },
     {
       "anchor": {
-        "x": 2.93935385724081,
-        "y": 2.1881666661365524
+        "x": 5.7341703254835075,
+        "y": 6.406183098080483
       },
       "prevControl": {
-        "x": 2.381297928964374,
-        "y": 2.4965659949208994
+        "x": 5.112256069901101,
+        "y": 6.643102814492829
       },
       "nextControl": {
-        "x": 3.623494412884188,
-        "y": 1.8100889906494215
+        "x": 6.349867556877971,
+        "y": 6.1716317718349725
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.343553829964803,
-        "y": 1.0847998838854824
+        "x": 8.240937624732393,
+        "y": 5.775826408795675
       },
       "prevControl": {
-        "x": 7.286184702704188,
-        "y": 0.9379430606548417
+        "x": 6.760332377807613,
+        "y": 5.614572372001888
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,11 +55,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -179.6416782997656,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Mid Line Paths",
-  "previewStartingState": null,
+  "folder": "4 Piece Path",
+  "previewStartingState": {
+    "rotation": 143.92637588327048,
+    "velocity": 0.0
+  },
   "useDefaultConstraints": true
 }

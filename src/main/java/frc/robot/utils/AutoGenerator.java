@@ -41,7 +41,7 @@ public class AutoGenerator {
   SUB_Intake intake = SUB_Intake.getInstance();
   SUB_Shooter shooter = SUB_Shooter.getInstance();
   SUB_Pivot pivot = SUB_Pivot.getInstance();
-  SUB_Limelight limelight = SUB_Limelight.getInstance();
+  // SUB_Limelight limelight = SUB_Limelight.getInstance();
   CommandXboxController driver1;
 
   public static enum StartPosition {
@@ -160,7 +160,7 @@ public class AutoGenerator {
   public Command autoAimShot(double delay) {
     return new SequentialCommandGroup(
         new ParallelDeadlineGroup(
-            new CMD_AutoAimOnDist(pivot, limelight, drivetrain).withTimeout(2.0),
+            new CMD_AutoAimOnDist(pivot, drivetrain).withTimeout(2.0),
             new RunCommand(() -> shooter.shootFlywheelOnRPM(4500), shooter)).andThen(
                 new ParallelCommandGroup(
                     new RunCommand(() -> shooter.shootFlywheelOnRPM(4500), shooter),

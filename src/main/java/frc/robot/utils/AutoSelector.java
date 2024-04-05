@@ -46,9 +46,9 @@ public class AutoSelector {
         //chooser.addOption("Beline", new AUTO_MidLine_Beline());
         chooser.addOption("Gerstner Auto", new AUTO_Silly_GERSTNER());
 
-        chooser.addOption("1 Meter back", new AUTO_1_Meter());
-        chooser.addOption("2 Meter", new AUTO_2_Meter());
-        chooser.addOption("5 Meter", new AUTO_5_Meter());
+        // chooser.addOption("1 Meter back", new AUTO_1_Meter());
+        // chooser.addOption("2 Meter", new AUTO_2_Meter());
+        // chooser.addOption("5 Meter", new AUTO_5_Meter());
 
 
         SmartDashboard.putData("Auto Selector", chooser);
