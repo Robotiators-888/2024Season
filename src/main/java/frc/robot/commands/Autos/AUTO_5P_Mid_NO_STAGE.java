@@ -12,14 +12,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.*;
 import frc.robot.utils.AutoGenerator;
+import frc.robot.utils.PathPlannerBase;
 
 /** Add your docs here. */
-public class AUTO_5P_Mid extends AutoPaths{
+public class AUTO_5P_Mid_NO_STAGE extends AutoPaths{
 
     @Override
     public Command load(AutoGenerator autos) {
         String p1Name = "4P_Middle_Extended";
-        String p2Name = "";
 
         //Path misses first pickup
         return Commands.sequence(

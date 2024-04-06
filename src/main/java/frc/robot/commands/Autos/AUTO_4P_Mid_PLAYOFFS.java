@@ -10,11 +10,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.*;
 import frc.robot.utils.AutoGenerator;
 
 /** Add your docs here. */
-public class AUTO_4P_Mid extends AutoPaths{
+public class AUTO_4P_Mid_PLAYOFFS extends AutoPaths{
 
     @Override
     public Command load(AutoGenerator autos) {
@@ -35,14 +36,15 @@ public class AUTO_4P_Mid extends AutoPaths{
 
         //Path misses first pickup
         return Commands.sequence(
+            new WaitCommand(1.5),
             autos.scoringSequence(Pivot.kSpeakerAngleSP-6,4000, 0.45),
             autos.resetOdometry(startingPose),
 
             autos.pathIntake(p1Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP+4, 4000, 0.33),
+            autos.scoringSequence(Pivot.kLowAngleSP+2, 4000, 0.33),
 
             autos.pathIntake(p2Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP+3, 4000, 0.33),
+            autos.scoringSequence(Pivot.kLowAngleSP+5, 4000, 0.33),
 
             autos.pathIntake(p3Name).withTimeout(4.5),
             autos.scoringSequence(Pivot.kLowMidAngleSP-11, 4000, 0.33)
