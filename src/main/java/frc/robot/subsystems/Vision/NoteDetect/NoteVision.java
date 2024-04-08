@@ -119,6 +119,8 @@ public class NoteVision extends SubsystemBase {
         Logger.recordOutput("Vision/Note/Target", optIntakeTarget.map(TrackedNote::toASPose).map((a) -> new Pose3d[]{a}).orElse(new Pose3d[0]));
         Logger.recordOutput("Vision/Note/Locked Target", optIntakeTarget.filter((a) -> intakeTargetLocked).map(TrackedNote::toASPose).map((a) -> new Pose3d[]{a}).orElse(new Pose3d[0]));
         intakeTargetLocked = false;
+
+  
     }
 
     public DoubleSupplier applyDotProduct(Supplier<ChassisSpeeds> joystickFieldRelative) {

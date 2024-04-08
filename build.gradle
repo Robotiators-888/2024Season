@@ -126,13 +126,13 @@ task(checkAkitInstall, dependsOn: "classes", type: JavaExec) {
 }
 compileJava.finalizedBy checkAkitInstall
 
-// Create version file
-project.compileJava.dependsOn(createVersionFile)
-gversion {
-    srcDir       = "src/main/java/"
-    classPackage = "frc.robot"
-    className    = "BuildConstants"
-    dateFormat   = "yyyy-MM-dd HH:mm:ss z"
-    timeZone     = "America/New_York"
-    indent       = "  "
-}
+// // Create version fil
+// project.compileJava.dependsOn(createVersionFile)
+// gversion {
+//     srcDir       = "src/main/java/"
+//     classPackage = "frc.robot"
+//     className    = "BuildConstants"
+//     dateFormat   = "yyyy-MM-dd HH:mm:ss z"
+//     timeZone     = "America/New_York"
+//     indent       = "  "
+// }

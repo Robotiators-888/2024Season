@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.*;
 import frc.robot.commands.Limelight.CMD_TeleopAimOnDist;
 import frc.robot.commands.Limelight.CMD_AlignSource;
+import frc.robot.commands.Limelight.CMD_CenterOnNote;
 import frc.robot.subsystems.SUB_Climber;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
@@ -62,7 +63,7 @@ public class RobotContainer {
   public static SUB_Index index = SUB_Index.getInstance();
   public static SUB_Intake intake = SUB_Intake.getInstance();
   public static SUB_Pivot pivot = SUB_Pivot.getInstance();
-  public static SUB_Limelight limelight = SUB_Limelight.getInstance();
+  // public static SUB_Limelight limelight = SUB_Limelight.getInstance();
   public static SUB_LEDs led = new SUB_LEDs(9);
   public static SUB_PhotonVision photonVision = SUB_PhotonVision.getInstance();
   public static NoteVision noteVision = NoteVision.getInstance();
@@ -108,22 +109,29 @@ public class RobotContainer {
 
     // pivot.set
 
-    Driver1.leftTrigger().whileTrue(new RunCommand(() -> climber.runLeft(Climber.kDownSpeed), climber));
-    Driver1.leftBumper().whileTrue(new RunCommand(() -> climber.runLeft(Climber.kUpSpeed), climber));
-
+    Driver1.leftTrigger().whileTrue(
+        new ParallelCommandGroup( 
+            new RunCommand(() -> climber.runLeft(Climber.kDownSpeed), climber),
+            new InstantCommand(()->pivot.goToAngle(Pivot.kLowAngleSP-5))
+        ));
+    Driver1.leftBumper().whileTrue(
+        new ParallelCommandGroup(     
+            new RunCommand(() -> climber.runLeft(Climber.kUpSpeed), climber),
+            new InstantCommand(()->pivot.goToAngle(Pivot.kLowAngleSP-5))
+        ));
     Driver1.rightTrigger().whileTrue(new RunCommand(() -> climber.runRight(Climber.kDownSpeed), climber));
     Driver1.rightBumper().whileTrue(new RunCommand(() -> climber.runRight(Climber.kUpSpeed), climber));
 
     Driver1.leftStick().onTrue(new InstantCommand(() -> drivetrain.zeroHeading()));
 
     Driver1.povRight().onTrue(new SequentialCommandGroup(
-        new InstantCommand(() -> pivot.goToAngle(75))));// Shoot From Middle Setpoint
+        new InstantCommand(() -> pivot.goToAngle(Pivot.kLowMidAngleSP))));// Shoot From Middle Setpoint
 
     Driver1.povUp().onTrue(new SequentialCommandGroup(
         new InstantCommand(() -> pivot.goToAngle(Constants.Pivot.kSpeakerAngleSP))));// Shoot From Up Close Setpoint
 
-    Driver1.povDown().onTrue(new SequentialCommandGroup(
-        new InstantCommand(() -> pivot.goToAngle(50))));// Shoot From Bottom Setpoint
+    Driver1.povLeft().onTrue(new SequentialCommandGroup(
+        new InstantCommand(() -> pivot.goToAngle(Pivot.kLowAngleSP-5))));// Shoot From Bottom Setpoint
 
     // Driver1.start().whileTrue( new ParallelCommandGroup(
     // new InstantCommand(()->pivot.goToAngle(Pivot.kSideSP)),
@@ -183,7 +191,7 @@ public class RobotContainer {
 
     //Align to source
     Driver1.a().whileTrue(
-        new CMD_AlignSource(pivot, limelight, drivetrain, Driver1));
+        new CMD_AlignSource(pivot, drivetrain, Driver1));
 
     // Manual Auto shot
     Driver1.b().whileTrue(
@@ -201,7 +209,7 @@ public class RobotContainer {
 
     //Align to Source Intake
     Driver1.y().whileTrue(new ParallelCommandGroup(
-        new CMD_AlignSource(pivot, limelight, drivetrain, Driver1),
+        new CMD_AlignSource(pivot, drivetrain, Driver1),
         new ParallelCommandGroup(
             new InstantCommand(() -> index.starttimer()),
             new RunCommand(() -> index.setMotorSpeed(-Constants.Intake.kIndexSpeed), index),
@@ -220,7 +228,7 @@ public class RobotContainer {
                 new InstantCommand(() -> shooter.shootFlywheelOnRPM(1500))));
 
     //Robot relative drive
-    Driver1.povLeft().whileTrue(
+    Driver1.povDown().whileTrue(
         new RunCommand(
             () -> drivetrain.drive(
                 -MathUtil.applyDeadband(Math.copySign(Math.pow(Driver1.getRawAxis(1), 2), Driver1.getRawAxis(1)),
@@ -273,7 +281,7 @@ public class RobotContainer {
         new ParallelCommandGroup(
             new ParallelCommandGroup(
                 new RunCommand(() -> shooter.shootFlywheelOnRPM(4000), shooter),
-                new CMD_TeleopAimOnDist(pivot, limelight, drivetrain, Driver1)),
+                new CMD_TeleopAimOnDist(pivot, drivetrain, Driver1)),
             new InstantCommand(() -> SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value)))
         .onFalse(
             new ParallelCommandGroup(
@@ -362,6 +370,9 @@ public class RobotContainer {
     Driver2.povRight().whileTrue(new RunCommand(() -> pivot.runManual(-0.2), pivot));
     Driver2.povLeft().whileTrue(new RunCommand(() -> pivot.runManual(0.2), pivot));
 
+    //Auto intake
+    Driver1.x().and(() -> SUB_PhotonVision.getInstance().hasResults).whileTrue(new CMD_CenterOnNote(pivot, drivetrain, photonVision, Driver1));
+
   }
 
   /**
@@ -402,38 +413,42 @@ public class RobotContainer {
   }
 
   public void teleopPeriodic() {
-    photonPoseUpdate();
+    teleopPhotonPose();
   }
 
   public void robotPeriodic() {
 
-  }
-
-  public void limelightPoseUpdate() {
-    Pose2d visionPose = limelight.getPose();
-
-    SmartDashboard.putNumber("LL X pose", visionPose.getX());
-    SmartDashboard.putNumber("LL Y pose", visionPose.getY());
-    if (!visionPose.equals(new Pose2d()) &&
-        visionPose.getX() >= 0 && visionPose.getX() <= 1655.0 / 100 &&
-        visionPose.getY() >= 0 && visionPose.getY() <= 821.0 / 100) {
-      // Check if vision pose is within one meter of the current estiamted pose
-      // to avoid abnormalities with vision (detecting a tag that isn't present) from
-      // affecting the accuracy of our pose measurement.
-      Transform2d t2d = visionPose.minus(drivetrain.getPose());
-      double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
-      double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
-      drivetrain.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latencySec / 1000);
-
+    // COMMENT OUT BELOW IF IT DOESN'T WORK, ALSO IN SUB_PHOTONVISION
+    if (photonVision.getBestNote() != null && photonVision.hasResults){
+        SmartDashboard.putNumber("NOTE/YAW", photonVision.getBestNote().getYaw());
     }
-    // drivetrain.limelightVisionUpdate(); 
+
   }
+
+//   public void limelightPoseUpdate() {
+//     Pose2d visionPose = limelight.getPose();
+
+//     SmartDashboard.putNumber("LL X pose", visionPose.getX());
+//     SmartDashboard.putNumber("LL Y pose", visionPose.getY());
+//     if (!visionPose.equals(new Pose2d()) &&
+//         visionPose.getX() >= 0 && visionPose.getX() <= 1655.0 / 100 &&
+//         visionPose.getY() >= 0 && visionPose.getY() <= 821.0 / 100) {
+//       // Check if vision pose is within one meter of the current estiamted pose
+//       // to avoid abnormalities with vision (detecting a tag that isn't present) from
+//       // affecting the accuracy of our pose measurement.
+//       Transform2d t2d = visionPose.minus(drivetrain.getPose());
+//       double dist = Math.sqrt(Math.pow(t2d.getX(), 2) + Math.pow(t2d.getY(), 2));
+//       double latencySec = limelight.getCaptureLatency() + limelight.getPipelineLatency();
+//       drivetrain.addVisionMeasurement(visionPose, Timer.getFPGATimestamp() - latencySec / 1000);
+
+//     }
+//     // drivetrain.limelightVisionUpdate(); 
+//   }
 
   public static void photonPoseUpdate() {
     Optional<EstimatedRobotPose> photonPoseOptional = photonVision.getEstimatedGlobalPose(drivetrain.getPose());
     
     if (photonPoseOptional.isPresent()) {
-        SmartDashboard.putNumber("sdfjisda", 2);
         Pose3d photonPose = photonPoseOptional.get().estimatedPose;
         if (photonPose.getX() >= 0 && photonPose.getX() <= 1655.0 / 100 &&
         photonPose.getY() >= 0
@@ -447,15 +462,81 @@ public class RobotContainer {
         Pose2d closestTag = photonVision.at_field.getTagPose(photonVision.getBestTarget().getFiducialId()).get().toPose2d();
         Translation2d translate = closestTag.minus(photonPose.toPose2d()).getTranslation();
         // distance/4 
-        double xStddev = (Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2))/2.0;
+        double distance = Math.sqrt(Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2));
+        double sqDistance = (Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2));
 
-        double yStddev = xStddev * 7;
-        if(translate.getX() > 8){
-            xStddev =(Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2))/0.1;
-        }
+
+        // if (distance <= 5){
+        double xStddev = distance/1.0;
+        double yStddev = xStddev * 4;
+
+        // if(translate.getX() > 8){
+        //     xStddev = sqDistance/0.1;
+        // }
+
+        drivetrain.m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(xStddev, yStddev, rotStddev));
+        // } else {
+        //     double xStddev = sqDistance/2.0;
+        //     double yStddev = xStddev * 7;
+
+        //     if(translate.getX() > 8){
+        //         xStddev = sqDistance/0.1;
+        //     }
+        //      drivetrain.m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(xStddev, yStddev, rotStddev));
+        // }
+
+        
+
         SmartDashboard.putNumberArray("PHOTON/Pose", new Double[]{photonPose.toPose2d().getX(), photonPose.toPose2d().getY(), photonPose.toPose2d().getRotation().getDegrees()});
         SmartDashboard.putNumberArray("PHOTON/Pose3d", new Double[]{photonPose.getX(), photonPose.getY(), photonPose.getZ(), photonPose.getRotation().getQuaternion().getW(), photonPose.getRotation().getQuaternion().getX(), photonPose.getRotation().getQuaternion().getY(), photonPose.getRotation().getQuaternion().getZ()});
+        drivetrain.addVisionMeasurement(photonPose.toPose2d(), photonPoseOptional.get().timestampSeconds);    
+    }
+  }
+
+ public static void teleopPhotonPose() {
+    Optional<EstimatedRobotPose> photonPoseOptional = photonVision.getEstimatedGlobalPose(drivetrain.getPose());
+    
+    if (photonPoseOptional.isPresent()) {
+        Pose3d photonPose = photonPoseOptional.get().estimatedPose;
+        if (photonPose.getX() >= 0 && photonPose.getX() <= 1655.0 / 100 &&
+        photonPose.getY() >= 0
+        && photonPose.getY() <= 821.0 / 100) {
+        }
+
+        if (photonVision.getBestTarget() == null){
+            return;
+        }
+        double rotStddev = Units.degreesToRadians(70.0);
+        Pose2d closestTag = photonVision.at_field.getTagPose(photonVision.getBestTarget().getFiducialId()).get().toPose2d();
+        Translation2d translate = closestTag.minus(photonPose.toPose2d()).getTranslation();
+        // distance/4 
+        double distance = Math.sqrt(Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2));
+        double sqDistance = (Math.pow(translate.getX(), 2) + Math.pow(translate.getY(), 2));
+
+
+        // if (distance <= 5){
+        double xStddev = distance/16.0;
+        double yStddev = xStddev * 4;
+
+        // if(translate.getX() > 8){
+        //     xStddev = sqDistance/0.1;
+        // }
+
         drivetrain.m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(xStddev, yStddev, rotStddev));
+        // } else {
+        //     double xStddev = sqDistance/2.0;
+        //     double yStddev = xStddev * 7;
+
+        //     if(translate.getX() > 8){
+        //         xStddev = sqDistance/0.1;
+        //     }
+        //      drivetrain.m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(xStddev, yStddev, rotStddev));
+        // }
+
+        
+
+        SmartDashboard.putNumberArray("PHOTON/Pose", new Double[]{photonPose.toPose2d().getX(), photonPose.toPose2d().getY(), photonPose.toPose2d().getRotation().getDegrees()});
+        SmartDashboard.putNumberArray("PHOTON/Pose3d", new Double[]{photonPose.getX(), photonPose.getY(), photonPose.getZ(), photonPose.getRotation().getQuaternion().getW(), photonPose.getRotation().getQuaternion().getX(), photonPose.getRotation().getQuaternion().getY(), photonPose.getRotation().getQuaternion().getZ()});
         drivetrain.addVisionMeasurement(photonPose.toPose2d(), photonPoseOptional.get().timestampSeconds);    
     }
   }

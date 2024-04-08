@@ -16,68 +16,57 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.subsystems.Vision.SUB_Limelight;
+import frc.robot.subsystems.Vision.SUB_PhotonVision;
 
 import static frc.robot.Constants.Pivot.*;
-public class CMD_AlignSource extends Command {
+
+import org.photonvision.targeting.PhotonTrackedTarget;
+public class CMD_CenterOnNote extends Command {
   SUB_Pivot pivot;
   SUB_Limelight limelight;
   SUB_Drivetrain drivetrain;
-  
-  Pose3d tagPose;
-  Integer targetId;
+  SUB_PhotonVision photonVision;
 
   CommandXboxController driverController;
 
-  private final PIDController robotAngleController = new PIDController( 0.5, 0.01, 0); // 0.25, 0, 0
-
+  private final PIDController robotAngleController = new PIDController( 0.01, 0, .0); // 0.25, 0, 0
+  private PhotonTrackedTarget note;
+  
   /** Creates a new CMD_AdjustPivotOnDist. */
-  public CMD_AlignSource(SUB_Pivot pivot, SUB_Drivetrain drivetrain, CommandXboxController driverController) {
+  public CMD_CenterOnNote(SUB_Pivot pivot, SUB_Drivetrain drivetrain, SUB_PhotonVision photonVision, CommandXboxController driverController) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pivot = pivot;
     this.drivetrain = drivetrain;
     this.driverController = driverController;
+    this.photonVision = photonVision;
     addRequirements(pivot, drivetrain);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    var alliance = DriverStation.getAlliance();
-    if (alliance.isPresent()){
-      if (alliance.get() == DriverStation.Alliance.Red){
-        tagPose = drivetrain.at_field.getTagPose(9).get();
-        targetId = 9;
-      } else {
-        tagPose = drivetrain.at_field.getTagPose(2).get();
-        targetId = 2;
-      }
-    } else {
-      SmartDashboard.putBoolean("Alliance Error", true);
-      end(true);
-    }
 
-    robotAngleController.setTolerance(0.07);
-    SmartDashboard.putNumber("rot radians", tagPose.getRotation().getAngle());
+    note = photonVision.getBestNote();
+
+    robotAngleController.setTolerance(4.0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Pose2d currentPose = drivetrain.getPose();
-    pivot.goToAngle(kSourceAngle);
-    pivot.runAutomatic();
-    double target = tagPose.getRotation().getAngle() + Math.PI;
+    note = photonVision.getBestNote();
 
-    if (target > Math.PI) {
-      target = -Math.PI + tagPose.getRotation().getAngle();
-    }
-
-    drivetrain.drive(
-      -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(1), 2), driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
-      -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(0), 2), driverController.getRawAxis(0)), OIConstants.kDriveDeadband),
+    // drivetrain.drive(
+    //   -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(1), 2), driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
+    //   -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(0), 2), driverController.getRawAxis(0)), OIConstants.kDriveDeadband),
       
-      robotAngleController.calculate(currentPose.getRotation().getRadians(), target),
-     false, true);
+    //   robotAngleController.calculate(note.getYaw(), 0),
+    //  true, true);
+      drivetrain.drive(
+      -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(1), 2), driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
+      -MathUtil.clamp(robotAngleController.calculate(note.getYaw(), 0), -0.3, 0.3),
+      -MathUtil.applyDeadband(driverController.getRawAxis(4), OIConstants.kDriveDeadband),
+      false, true);
   }
 
   // Called once the command ends or is interrupted.
@@ -89,7 +78,6 @@ public class CMD_AlignSource extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(pivot.calculateDegreesRotation()-kSourceAngle) < 5 && 
-    robotAngleController.atSetpoint();
+    return false;
   }
 }

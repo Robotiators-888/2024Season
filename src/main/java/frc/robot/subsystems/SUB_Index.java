@@ -34,7 +34,7 @@ public class SUB_Index extends SubsystemBase {
     double avg = (indexLeft.getOutputCurrent()+indexRight.getOutputCurrent())/2.0;
 
     SmartDashboard.putNumber("Index/OutputCurrent", avg);
-    return (currentTimer.hasElapsed(.25) && avg > 15.0);
+    return (currentTimer.hasElapsed(.45) && avg > 15.0);
   }
 
   public static SUB_Index getInstance(){

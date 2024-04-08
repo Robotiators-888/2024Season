@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.52,
-        "y": 4.023876956519567
+        "x": 6.78,
+        "y": 4.25
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9530127018922199,
-        "y": 3.773876956519567
-      },
-      "isLocked": false,
-      "linkedName": "BottomRobotStart"
-    },
-    {
-      "anchor": {
-        "x": 2.93935385724081,
-        "y": 2.1881666661365524
-      },
-      "prevControl": {
-        "x": 2.381297928964374,
-        "y": 2.4965659949208994
-      },
-      "nextControl": {
-        "x": 3.623494412884188,
-        "y": 1.8100889906494215
+        "x": 7.016602561776552,
+        "y": 4.235329293515731
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.343553829964803,
-        "y": 1.0847998838854824
+        "x": 8.270256540513081,
+        "y": 4.2219238724191746
       },
       "prevControl": {
-        "x": 7.286184702704188,
-        "y": 0.9379430606548417
+        "x": 7.962407924815849,
+        "y": 4.236583330309518
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -179.6416782997656,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Mid Line Paths",
+  "folder": "5 Piece Path",
   "previewStartingState": null,
   "useDefaultConstraints": true
 }

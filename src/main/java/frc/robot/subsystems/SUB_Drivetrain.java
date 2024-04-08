@@ -97,6 +97,8 @@ public class SUB_Drivetrain extends SubsystemBase {
 
   Pose2d pose = new Pose2d();
   // Odometry class for tracking robot pose
+
+  
   public SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
           Constants.Drivetrain.kDriveKinematics,
           Rotation2d.fromDegrees(getAngle()),
@@ -125,10 +127,26 @@ public class SUB_Drivetrain extends SubsystemBase {
       SmartDashboard.putBoolean("FILE FOUND?", false);      
     }      
   }
+
+  private double lastGoodBackLeft = 0;
   
   @Override
   public void periodic() {
-    m_poseEstimator.update(
+
+
+    // if (backLeft.getPosition().distanceMeters == 0 || Math.abs(lastGoodBackLeft - backLeft.getPosition().distanceMeters) > 1){;
+    //   backLeft.setPosition(lastGoodBackLeft);
+    //   SmartDashboard.putBoolean("Back left bad", true);
+    //     m_poseEstimator.update(
+    //     Rotation2d.fromDegrees(getAngle()),
+    //     new SwerveModulePosition[] {
+    //       frontLeft.getPosition(),
+    //       frontRight.getPosition(),
+    //       new SwerveModulePosition(lastGoodBackLeft, backLeft.getPosition().angle),
+    //       backRight.getPosition()
+    //     });
+    // } else {
+          m_poseEstimator.update(
         Rotation2d.fromDegrees(getAngle()),
         new SwerveModulePosition[] {
           frontLeft.getPosition(),
@@ -136,6 +154,9 @@ public class SUB_Drivetrain extends SubsystemBase {
           backLeft.getPosition(),
           backRight.getPosition()
         });
+    //           SmartDashboard.putBoolean("Back left bad", false);
+    //     lastGoodBackLeft = backLeft.getPosition().distanceMeters;
+    // }
     m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
     modules = new MAXSwerveModule[]{frontLeft, frontRight, backLeft, backRight};
 
@@ -160,6 +181,13 @@ public class SUB_Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Drive/Robot Pose Y meters", (getPose().getY()));
     SmartDashboard.putNumber("Drive/rotation", getPose().getRotation().getDegrees());
     SmartDashboard.putNumber("Drive/Robot Speed", modules[0].getVelocityDrive());
+
+    SmartDashboard.putNumber("BACK RIGHT MODULE POSITION", backRight.getPosition().distanceMeters);
+    SmartDashboard.putNumber("BACK LEFT MODULE POSITION", backLeft.getPosition().distanceMeters);
+    SmartDashboard.putNumber("FRONT LEFT MODULE POSITION", frontLeft.getPosition().distanceMeters);
+    SmartDashboard.putNumber("FRONT RIGHT MODULE POSITION", frontRight.getPosition().distanceMeters);
+
+
   }
 
   /**
