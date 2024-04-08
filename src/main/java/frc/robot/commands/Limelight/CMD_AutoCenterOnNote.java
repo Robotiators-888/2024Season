@@ -21,7 +21,7 @@ import frc.robot.subsystems.Vision.SUB_PhotonVision;
 import static frc.robot.Constants.Pivot.*;
 
 import org.photonvision.targeting.PhotonTrackedTarget;
-public class CMD_CenterOnNote extends Command {
+public class CMD_AutoCenterOnNote extends Command {
   SUB_Pivot pivot;
   SUB_Limelight limelight;
   SUB_Drivetrain drivetrain;
@@ -34,11 +34,9 @@ public class CMD_CenterOnNote extends Command {
   private PhotonTrackedTarget note;
   
   /** Creates a new CMD_AdjustPivotOnDist. */
-  public CMD_CenterOnNote(SUB_Pivot pivot, SUB_Drivetrain drivetrain, SUB_PhotonVision photonVision, CommandXboxController driverController) {
+  public CMD_AutoCenterOnNote(SUB_Drivetrain drivetrain, SUB_PhotonVision photonVision) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.pivot = pivot;
     this.drivetrain = drivetrain;
-    this.driverController = driverController;
     this.photonVision = photonVision;
   }
 
@@ -63,9 +61,9 @@ public class CMD_CenterOnNote extends Command {
     //   robotAngleController.calculate(note.getYaw(), 0),
     //  true, true);
       drivetrain.drive(
-      -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(1), 2), driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
+      0,
       -MathUtil.clamp(robotAngleController.calculate(note.getYaw(), 0), -0.3, 0.3),
-      -MathUtil.applyDeadband(driverController.getRawAxis(4), OIConstants.kDriveDeadband),
+      0,
       false, true);
   }
 

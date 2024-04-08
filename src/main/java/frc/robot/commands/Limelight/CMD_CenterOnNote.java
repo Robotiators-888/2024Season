@@ -33,13 +33,12 @@ public class CMD_CenterOnNote extends Command {
   private PhotonTrackedTarget note;
   
   /** Creates a new CMD_AdjustPivotOnDist. */
-  public CMD_CenterOnNote(SUB_Pivot pivot, SUB_Drivetrain drivetrain, SUB_PhotonVision photonVision, CommandXboxController driverController) {
+  public CMD_CenterOnNote(SUB_Drivetrain drivetrain, SUB_PhotonVision photonVision, CommandXboxController driverController) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.pivot = pivot;
     this.drivetrain = drivetrain;
     this.driverController = driverController;
     this.photonVision = photonVision;
-    addRequirements(pivot, drivetrain);
+    addRequirements(drivetrain);
   }
 
   // Called when the command is initially scheduled.
