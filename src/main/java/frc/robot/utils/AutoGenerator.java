@@ -133,7 +133,7 @@ public class AutoGenerator {
       new ParallelCommandGroup(
           new InstantCommand(() -> index.setMotorSpeed(0)),
           new InstantCommand(() -> intake.setMotorSpeed(0)),
-          new InstantCommand(() -> shooter.shootFlywheelOnRPM(0))));
+          new InstantCommand(() -> shooter.shootFlywheelOnRPM(4000))));
   }
   public Command resetOdometry(Pose2d pose, Rotation2d rot) {
     pose.rotateBy(new Rotation2d(Math.abs(rot.getDegrees() - pose.getRotation().getDegrees())));

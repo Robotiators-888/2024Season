@@ -398,7 +398,7 @@ public class RobotContainer {
             new ParallelCommandGroup(
                 new InstantCommand(() -> index.setMotorSpeed(0)),
                 new InstantCommand(() -> intake.setMotorSpeed(0)),
-                new InstantCommand(() -> shooter.shootFlywheelOnRPM(1500))).andThen(
+                new InstantCommand(() -> shooter.shootFlywheelOnRPM(4000))).andThen(
                     new SequentialCommandGroup(
                         new WaitCommand(.5),
                         new ParallelCommandGroup(
