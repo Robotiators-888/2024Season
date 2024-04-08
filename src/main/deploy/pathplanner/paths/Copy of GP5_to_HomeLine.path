@@ -1,0 +1,68 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.280700937992206,
+        "y": 0.7624410159761787
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.848289125149679,
+        "y": 1.2313944627889262
+      },
+      "isLocked": false,
+      "linkedName": "GP_5"
+    },
+    {
+      "anchor": {
+        "x": 5.191770383540767,
+        "y": 1.7884538626220114
+      },
+      "prevControl": {
+        "x": 6.335208098987628,
+        "y": 1.2607133785696143
+      },
+      "nextControl": {
+        "x": 3.9719459304959925,
+        "y": 2.351449764027292
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.509089589607751,
+        "y": 3.4449726042309234
+      },
+      "prevControl": {
+        "x": 2.963532784208426,
+        "y": 3.019848325410937
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 146.9761324442033,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Note Detect Path",
+  "previewStartingState": {
+    "rotation": 178.5479053790663,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}
