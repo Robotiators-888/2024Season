@@ -37,7 +37,6 @@ public class CMD_AutoAimOnDist extends Command {
     // Use addRequirements() here to declare subsystem dependencies.  
     this.pivot = pivot;
     this.drivetrain = drivetrain;
-    addRequirements(pivot, drivetrain);
   }
 
   // Called when the command is initially scheduled.
