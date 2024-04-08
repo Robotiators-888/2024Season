@@ -27,6 +27,7 @@ public class CMD_CenterOnNote extends Command {
   SUB_Drivetrain drivetrain;
   SUB_PhotonVision photonVision;
 
+
   CommandXboxController driverController;
 
   private final PIDController robotAngleController = new PIDController( 0.01, 0, .0005); // 0.25, 0, 0
@@ -39,7 +40,6 @@ public class CMD_CenterOnNote extends Command {
     this.drivetrain = drivetrain;
     this.driverController = driverController;
     this.photonVision = photonVision;
-    addRequirements(pivot, drivetrain);
   }
 
   // Called when the command is initially scheduled.

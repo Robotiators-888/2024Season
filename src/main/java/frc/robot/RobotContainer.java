@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.*;
 import frc.robot.commands.Limelight.CMD_TeleopAimOnDist;
 import frc.robot.commands.Limelight.CMD_AlignSource;
+import frc.robot.commands.Limelight.CMD_AutoCenterOnNote;
 import frc.robot.commands.Limelight.CMD_CenterOnNote;
 import frc.robot.subsystems.SUB_Climber;
 import frc.robot.subsystems.SUB_Drivetrain;
@@ -73,7 +74,6 @@ public class RobotContainer {
   public static CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort);
 
   public static SendableChooser<Boolean> standardPosChecker = new SendableChooser<Boolean>();
-  
 
   public static AutoSelector autoSelector = new AutoSelector(Driver1);
 
@@ -81,6 +81,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    
     standardPosChecker.addOption("Odometery Init", Boolean.TRUE);
     standardPosChecker.setDefaultOption("ATag Init", Boolean.FALSE);
     SmartDashboard.putData(standardPosChecker);
@@ -371,8 +372,11 @@ public class RobotContainer {
     Driver2.povLeft().whileTrue(new RunCommand(() -> pivot.runManual(0.2), pivot));
 
     //Auto intake
-    Driver1.x().and(() -> SUB_PhotonVision.getInstance().hasResults).whileTrue(new CMD_CenterOnNote(pivot, drivetrain, photonVision, Driver1));
-
+    // Driver1.x().and(() -> SUB_PhotonVision.getInstance().hasResults).whileTrue(new CMD_CenterOnNote(pivot, drivetrain, photonVision, Driver1));
+    Driver1.x().and(new CMD_AutoCenterOnNote(pivot, drivetrain, photonVision).withTimeout(3).andThen(
+        new ParallelCommandGroup(
+            new RunCommand(()->drivetrain.drive(0.2, 0, 0, false, true))).withTimeout(3.0).until(()->index.CurrentLimitSpike()),
+            new InstantCommand(()->index.starttimer()));)
   }
 
   /**
