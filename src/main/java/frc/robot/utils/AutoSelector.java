@@ -48,7 +48,7 @@ public class AutoSelector {
         chooser.addOption("5P_Middle_No_Stage", new AUTO_5P_Mid_NO_STAGE());
         chooser.addOption("5P_Middle_STAGE", new AUTO_5P_Mid_STAGE());
 
-        // chooser.addOption("Gerstner Auto", new AUTO_Silly_GERSTNER());
+        chooser.addOption("Gerstner Auto", new AUTO_Silly_GERSTNER());
 
         // chooser.addOption("1 Meter back", new AUTO_1_Meter());
         // chooser.addOption("2 Meter", new AUTO_2_Meter());
