@@ -26,12 +26,14 @@ import frc.robot.RobotContainer;
 import frc.robot.commands.AutoActions.CMD_Shoot;
 import frc.robot.commands.AutoActions.CMD_ShootSEQ;
 import frc.robot.commands.Limelight.CMD_AutoAimOnDist;
+import frc.robot.commands.Limelight.CMD_AutoCenterOnNote;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Intake;
 import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.subsystems.SUB_Shooter;
 import frc.robot.subsystems.Vision.SUB_Limelight;
+import frc.robot.subsystems.Vision.SUB_PhotonVision;
 import frc.robot.subsystems.Vision.NoteDetect.NoteVision;
 
 /** This utility class is built for selecting made autos */
@@ -41,6 +43,7 @@ public class AutoGenerator {
   SUB_Intake intake = SUB_Intake.getInstance();
   SUB_Shooter shooter = SUB_Shooter.getInstance();
   SUB_Pivot pivot = SUB_Pivot.getInstance();
+  SUB_PhotonVision photonVision = SUB_PhotonVision.getInstance();
   // SUB_Limelight limelight = SUB_Limelight.getInstance();
   CommandXboxController driver1;
 
@@ -110,6 +113,28 @@ public class AutoGenerator {
     }
   }
 
+  public Command visionAlignToNote(){
+    return new ParallelCommandGroup(
+      new CMD_AutoCenterOnNote(drivetrain, photonVision).withTimeout(1.5).andThen(
+              new RunCommand(()->drivetrain.drive(-0.5, 0, 0, false, true))).withTimeout(3.0).until(()->index.CurrentLimitSpike()),
+      new ParallelCommandGroup(
+          new InstantCommand(() -> pivot.goToAngle(75)),
+          new InstantCommand(() -> index.starttimer()),
+          new RunCommand(() -> index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
+          new RunCommand(() -> intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
+              () -> index.CurrentLimitSpike())
+          .andThen(
+              new InstantCommand(()->intake.setHasNote(true)),
+              new RunCommand(() -> index.setMotorSpeed(0.0)).withTimeout(0.0).andThen(
+                  new ParallelCommandGroup(
+                      new InstantCommand(() -> index.setMotorSpeed(0)),
+                      new InstantCommand(() -> shooter.setMotorSpeed(0)))))
+  ).andThen(
+      new ParallelCommandGroup(
+          new InstantCommand(() -> index.setMotorSpeed(0)),
+          new InstantCommand(() -> intake.setMotorSpeed(0)),
+          new InstantCommand(() -> shooter.shootFlywheelOnRPM(4000))));
+  }
   public Command resetOdometry(Pose2d pose, Rotation2d rot) {
     pose.rotateBy(new Rotation2d(Math.abs(rot.getDegrees() - pose.getRotation().getDegrees())));
     return new InstantCommand(
