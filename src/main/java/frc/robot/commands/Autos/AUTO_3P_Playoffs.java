@@ -20,48 +20,45 @@ import frc.robot.utils.AutoGenerator;
 import frc.robot.utils.PathPlannerBase;
 
 /** Add your docs here. */
-public class AUTO_3P_Playoffs extends AutoPaths{
+public class AUTO_3P_Playoffs extends AutoPaths {
 
     @Override
     public Command load(AutoGenerator autos) {
         String p1Name = "2P_Top";
         String p2Name = "TopGP_to_1stGP";
         String p3Name = "1st2nd_ReturnToShoot";
-       // String p4Name = "TopGP_to_2ndGP";
+        // String p4Name = "TopGP_to_2ndGP";
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
 
         var alliance = DriverStation.getAlliance();
-    
+
         Pose2d startingPose = null;
         if (alliance.isPresent()) {
-            if (alliance.get() == DriverStation.Alliance.Red){
+            if (alliance.get() == DriverStation.Alliance.Red) {
                 startingPose = p1.flipPath().getPreviewStartingHolonomicPose();
             } else {
                 startingPose = p1.getPreviewStartingHolonomicPose();
             }
-        } 
+        }
         startingPose.rotateBy(Rotation2d.fromDegrees(180));
         return Commands.sequence(
-            autos.scoringSequence(Pivot.kSpeakerAngleSP-6,4000, 0.45),
-            autos.resetOdometry(startingPose),
-            new RunCommand(()->RobotContainer.photonPoseUpdate()).withTimeout(0.5),
-            new InstantCommand(()->SUB_Drivetrain.getInstance().setGyroRotation(180)),
+                autos.scoringSequence(Pivot.kSpeakerAngleSP - 6, 4000, 0.45),
+                autos.resetOdometry(startingPose),
+                new RunCommand(() -> RobotContainer.photonPoseUpdate()).withTimeout(0.5),
+                new InstantCommand(() -> SUB_Drivetrain.getInstance().setGyroRotation(180)),
 
+                autos.pathIntake(p1Name).withTimeout(4),
+                autos.scoringSequence(Pivot.kLowAngleSP + 2, 4000, 0.45),
 
-            autos.pathIntake(p1Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP+2, 4000, 0.45),
+                autos.pathIntake(p2Name).withTimeout(4),
+                PathPlannerBase.followTrajectory(p3Name),
+                autos.scoringSequence(Pivot.kLowAngleSP + 3, 4500, 0.5)// ,
 
-            autos.pathIntake(p2Name).withTimeout(4),
-            PathPlannerBase.followTrajectory(p3Name),
-            autos.scoringSequence(Pivot.kLowAngleSP+3, 4500, 0.5)//,
-
-        //    autos.pathIntake(p4Name),
-        //    PathPlannerBase.followTrajectory(p3Name),
-        //    autos.scoringSequence(Pivot.kLowAngleSP+3, 4500, 0.5)
-
-            
+        // autos.pathIntake(p4Name),
+        // PathPlannerBase.followTrajectory(p3Name),
+        // autos.scoringSequence(Pivot.kLowAngleSP+3, 4500, 0.5)
 
         );
     }
-    
+
 }

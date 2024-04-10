@@ -19,8 +19,8 @@ public class SUB_Amp extends SubsystemBase {
   CANSparkMax ampController;
   Timer currentTimer = new Timer();
 
-  public static SUB_Amp getInstance(){
-    if(INSTANCE == null){
+  public static SUB_Amp getInstance() {
+    if (INSTANCE == null) {
       INSTANCE = new SUB_Amp();
     }
 
@@ -43,25 +43,24 @@ public class SUB_Amp extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-
-  public void setMotorSpeed(double speed){
+  public void setMotorSpeed(double speed) {
     ampController.set(speed);
   }
 
-  public boolean isAtForwardLimit(){
+  public boolean isAtForwardLimit() {
     return ampController.getForwardLimitSwitch(Type.kNormallyOpen).isPressed();
   }
 
-  public boolean isAtReverseLimit(){
+  public boolean isAtReverseLimit() {
     return ampController.getReverseLimitSwitch(Type.kNormallyOpen).isPressed();
   }
 
-  public void starttimer(){
+  public void starttimer() {
     currentTimer.reset();
     currentTimer.start();
-    }
+  }
 
-   public boolean CurrentLimitSpike(){
+  public boolean CurrentLimitSpike() {
     double avg = ampController.getOutputCurrent();
 
     SmartDashboard.putNumber("Amp/OutputCurrent", avg);

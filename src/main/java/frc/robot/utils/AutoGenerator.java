@@ -34,7 +34,6 @@ import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.subsystems.SUB_Shooter;
 import frc.robot.subsystems.Vision.SUB_Limelight;
 import frc.robot.subsystems.Vision.SUB_PhotonVision;
-import frc.robot.subsystems.Vision.NoteDetect.NoteVision;
 
 /** This utility class is built for selecting made autos */
 public class AutoGenerator {
@@ -97,44 +96,46 @@ public class AutoGenerator {
   // ====================================================================
 
   public Command resetOdometry(Pose2d pose) {
-    if(!RobotContainer.standardPosChecker.getSelected().booleanValue()){
-      //drivetrain.getPose().rotateBy(Rotation2d.fromDegrees(180));
-        // drivetrain.resetOdometry(
-        //   new Pose2d(
-        //     SmartDashboard.getNumber("STARTING POSE/ABSOLUTE X meters", 0), 
-        //     SmartDashboard.getNumber("STARTING POSE/ABSOLUTE Y meters", 0), 
-        //     Rotation2d.fromDegrees(SmartDashboard.getNumber("STARTING POSE/ABSOLUTE ROTATION degrees", 0))));
-          return new InstantCommand(
-        () -> drivetrain.resetOdometry(drivetrain.getPose()));
-    }  
-    else{
-    return new InstantCommand(
-        () -> drivetrain.resetOdometry(pose));
+    if (!RobotContainer.standardPosChecker.getSelected().booleanValue()) {
+      // drivetrain.getPose().rotateBy(Rotation2d.fromDegrees(180));
+      // drivetrain.resetOdometry(
+      // new Pose2d(
+      // SmartDashboard.getNumber("STARTING POSE/ABSOLUTE X meters", 0),
+      // SmartDashboard.getNumber("STARTING POSE/ABSOLUTE Y meters", 0),
+      // Rotation2d.fromDegrees(SmartDashboard.getNumber("STARTING POSE/ABSOLUTE
+      // ROTATION degrees", 0))));
+      return new InstantCommand(
+          () -> drivetrain.resetOdometry(drivetrain.getPose()));
+    } else {
+      return new InstantCommand(
+          () -> drivetrain.resetOdometry(pose));
     }
   }
 
-  public Command visionAlignToNote(){
+  public Command visionAlignToNote() {
     return new ParallelCommandGroup(
-      new CMD_AutoCenterOnNote(drivetrain, photonVision).withTimeout(1.5).andThen(
-              new RunCommand(()->drivetrain.drive(-0.5, 0, 0, false, true))).withTimeout(3.0).until(()->index.CurrentLimitSpike()),
-      new ParallelCommandGroup(
-          new InstantCommand(() -> pivot.goToAngle(75)),
-          new InstantCommand(() -> index.starttimer()),
-          new RunCommand(() -> index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
-          new RunCommand(() -> intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
-              () -> index.CurrentLimitSpike())
-          .andThen(
-              new InstantCommand(()->intake.setHasNote(true)),
-              new RunCommand(() -> index.setMotorSpeed(0.0)).withTimeout(0.0).andThen(
-                  new ParallelCommandGroup(
-                      new InstantCommand(() -> index.setMotorSpeed(0)),
-                      new InstantCommand(() -> shooter.setMotorSpeed(0)))))
-  ).andThen(
-      new ParallelCommandGroup(
-          new InstantCommand(() -> index.setMotorSpeed(0)),
-          new InstantCommand(() -> intake.setMotorSpeed(0)),
-          new InstantCommand(() -> shooter.shootFlywheelOnRPM(4000))));
+        new CMD_AutoCenterOnNote(drivetrain, photonVision).withTimeout(1.5).andThen(
+            new RunCommand(() -> drivetrain.drive(-0.5, 0, 0, false, true))).withTimeout(3.0)
+            .until(() -> index.CurrentLimitSpike()),
+        new ParallelCommandGroup(
+            new InstantCommand(() -> pivot.goToAngle(75)),
+            new InstantCommand(() -> index.starttimer()),
+            new RunCommand(() -> index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
+            new RunCommand(() -> intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
+                () -> index.CurrentLimitSpike())
+            .andThen(
+                new InstantCommand(() -> intake.setHasNote(true)),
+                new RunCommand(() -> index.setMotorSpeed(0.0)).withTimeout(0.0).andThen(
+                    new ParallelCommandGroup(
+                        new InstantCommand(() -> index.setMotorSpeed(0)),
+                        new InstantCommand(() -> shooter.setMotorSpeed(0))))))
+        .andThen(
+            new ParallelCommandGroup(
+                new InstantCommand(() -> index.setMotorSpeed(0)),
+                new InstantCommand(() -> intake.setMotorSpeed(0)),
+                new InstantCommand(() -> shooter.shootFlywheelOnRPM(4000))));
   }
+
   public Command resetOdometry(Pose2d pose, Rotation2d rot) {
     pose.rotateBy(new Rotation2d(Math.abs(rot.getDegrees() - pose.getRotation().getDegrees())));
     return new InstantCommand(
@@ -200,17 +201,6 @@ public class AutoGenerator {
     return new ParallelCommandGroup(
         runIntake(),
         PathPlannerBase.followTrajectory(path));
-  }
-
-  public Command noteDetectPath(String path) {
-    return new SequentialCommandGroup(
-        PathPlannerBase.followTrajectory(path)
-            .onlyWhile(() -> !NoteVision.getInstance().hasTarget())
-            .andThen(
-                runIntake()
-                    .deadlineWith(
-                        NoteVision.getInstance().autoIntake(() -> 2, SUB_Drivetrain.getInstance(),
-                            SUB_Intake.getInstance()))));
   }
 
   public Command runShooter(int rpm) {

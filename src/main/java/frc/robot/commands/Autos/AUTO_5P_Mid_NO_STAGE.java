@@ -15,18 +15,17 @@ import frc.robot.utils.AutoGenerator;
 import frc.robot.utils.PathPlannerBase;
 
 /** Add your docs here. */
-public class AUTO_5P_Mid_NO_STAGE extends AutoPaths{
+public class AUTO_5P_Mid_NO_STAGE extends AutoPaths {
 
     @Override
     public Command load(AutoGenerator autos) {
         String p1Name = "4P_Middle_Extended";
 
-        //Path misses first pickup
+        // Path misses first pickup
         return Commands.sequence(
-            new AUTO_4P_Mid().load(autos),
+                new AUTO_4P_Mid().load(autos),
 
-            autos.pathIntake(p1Name)
-        );
+                autos.pathIntake(p1Name));
     }
-    
+
 }

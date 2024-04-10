@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SUB_LEDs extends SubsystemBase {
 
-
   public enum BlinkinPattern {
     /*
      * Fixed Palette Pattern
@@ -131,12 +130,11 @@ public class SUB_LEDs extends SubsystemBase {
     BLACK(+0.99);
 
     public final double value;
+
     private BlinkinPattern(double value) {
       this.value = value;
     }
   };
-
-
 
   /** Creates a new SUB_Leds. */
   Spark blinkin;
@@ -151,31 +149,31 @@ public class SUB_LEDs extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-    /*
+  /*
    * Set the color and blink pattern of the LED strip.
    * 
-   * Consult the Rev Robotics Blinkin manual Table 5 for a mapping of values to patterns.
+   * Consult the Rev Robotics Blinkin manual Table 5 for a mapping of values to
+   * patterns.
    * 
    * @param val The LED blink color and patern value [-1,1]
    * 
-   */ 
+   */
   public void set(double val) {
     if ((val >= -1.0) && (val <= 1.0)) {
       blinkin.set(val);
     }
   }
 
-  public void setAllianceColor(){
+  public void setAllianceColor() {
     var alliance = DriverStation.getAlliance();
-    
+
     if (alliance.isPresent()) {
-      if (alliance.get() == DriverStation.Alliance.Red){
+      if (alliance.get() == DriverStation.Alliance.Red) {
         blinkin.set(0.17);
       } else {
         blinkin.set(0.86);
       }
-    } 
+    }
   }
 
-  
 }
