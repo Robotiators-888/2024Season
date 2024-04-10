@@ -9,6 +9,7 @@ import frc.robot.commands.Limelight.CMD_TeleopAimOnDist;
 import frc.robot.commands.Limelight.CMD_AlignSource;
 import frc.robot.commands.Limelight.CMD_AutoCenterOnNote;
 import frc.robot.commands.Limelight.CMD_CenterOnNote;
+import frc.robot.subsystems.SUB_Amp;
 import frc.robot.subsystems.SUB_Climber;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
@@ -64,6 +65,7 @@ public class RobotContainer {
   public static SUB_Index index = SUB_Index.getInstance();
   public static SUB_Intake intake = SUB_Intake.getInstance();
   public static SUB_Pivot pivot = SUB_Pivot.getInstance();
+  public static SUB_Amp amp = SUB_Amp.getInstance();
   // public static SUB_Limelight limelight = SUB_Limelight.getInstance();
   public static SUB_LEDs led = new SUB_LEDs(9);
   public static SUB_PhotonVision photonVision = SUB_PhotonVision.getInstance();
@@ -370,6 +372,30 @@ public class RobotContainer {
         .onFalse(new InstantCommand(() -> intake.setMotorSpeed(0.0))); // Drive Intake OUT
     Driver2.povRight().whileTrue(new RunCommand(() -> pivot.runManual(-0.2), pivot));
     Driver2.povLeft().whileTrue(new RunCommand(() -> pivot.runManual(0.2), pivot));
+
+    Driver2.y().whileTrue(
+        new SequentialCommandGroup(
+            new InstantCommand(()->pivot.goToAngle(75.56)),
+            new InstantCommand(()->amp.starttimer()),
+            new ParallelCommandGroup(
+                new RunCommand(()->amp.setMotorSpeed(0.7)).until(
+                () -> amp.CurrentLimitSpike()).andThen(new InstantCommand(()->amp.setMotorSpeed(0.0))),
+                new RunCommand(() -> shooter.shootFlywheelOnRPM(2000), shooter),
+                new SequentialCommandGroup(
+                    new WaitUntilCommand(() -> shooter.getFlywheelRPM() >= 1500),
+                    new RunCommand(() -> index.setMotorSpeed(0.5), index),
+                    new InstantCommand(()->intake.setHasNote(false)),
+                    new InstantCommand(() -> SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value)))
+    )).onFalse(
+        new SequentialCommandGroup(
+            new InstantCommand(()->pivot.goToAngle(75.56)),
+            new ParallelCommandGroup(
+             new InstantCommand(()->amp.starttimer()),
+             new RunCommand(()->amp.setMotorSpeed(-0.7)).until(
+                   () -> amp.CurrentLimitSpike()).andThen(new InstantCommand(()->amp.setMotorSpeed(0.0))),
+                new InstantCommand(() -> index.setMotorSpeed(0)),
+                new InstantCommand(() -> shooter.setMotorSpeed(0))))
+    );
 
     //Auto intake
     // Driver1.x().and(() -> SUB_PhotonVision.getInstance().hasResults).whileTrue(new CMD_CenterOnNote(pivot, drivetrain, photonVision, Driver1));

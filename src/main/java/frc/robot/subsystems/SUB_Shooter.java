@@ -18,6 +18,7 @@ public class SUB_Shooter extends SubsystemBase {
   public InterpolatingDoubleTreeMap distToTimeMap = new InterpolatingDoubleTreeMap();
   private SparkPIDController PIDController;
   public static int MANUAL_RPM = 1000;
+  public static int AUTO_RPM = 1000;
   
   public static int SetpointRPM;
   CANSparkMax shooterLeft;
@@ -79,6 +80,10 @@ public class SUB_Shooter extends SubsystemBase {
 
   public void setRPM(int rpm){
     SetpointRPM = rpm;
+  }
+
+  public void setAutoRPM(int rpm){
+    AUTO_RPM = rpm;
   }
 
 

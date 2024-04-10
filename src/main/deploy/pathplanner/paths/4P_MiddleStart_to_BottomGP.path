@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.992,
-        "y": 5.492
+        "x": 1.2211290254423093,
+        "y": 5.492445188825977
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4875839210348203,
-        "y": 4.872138018649894
+        "x": 1.8526133653298202,
+        "y": 4.743475390350988
       },
       "isLocked": false,
-      "linkedName": "ScorePosMiddle"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.076728835386292,
-        "y": 4.094203811817293
+        "x": 2.0288415532108353,
+        "y": 4.346961967626977
       },
       "prevControl": {
-        "x": 1.4327235264499207,
-        "y": 4.094203811817293
+        "x": 1.6776460659528971,
+        "y": 4.52568969558576
       },
       "nextControl": {
-        "x": 2.191617207661897,
-        "y": 4.094203811817293
+        "x": 2.2745382633622415,
+        "y": 4.2219238724191746
       },
       "isLocked": false,
       "linkedName": null
@@ -36,28 +36,28 @@
         "y": 4.133967125077108
       },
       "prevControl": {
-        "x": 1.8222692277103587,
-        "y": 4.195811410686959
+        "x": 2.526596324910303,
+        "y": 4.12153746009549
       },
       "nextControl": {
-        "x": 2.795396457151457,
-        "y": 4.133468887810653
+        "x": 3.006951636585935,
+        "y": 4.144411522556233
       },
       "isLocked": false,
       "linkedName": "BottomGP"
     },
     {
       "anchor": {
-        "x": 2.3691719648070344,
-        "y": 4.407535736191065
+        "x": 2.3372408819951813,
+        "y": 4.581932884796002
       },
       "prevControl": {
-        "x": 2.291006242747955,
-        "y": 3.905015259615335
+        "x": 2.577462024015073,
+        "y": 4.435711320088241
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "4P_MiddleEnd"
     }
   ],
   "rotationTargets": [
@@ -82,13 +82,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 159.42581585781528,
+    "rotation": 160.5,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "3 Piece Path",
+  "folder": "4 Piece Path",
   "previewStartingState": {
-    "rotation": -177.75425743408306,
+    "rotation": 180.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

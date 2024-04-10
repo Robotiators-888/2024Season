@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.2064433431192452,
+      "y": 5.53650223579517
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleStart_to_TopGP"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TopGP_to_MiddleGP_Scorepos"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4P_MiddleScorePose_to_BottomGP"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4P_Middle_Extended_STAGE"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "4 Piece",
+  "choreoAuto": false
+}
