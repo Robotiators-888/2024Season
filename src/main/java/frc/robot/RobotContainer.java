@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.*;
 import frc.robot.commands.Limelight.CMD_TeleopAimOnDist;
 import frc.robot.commands.Limelight.CMD_AlignSource;
+import frc.robot.commands.Limelight.CMD_AutoCenterOnNote;
 import frc.robot.commands.Limelight.CMD_CenterOnNote;
 import frc.robot.subsystems.SUB_Climber;
 import frc.robot.subsystems.SUB_Drivetrain;
@@ -73,7 +74,6 @@ public class RobotContainer {
   public static CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort);
 
   public static SendableChooser<Boolean> standardPosChecker = new SendableChooser<Boolean>();
-  
 
   public static AutoSelector autoSelector = new AutoSelector(Driver1);
 
@@ -81,6 +81,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    
     standardPosChecker.addOption("Odometery Init", Boolean.TRUE);
     standardPosChecker.setDefaultOption("ATag Init", Boolean.FALSE);
     SmartDashboard.putData(standardPosChecker);
@@ -371,8 +372,44 @@ public class RobotContainer {
     Driver2.povLeft().whileTrue(new RunCommand(() -> pivot.runManual(0.2), pivot));
 
     //Auto intake
-    Driver1.x().and(() -> SUB_PhotonVision.getInstance().hasResults).whileTrue(new CMD_CenterOnNote(pivot, drivetrain, photonVision, Driver1));
-
+    // Driver1.x().and(() -> SUB_PhotonVision.getInstance().hasResults).whileTrue(new CMD_CenterOnNote(pivot, drivetrain, photonVision, Driver1));
+    
+    Driver1.x().whileTrue(
+        new ParallelCommandGroup(
+            new CMD_CenterOnNote(drivetrain, photonVision, Driver1).withTimeout(1.5).andThen(
+                    new RunCommand(()->drivetrain.drive(-0.5, 0, 0, false, true))).withTimeout(3.0).until(()->index.CurrentLimitSpike()),
+            new ParallelCommandGroup(
+                new InstantCommand(() -> pivot.goToAngle(75)),
+                new InstantCommand(() -> index.starttimer()),
+                new RunCommand(() -> index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
+                new RunCommand(() -> intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
+                    () -> index.CurrentLimitSpike())
+                .andThen(
+                    new InstantCommand(() -> Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)),
+                    new InstantCommand(() -> Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)))
+                .andThen(
+                    new InstantCommand(()->intake.setHasNote(true)),
+                    new RunCommand(() -> index.setMotorSpeed(0.0)).withTimeout(0.0).andThen(
+                        new ParallelCommandGroup(
+                            new InstantCommand(() -> index.setMotorSpeed(0)),
+                            new InstantCommand(() -> shooter.setMotorSpeed(0)),
+                            new InstantCommand(() -> SUB_LEDs.ledValue = BlinkinPattern.GREEN.value))))
+        )).onFalse(
+            new ParallelCommandGroup(
+                new InstantCommand(() -> index.setMotorSpeed(0)),
+                new InstantCommand(() -> intake.setMotorSpeed(0)),
+                new InstantCommand(() -> shooter.shootFlywheelOnRPM(4000))).andThen(
+                    new SequentialCommandGroup(
+                        new WaitCommand(.5),
+                        new ParallelCommandGroup(
+                            new InstantCommand(() -> Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0)),
+                            new InstantCommand(() -> Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0))),
+                        new WaitCommand(1.0),
+                        new InstantCommand(() -> pivot.goToAngle(Constants.Pivot.kLowAngleSP)))));
+    // Driver1.x().whileTrue(new CMD_AutoCenterOnNote(pivot, drivetrain, photonVision).withTimeout(3).andThen(
+    //     new ParallelCommandGroup(
+    //         new RunCommand(()->drivetrain.drive(0.2, 0, 0, false, true))).withTimeout(3.0).until(()->index.CurrentLimitSpike()),
+    //         new InstantCommand(()->index.starttimer())));
   }
 
   /**
