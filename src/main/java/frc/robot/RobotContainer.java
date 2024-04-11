@@ -336,14 +336,17 @@ public class RobotContainer {
         Driver2.y().whileTrue(
                 new SequentialCommandGroup(
                         new InstantCommand(() -> pivot.goToAngle(75.56)),
+                        new WaitCommand(0.25),  
                         new InstantCommand(() -> amp.starttimer()),
                         new ParallelCommandGroup(
-                                new RunCommand(() -> amp.setMotorSpeed(0.7)).until(
+                                new RunCommand(() -> amp.setMotorSpeed(0.3)).until(
                                         () -> amp.CurrentLimitSpike())
+                                        .andThen(new WaitCommand(.05))
                                         .andThen(new InstantCommand(() -> amp.setMotorSpeed(0.0))),
                                 new RunCommand(() -> shooter.shootFlywheelOnRPM(2000), shooter),
                                 new SequentialCommandGroup(
                                         new WaitUntilCommand(() -> shooter.getFlywheelRPM() >= 1500),
+                                        new WaitCommand(.05),
                                         new RunCommand(() -> index.setMotorSpeed(0.5), index),
                                         new InstantCommand(() -> intake.setHasNote(false)),
                                         new InstantCommand(
@@ -353,9 +356,13 @@ public class RobotContainer {
                                 new InstantCommand(() -> pivot.goToAngle(75.56)),
                                 new ParallelCommandGroup(
                                         new InstantCommand(() -> amp.starttimer()),
-                                        new RunCommand(() -> amp.setMotorSpeed(-0.7)).until(
+                                        new InstantCommand(() -> amp.setcoast()),
+                                        new RunCommand(() -> amp.setMotorSpeed(-0.15)).until(
                                                 () -> amp.CurrentLimitSpike())
-                                                .andThen(new InstantCommand(() -> amp.setMotorSpeed(0.0))),
+                                                .andThen(new WaitCommand(.2))
+                                                .andThen(new InstantCommand(() -> amp.setMotorSpeed(0.0)))
+                                                .andThen(new WaitCommand(.1))
+                                                .andThen(new InstantCommand(() -> amp.setbreak())),
                                         new InstantCommand(() -> index.setMotorSpeed(0)),
                                         new InstantCommand(() -> shooter.setMotorSpeed(0)))));
 
