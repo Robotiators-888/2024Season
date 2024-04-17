@@ -122,6 +122,10 @@ public class SUB_Pivot extends SubsystemBase {
     pivotSetpoint = rotateEncoder.getPosition();
   }
 
+  public double getAngle(){
+    return rotateEncoder.getPosition();
+  }
+
   public void setLimits() {
     // set soft limits and current limits for how far the manip can move
     pivotMotor.setSmartCurrentLimit(kCurrentLimit);

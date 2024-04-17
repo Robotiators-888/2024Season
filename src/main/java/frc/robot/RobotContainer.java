@@ -333,74 +333,42 @@ public class RobotContainer {
         Driver2.povLeft().whileTrue(new RunCommand(() -> pivot.runManual(0.2), pivot));
 
         // Amp Scoring Seq
-        Driver2.y().whileTrue(
+        // Driver2.y().whileTrue(
+        //         new SequentialCommandGroup(
+        //                 new InstantCommand(() -> pivot.goToAngle(Pivot.kLowMidAngleSP)),
+        //                 new WaitUntilCommand(()->(pivot.getAngle()-5 > Pivot.kLowMidAngleSP))),  
+        //                 new InstantCommand(() -> amp.starttimer()),
+        //                 new ParallelCommandGroup(
+        //                         new RunCommand(() -> amp.setMotorSpeed(0.75)).until(
+        //                                 () -> amp.CurrentLimitSpike())
+        //                                 .andThen(new WaitCommand(.1))
+        //                                 .andThen(new InstantCommand(() -> amp.setMotorSpeed(0.0))),
+        //                         new RunCommand(() -> shooter.shootFlywheelOnRPM(2000), shooter),
+        //                         new SequentialCommandGroup(
+        //                                 new WaitUntilCommand(() -> shooter.getFlywheelRPM() >= 1500),
+        //                                 new WaitCommand(.05),
+        //                                 new RunCommand(() -> index.setMotorSpeed(0.5), index),
+        //                                 new InstantCommand(() -> intake.setHasNote(false)),
+        //                                 new InstantCommand(
+        //                                         () -> SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value))))
+        //         .onFalse(
+        //                 new SequentialCommandGroup(
+        //                         new InstantCommand(() -> pivot.goToAngle(Pivot.kLowMidAngleSP)),
+        //                         new ParallelCommandGroup(
+        //                                 new InstantCommand(() -> amp.starttimer()),
+        //                                 new InstantCommand(() -> amp.setcoast()),
+        //                                 new RunCommand(() -> amp.setMotorSpeed(-0.15)).until(
+        //                                         () -> amp.CurrentLimitSpike())
+        //                                         .andThen(new WaitCommand(.2))
+        //                                         .andThen(new InstantCommand(() -> amp.setMotorSpeed(0.0)))
+        //                                         .andThen(new WaitCommand(.1))
+        //                                         .andThen(new InstantCommand(() -> amp.setbreak())),
+        //                                 new InstantCommand(() -> index.setMotorSpeed(0)),
+        //                                 new InstantCommand(() -> shooter.setMotorSpeed(0)))));
+                                        
+      Driver2.y().whileTrue(
                 new SequentialCommandGroup(
-                        new InstantCommand(() -> pivot.goToAngle(75.56)),
-                        new WaitCommand(0.25),  
-                        new InstantCommand(() -> amp.starttimer()),
-                        new ParallelCommandGroup(
-                                new RunCommand(() -> amp.setMotorSpeed(0.3)).until(
-                                        () -> amp.CurrentLimitSpike())
-                                        .andThen(new WaitCommand(.1))
-                                        .andThen(new InstantCommand(() -> amp.setMotorSpeed(0.0))),
-                                new RunCommand(() -> shooter.shootFlywheelOnRPM(2000), shooter),
-                                new SequentialCommandGroup(
-                                        new WaitUntilCommand(() -> shooter.getFlywheelRPM() >= 1500),
-                                        new WaitCommand(.05),
-                                        new RunCommand(() -> index.setMotorSpeed(0.5), index),
-                                        new InstantCommand(() -> intake.setHasNote(false)),
-                                        new InstantCommand(
-                                                () -> SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value)))))
-                .onFalse(
-                        new SequentialCommandGroup(
-                                new InstantCommand(() -> pivot.goToAngle(75.56)),
-                                new ParallelCommandGroup(
-                                        new InstantCommand(() -> amp.starttimer()),
-                                        new InstantCommand(() -> amp.setcoast()),
-                                        new RunCommand(() -> amp.setMotorSpeed(-0.15)).until(
-                                                () -> amp.CurrentLimitSpike())
-                                                .andThen(new WaitCommand(.2))
-                                                .andThen(new InstantCommand(() -> amp.setMotorSpeed(0.0)))
-                                                .andThen(new WaitCommand(.1))
-                                                .andThen(new InstantCommand(() -> amp.setbreak())),
-                                        new InstantCommand(() -> index.setMotorSpeed(0)),
-                                        new InstantCommand(() -> shooter.setMotorSpeed(0)))));
-                                        Driver2.y().whileTrue(
-                                                new SequentialCommandGroup(
-                                                        new InstantCommand(() -> pivot.goToAngle(75.56)),
-                                                        new WaitCommand(0.25),  
-                                                        new InstantCommand(() -> amp.starttimer()),
-                                                        new ParallelCommandGroup(
-                                                                new RunCommand(() -> amp.setMotorSpeed(0.3)).until(
-                                                                        () -> amp.CurrentLimitSpike())
-                                                                        .andThen(new WaitCommand(.1))
-                                                                        .andThen(new InstantCommand(() -> amp.setMotorSpeed(0.0))),
-                                                                new RunCommand(() -> shooter.shootFlywheelOnRPM(2000), shooter),
-                                                                new SequentialCommandGroup(
-                                                                        new WaitUntilCommand(() -> shooter.getFlywheelRPM() >= 1500),
-                                                                        new WaitCommand(.05),
-                                                                        new RunCommand(() -> index.setMotorSpeed(0.5), index),
-                                                                        new InstantCommand(() -> intake.setHasNote(false)),
-                                                                        new InstantCommand(
-                                                                                () -> SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value)))))
-                                                .onFalse(
-                                                        new SequentialCommandGroup(
-                                                                new InstantCommand(() -> pivot.goToAngle(75.56)),
-                                                                new ParallelCommandGroup(
-                                                                        new InstantCommand(() -> amp.starttimer()),
-                                                                        new InstantCommand(() -> amp.setcoast()),
-                                                                        new RunCommand(() -> amp.setMotorSpeed(-0.15)).until(
-                                                                                () -> amp.CurrentLimitSpike())
-                                                                                .andThen(new WaitCommand(.2))
-                                                                                .andThen(new InstantCommand(() -> amp.setMotorSpeed(0.0)))
-                                                                                .andThen(new WaitCommand(.1))
-                                                                                .andThen(new InstantCommand(() -> amp.setbreak())),
-                                                                        new InstantCommand(() -> index.setMotorSpeed(0)),
-                                                                        new InstantCommand(() -> shooter.setMotorSpeed(0)))));
-                                
-/*         Driver2.y().whileTrue(
-                new SequentialCommandGroup(
-                        new InstantCommand(() -> pivot.goToAngle(75.56)),
+                        new InstantCommand(() -> pivot.goToAngle(Pivot.kLowMidAngleSP)),
                         new InstantCommand(() -> amp.starttimer()),
                         new ParallelCommandGroup(
                                 new RunCommand(() -> amp.setMotorSpeed(0.7)).until(
@@ -415,7 +383,7 @@ public class RobotContainer {
                                                 () -> SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value)))))
                 .onFalse(
                         new SequentialCommandGroup(
-                                new InstantCommand(() -> pivot.goToAngle(75.56)),
+                                new InstantCommand(() -> pivot.goToAngle(Pivot.kLowMidAngleSP)),
                                 new ParallelCommandGroup(
                                         new InstantCommand(() -> amp.starttimer()),
                                         new RunCommand(() -> amp.setMotorSpeed(-0.3)).until(
@@ -423,7 +391,7 @@ public class RobotContainer {
                                                 .andThen(new InstantCommand(() -> amp.setMotorSpeed(0.0))),
                                         new InstantCommand(() -> index.setMotorSpeed(0)),
                                         new InstantCommand(() -> shooter.setMotorSpeed(0)))));
- */
+ 
         // Center on Note Pickup
         Driver1.x().whileTrue(
                 new ParallelCommandGroup(

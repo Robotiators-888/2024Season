@@ -70,7 +70,7 @@ public class SUB_Amp extends SubsystemBase {
     double avg = ampController.getOutputCurrent();
 
     SmartDashboard.putNumber("Amp/OutputCurrent", avg);
-    return (currentTimer.hasElapsed(.3) && avg > 15.0);
+    return (currentTimer.hasElapsed(.1) && avg > 15.0);
   }
 
 }
