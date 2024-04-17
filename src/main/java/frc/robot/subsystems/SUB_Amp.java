@@ -46,6 +46,12 @@ public class SUB_Amp extends SubsystemBase {
   public void setMotorSpeed(double speed) {
     ampController.set(speed);
   }
+  public void setbreak(){
+    ampController.setIdleMode(IdleMode.kBrake);
+  }
+  public void setcoast(){
+    ampController.setIdleMode(IdleMode.kCoast);
+  }
 
   public boolean isAtForwardLimit() {
     return ampController.getForwardLimitSwitch(Type.kNormallyOpen).isPressed();
@@ -64,7 +70,7 @@ public class SUB_Amp extends SubsystemBase {
     double avg = ampController.getOutputCurrent();
 
     SmartDashboard.putNumber("Amp/OutputCurrent", avg);
-    return (currentTimer.hasElapsed(.15) && avg > 15.0);
+    return (currentTimer.hasElapsed(.1) && avg > 15.0);
   }
 
 }
