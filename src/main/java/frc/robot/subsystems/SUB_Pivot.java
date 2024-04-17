@@ -5,7 +5,6 @@ import static frc.robot.Constants.Pivot.*;
 import java.util.function.Supplier;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
@@ -29,17 +28,12 @@ public class SUB_Pivot extends SubsystemBase {
   public InterpolatingDoubleTreeMap constantApplicationMap = new InterpolatingDoubleTreeMap();
   private final CANSparkMax pivotMotor;
   public final SparkAbsoluteEncoder rotateEncoder;
-  private final RelativeEncoder rotateRelativeEncoder;
   private Timer pivotTimer;
-  private TrapezoidProfile pivotTrapezoidProfile;
   private SparkPIDController pivotPID;
   private double pivotSetpoint;
-  private TrapezoidProfile.State targetState;
   private TrapezoidProfile.State currentState;
 
-  private TrapezoidProfile.State nextState;
   private double feedforward;
-  private double manualValue;
   // Counteract Gravity on Arm, Currently lbsArm is arbitrary (For kG of FF)
   public InterpolatingDoubleTreeMap distToPivotAngle = new InterpolatingDoubleTreeMap();
   double gravitional_force_in_Kg = (lbsArm * 4.44822162) / 9.8;
@@ -55,8 +49,8 @@ public class SUB_Pivot extends SubsystemBase {
   private SUB_Pivot() {
     pivotMotor = new CANSparkMax(kPIVOT_ROTATE_MOTOR_CANID, MotorType.kBrushless);
     rotateEncoder = pivotMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
-    rotateRelativeEncoder = pivotMotor.getEncoder();
-    pivotTrapezoidProfile = new TrapezoidProfile(kArmMotionConstraint);
+    pivotMotor.getEncoder();
+    new TrapezoidProfile(kArmMotionConstraint);
     pivotMotor.restoreFactoryDefaults();
     pivotMotor.setOpenLoopRampRate(0.6); // motor takes 0.6 secs to reach desired power
     pivotMotor.setInverted(false);
@@ -74,7 +68,7 @@ public class SUB_Pivot extends SubsystemBase {
     pivotPID = pivotMotor.getPIDController();
     pivotPID.setFeedbackDevice(rotateEncoder);
     PIDGains.setSparkMaxGains(pivotPID, new PIDGains(0, 0, 0));
-    pivotPID.setOutputRange(-0.2, 0.2);
+    pivotPID.setOutputRange(-0.3, 0.3);
     setPIDF(pivotPID, 0.020, 0, 0.00, 0);
 
     Timer.delay(.1);
@@ -88,7 +82,7 @@ public class SUB_Pivot extends SubsystemBase {
     pivotTimer.start();
     pivotTimer.reset();
     setLimits();
-    targetState = new TrapezoidProfile.State(75, 0.0);
+    new TrapezoidProfile.State(75, 0.0);
     currentState = new TrapezoidProfile.State(75, 0.0);
 
     constantApplicationMap.put(107.0, -0.04);
@@ -175,7 +169,7 @@ public class SUB_Pivot extends SubsystemBase {
 
   public void goToAngle(double angle) {
     pivotSetpoint = Math.min(kMaxArmAngle, Math.max(kMinArmAngle, angle));
-    targetState = new TrapezoidProfile.State(pivotSetpoint, 0.0);
+    new TrapezoidProfile.State(pivotSetpoint, 0.0);
     currentState = new TrapezoidProfile.State(rotateEncoder.getPosition(), rotateEncoder.getVelocity());
   }
 

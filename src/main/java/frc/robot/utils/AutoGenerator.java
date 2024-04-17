@@ -88,11 +88,7 @@ public class AutoGenerator {
   }
 
   // ====================================================================
-  // Paths
-  // ====================================================================
-
-  // ====================================================================
-  // Routines
+  //                              Routines
   // ====================================================================
 
   public Command resetOdometry(Pose2d pose) {
@@ -153,9 +149,9 @@ public class AutoGenerator {
 
   // TODO: Test SEQ
   public Command scoringSequence() {
-    return new RunCommand(() -> shooter.shootFlywheelOnRPM(4000), shooter)
-        .until(() -> shooter.getFlywheelRPM() >= 3500)
-        .andThen(new RunCommand(() -> index.setMotorSpeed(0.5)).withTimeout(0.25))
+    return new RunCommand(() -> shooter.shootFlywheelOnRPM(4500), shooter)
+        .until(() -> shooter.getFlywheelRPM() >= 4000)
+        .andThen(new RunCommand(() -> index.setMotorSpeed(0.75)).withTimeout(0.10))
         .andThen(new InstantCommand(() -> index.setMotorSpeed(0)))
         .andThen(new InstantCommand(() -> intake.setHasNote(true)));
   }
@@ -165,8 +161,8 @@ public class AutoGenerator {
         new InstantCommand(() -> pivot.goToAngle(setpoint)),
         new WaitCommand(.25),
         new RunCommand(() -> shooter.shootFlywheelOnRPM(rpm), shooter)
-            .until(() -> shooter.getFlywheelRPM() >= rpm - 500)
-            .andThen(new RunCommand(() -> index.setMotorSpeed(0.5)).withTimeout(0.25))
+            .until(() -> shooter.getFlywheelRPM() >= rpm - 250)
+            .andThen(new RunCommand(() -> index.setMotorSpeed(0.75)).withTimeout(0.15))
             .andThen(new InstantCommand(() -> index.setMotorSpeed(0)))
             .andThen(new InstantCommand(() -> intake.setHasNote(true))));
   }
@@ -178,7 +174,7 @@ public class AutoGenerator {
         new WaitCommand(delay),
         new RunCommand(() -> shooter.shootFlywheelOnRPM(rpm), shooter)
             .until(() -> shooter.getFlywheelRPM() >= rpm - 250)
-            .andThen(new RunCommand(() -> index.setMotorSpeed(0.5)).withTimeout(0.25))
+            .andThen(new RunCommand(() -> index.setMotorSpeed(0.75)).withTimeout(0.15))
             .andThen(new InstantCommand(() -> index.setMotorSpeed(0)))
             .andThen(new InstantCommand(() -> intake.setHasNote(true))));
   }
@@ -246,14 +242,8 @@ public class AutoGenerator {
         new CMD_Shoot(shooter, index, drivetrain, intake, pivot));
   }
 
-  // public Command shootWhenReady(){
-  // return
-  // shooter.runOnce(()->shooter.setRPM(4000)).until(()->(shooter.getFlywheelRPM()
-  // >= 3500)).andThen(index.runOnce(()->index.setMotorSpeed(.5)));
-  // }
-
   // ====================================================================
-  // Helpers
+  //                                  Helpers
   // ====================================================================
 
   public void registerAllCommands() {
