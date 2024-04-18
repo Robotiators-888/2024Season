@@ -43,9 +43,7 @@ public class CMD_AutoCenterOnNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
     note = photonVision.getBestNote();
-
     robotAngleController.setTolerance(4.0);
   }
 
@@ -54,17 +52,15 @@ public class CMD_AutoCenterOnNote extends Command {
   public void execute() {
     note = photonVision.getBestNote();
 
-    // drivetrain.drive(
-    //   -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(1), 2), driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
-    //   -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(0), 2), driverController.getRawAxis(0)), OIConstants.kDriveDeadband),
+    if (note == null){
       
-    //   robotAngleController.calculate(note.getYaw(), 0),
-    //  true, true);
+    } else {
       drivetrain.drive(
       0,
       -MathUtil.clamp(robotAngleController.calculate(note.getYaw(), 0), -0.3, 0.3),
       0,
       false, true);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -76,6 +72,6 @@ public class CMD_AutoCenterOnNote extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return !SUB_PhotonVision.getInstance().hasResults;
   }
 }

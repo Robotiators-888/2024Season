@@ -55,17 +55,15 @@ public class CMD_CenterOnNote extends Command {
   public void execute() {
     note = photonVision.getBestNote();
 
-    // drivetrain.drive(
-    //   -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(1), 2), driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
-    //   -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(0), 2), driverController.getRawAxis(0)), OIConstants.kDriveDeadband),
-      
-    //   robotAngleController.calculate(note.getYaw(), 0),
-    //  true, true);
+    if (note == null){
+
+    } else {
       drivetrain.drive(
       -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(1), 2), driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
       -MathUtil.clamp(robotAngleController.calculate(note.getYaw(), 0), -0.3, 0.3),
       -MathUtil.applyDeadband(driverController.getRawAxis(4), OIConstants.kDriveDeadband),
       false, true);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -77,6 +75,6 @@ public class CMD_CenterOnNote extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return !SUB_PhotonVision.getInstance().hasResults;
   }
 }

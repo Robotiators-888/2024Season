@@ -403,33 +403,33 @@ public class RobotContainer {
                                         new InstantCommand(() -> index.setMotorSpeed(0)),
                                         new InstantCommand(() -> shooter.setMotorSpeed(0)))));
  
-        // Center on Note Pickup
+        // // Center on Note Pickup
         // Driver1.x().whileTrue(
         //         new ConditionalCommand(
-        //         new SequentialCommandGroup(
-        //                 new CMD_CenterOnNote(drivetrain, photonVision, Driver1).withTimeout(1.5),
-        //                 new ParallelCommandGroup(
-        //                         new RunCommand(() -> drivetrain.drive(-0.5, 0, 0, false, true))).withTimeout(3.0).until(() -> index.CurrentLimitSpike()),
-        //                         new InstantCommand(() -> pivot.goToAngle(75)),
-        //                         new InstantCommand(() -> index.starttimer()),
-        //                         new RunCommand(() -> index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
-        //                         new RunCommand(() -> intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
-        //                                 () -> index.CurrentLimitSpike())
-        //                         .andThen(
-        //                                 new InstantCommand(
-        //                                         () -> Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)),
-        //                                 new InstantCommand(
-        //                                         () -> Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)))
-        //                         .andThen(
-        //                                 new InstantCommand(() -> intake.setHasNote(true)),
-        //                                 new RunCommand(() -> index.setMotorSpeed(0.0)).withTimeout(0.0).andThen(
-        //                                         new ParallelCommandGroup(
-        //                                                 new InstantCommand(() -> index.setMotorSpeed(0)),
-        //                                                 new InstantCommand(() -> shooter.setMotorSpeed(0)),
-        //                                                 new InstantCommand(
-        //                                                         () -> SUB_LEDs.ledValue = BlinkinPattern.GREEN.value))))), 
-        //         new WaitCommand(0),
-        //         ()-> SUB_PhotonVision.getInstance().hasResults)                                                               
+        //                 new SequentialCommandGroup(
+        //                         new CMD_CenterOnNote(drivetrain, photonVision, Driver1).withTimeout(1.5),
+        //                         new ParallelCommandGroup(
+        //                                 new RunCommand(() -> drivetrain.drive(-0.5, 0, 0, false, true))).withTimeout(3.0).until(() -> index.CurrentLimitSpike()),
+        //                                 new InstantCommand(() -> pivot.goToAngle(75)),
+        //                                 new InstantCommand(() -> index.starttimer()),
+        //                                 new RunCommand(() -> index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
+        //                                 new RunCommand(() -> intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
+        //                                         () -> index.CurrentLimitSpike())
+        //                                 .andThen(
+        //                                         new InstantCommand(
+        //                                                 () -> Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)),
+        //                                         new InstantCommand(
+        //                                                 () -> Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)))
+        //                                 .andThen(
+        //                                         new InstantCommand(() -> intake.setHasNote(true)),
+        //                                         new RunCommand(() -> index.setMotorSpeed(0.0)).withTimeout(0.0).andThen(
+        //                                                 new ParallelCommandGroup(
+        //                                                         new InstantCommand(() -> index.setMotorSpeed(0)),
+        //                                                         new InstantCommand(() -> shooter.setMotorSpeed(0)),
+        //                                                         new InstantCommand(
+        //                                                                 () -> SUB_LEDs.ledValue = BlinkinPattern.GREEN.value))))), 
+        //                 new WaitCommand(0),
+        //                 ()-> SUB_PhotonVision.getInstance().hasResults))                                                               
         //         .onFalse(
         //                 new ParallelCommandGroup(
         //                         new InstantCommand(() -> index.setMotorSpeed(0)),
