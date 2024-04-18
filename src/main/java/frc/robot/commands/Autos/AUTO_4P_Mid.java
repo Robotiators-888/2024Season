@@ -10,6 +10,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.*;
 import frc.robot.utils.AutoGenerator;
 
@@ -38,11 +40,13 @@ public class AUTO_4P_Mid extends AutoPaths {
                 autos.scoringSequence(Pivot.kSpeakerAngleSP - 6, 4000, 0.45),
                 autos.resetOdometry(startingPose),
 
+                new WaitCommand(RobotContainer.delayChooser.getSelected().doubleValue()),
+
                 autos.pathIntake(p1Name).withTimeout(4),
-                autos.scoringSequence(Pivot.kLowAngleSP + 4, 4000, 0.33),
+                autos.scoringSequence(Pivot.kLowAngleSP + 6, 4000, 0.33),
 
                 autos.pathIntake(p2Name).withTimeout(4),
-                autos.scoringSequence(Pivot.kLowAngleSP + 3, 4000, 0.33),
+                autos.scoringSequence(Pivot.kLowAngleSP + 6, 4000, 0.33),
 
                 autos.pathIntake(p3Name).withTimeout(4.5),
                 autos.scoringSequence(Pivot.kLowMidAngleSP - 11, 4000, 0.33));

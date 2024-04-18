@@ -10,7 +10,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.Pivot;
+import frc.robot.RobotContainer;
 import frc.robot.commands.Autos.AutoPaths;
 import frc.robot.utils.AutoGenerator;
 import frc.robot.utils.PathPlannerBase;
@@ -41,6 +43,7 @@ public class AUTO_MidLine_FourP_One extends AutoPaths {
         return new SequentialCommandGroup(
             autos.scoringSequence(Pivot.kSpeakerAngleSP-6,4000, 0.45),
             autos.resetOdometry(startingPose),
+                new WaitCommand(RobotContainer.delayChooser.getSelected().doubleValue()),
 
             autos.pathIntake(p1Name).withTimeout(4),
             autos.scoringSequence(Pivot.kLowAngleSP+3, 4000, 0.33),

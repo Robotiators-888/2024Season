@@ -32,7 +32,7 @@ public class SUB_Amp extends SubsystemBase {
     ampController = new CANSparkMax(42, MotorType.kBrushless);
     ampController.restoreFactoryDefaults();
 
-    ampController.setSmartCurrentLimit(30);
+    ampController.setSmartCurrentLimit(20);
 
     ampController.setInverted(false);
     ampController.setIdleMode(IdleMode.kBrake);
