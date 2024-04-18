@@ -81,7 +81,8 @@ public class RobotContainer {
 
         standardPosChecker.addOption("Odometery Init", Boolean.TRUE);
         standardPosChecker.setDefaultOption("ATag Init", Boolean.FALSE);
-        SmartDashboard.putData(standardPosChecker);
+        SmartDashboard.putData("Standard Pose Chooser", standardPosChecker);
+
 
         delayChooser.setDefaultOption("0 Sec", Double.valueOf(0.0));
         delayChooser.addOption("1 Sec", Double.valueOf(1.0));
@@ -89,7 +90,7 @@ public class RobotContainer {
         delayChooser.addOption("3 Sec", Double.valueOf(3.0));
         delayChooser.addOption("4 Sec", Double.valueOf(4.0));
         delayChooser.addOption("5 Sec", Double.valueOf(5.0));
-        SmartDashboard.putData(delayChooser);
+        SmartDashboard.putData("Delay Chooser", delayChooser);
 
 
         // Configure the trigger bindings

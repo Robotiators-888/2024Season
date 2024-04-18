@@ -46,7 +46,7 @@ public class AUTO_4P_Mid extends AutoPaths {
                 autos.scoringSequence(Pivot.kLowAngleSP + 6, 4000, 0.33),
 
                 autos.pathIntake(p2Name).withTimeout(4),
-                autos.scoringSequence(Pivot.kLowAngleSP + 6, 4000, 0.33),
+                autos.scoringSequence(Pivot.kLowAngleSP + 9, 4000, 0.33),
 
                 autos.pathIntake(p3Name).withTimeout(4.5),
                 autos.scoringSequence(Pivot.kLowMidAngleSP - 11, 4000, 0.33));
