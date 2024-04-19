@@ -89,8 +89,6 @@ public class CMD_AutoAimOnDist extends Command {
     0, 0,
     robotAngleController.calculate(MathUtil.angleModulus(currentPose.getRotation().getRadians()), angle),
   true, true);
-    
-
   }
 
   // Called once the command ends or is interrupted.

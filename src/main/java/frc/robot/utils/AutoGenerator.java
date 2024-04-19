@@ -110,6 +110,17 @@ public class AutoGenerator {
     }
   }
 
+  public Command aimedShot(){
+    return new CMD_AutoAimOnDist(SUB_Pivot.getInstance(), SUB_Drivetrain.getInstance()).withTimeout(1.2).andThen(
+      new ParallelCommandGroup(
+        new RunCommand(() -> shooter.shootFlywheelOnRPM(4000), shooter),
+        new SequentialCommandGroup(
+                new WaitUntilCommand(() -> shooter.getFlywheelRPM() >= 3500),
+                new RunCommand(() -> index.setMotorSpeed(0.5), index),
+                new InstantCommand(() -> intake.setHasNote(false))))
+    );
+  }
+
   public Command visionAlignToNote() {
     return new ConditionalCommand(
         new ParallelCommandGroup(
