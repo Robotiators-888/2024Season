@@ -123,7 +123,7 @@ public class AutoGenerator {
             new ParallelCommandGroup(
                 new InstantCommand(() -> index.setMotorSpeed(0.0), index)), 
                 new InstantCommand(()->drivetrain.drive(0, 0, 0, true, true)))
-    ).withTimeout(1.5);
+    );
   }
 
   public Command visionAlignToNote() {
