@@ -28,6 +28,7 @@ import frc.robot.RobotContainer;
 import frc.robot.commands.AutoActions.CMD_Shoot;
 import frc.robot.commands.AutoActions.CMD_ShootSEQ;
 import frc.robot.commands.Limelight.CMD_AutoAimOnDist;
+import frc.robot.commands.Limelight.CMD_AutoAimOnDist_NO_DRIVE;
 import frc.robot.commands.Limelight.CMD_AutoCenterOnNote;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
@@ -124,6 +125,20 @@ public class AutoGenerator {
                 new InstantCommand(() -> index.setMotorSpeed(0.0), index)), 
                 new InstantCommand(()->drivetrain.drive(0, 0, 0, true, true)))
     );
+  }
+
+  public Command aimedShotWithoutDrive(){
+    return 
+      new CMD_AutoAimOnDist_NO_DRIVE(SUB_Pivot.getInstance(), SUB_Drivetrain.getInstance()).withTimeout(0.3)
+        .andThen(
+          new ParallelCommandGroup(
+            new RunCommand(() -> shooter.shootFlywheelOnRPM(4000), shooter),
+            new SequentialCommandGroup(
+                    new WaitUntilCommand(() -> shooter.getFlywheelRPM() >= 3500),
+                    new RunCommand(() -> index.setMotorSpeed(0.5), index).withTimeout(0.10),
+                    new InstantCommand(() -> intake.setHasNote(false)))).andThen(
+            new ParallelCommandGroup(
+                new InstantCommand(() -> index.setMotorSpeed(0.0), index))));
   }
 
   public Command visionAlignToNote() {
