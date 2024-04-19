@@ -30,7 +30,7 @@ public class CMD_AutoCenterOnNote extends Command {
 
   CommandXboxController driverController;
 
-  private final PIDController robotAngleController = new PIDController( 0.01, 0, .0005); // 0.25, 0, 0
+  private final PIDController robotAngleController = new PIDController( 0.015, 0, .0005); // 0.25, 0, 0
   private PhotonTrackedTarget note;
   
   /** Creates a new CMD_AdjustPivotOnDist. */

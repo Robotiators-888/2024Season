@@ -25,8 +25,8 @@ public class AUTO_5P_Mid_STAGE extends AutoPaths {
                 autos.setPivotSetpoint(Pivot.kLowAngleSP),
                 PathPlannerBase.followTrajectory(p1Name),
 
-               // autos.visionAlignToNote());
-                autos.pathIntake(p2Name));
+               autos.visionAlignToNote());
+                // autos.pathIntake(p2Name));
     }
 
 }

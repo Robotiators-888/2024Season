@@ -43,10 +43,11 @@ public class AUTO_MidLine_Bottom_Three extends AutoPaths {
         }
 
         return new SequentialCommandGroup(
+                new WaitCommand(RobotContainer.delayChooser.getSelected().doubleValue()),
+
                 autos.resetOdometry(startingPose),
                 PathPlannerBase.followTrajectory(p0Name).withTimeout(1),
                 autos.scoringSequence(Pivot.kSpeakerAngleSP - 20, 4000, 0.45),
-                new WaitCommand(RobotContainer.delayChooser.getSelected().doubleValue()),
 
                 autos.pathIntake(p1Name).withTimeout(4),
                 PathPlannerBase.followTrajectory(p2Name).withTimeout(4),

@@ -320,9 +320,7 @@ public class RobotContainer {
                                                                 .setRumble(GenericHID.RumbleType.kBothRumble, 0)),
                                                         new InstantCommand(() -> Driver2.getHID()
                                                                 .setRumble(GenericHID.RumbleType.kBothRumble, 0))),
-                                                new WaitCommand(1.0),
-                                                new InstantCommand(
-                                                        () -> pivot.goToAngle(Constants.Pivot.kLowAngleSP)))));
+                                                new WaitCommand(1.0))));
 
         // Outtake button
         Driver2.x().whileTrue(
@@ -379,73 +377,70 @@ public class RobotContainer {
         //                                 new InstantCommand(() -> index.setMotorSpeed(0)),
         //                                 new InstantCommand(() -> shooter.setMotorSpeed(0)))));
                                         
-//       Driver2.y().whileTrue(
-//                 new SequentialCommandGroup(
-//                         new InstantCommand(() -> pivot.goToAngle(Pivot.kLowMidAngleSP)),
-//                         new InstantCommand(() -> amp.starttimer()),
-//                         new ParallelCommandGroup(
-//                                 new RunCommand(() -> amp.setMotorSpeed(0.7)).withTimeout(0.75)
-//                                         .andThen(new InstantCommand(() -> amp.setMotorSpeed(0.0))),
-//                                 new RunCommand(() -> shooter.shootFlywheelOnRPM(1000), shooter),
-//                                 new SequentialCommandGroup(
-//                                         new WaitCommand(0.5),
-//                                         new WaitUntilCommand(() -> shooter.getFlywheelRPM() >= 500),
-//                                         new RunCommand(() -> index.setMotorSpeed(0.5), index),
-//                                         new InstantCommand(() -> intake.setHasNote(false)),
-//                                         new InstantCommand(
-//                                                 () -> SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value)))))
-//                 .onFalse(
-//                         new SequentialCommandGroup(
-//                                 new InstantCommand(() -> pivot.goToAngle(Pivot.kLowMidAngleSP)),
-//                                 new ParallelCommandGroup(
-//                                         new InstantCommand(() -> amp.starttimer()),
-//                                         new RunCommand(() -> amp.setMotorSpeed(-0.3)).withTimeout(0.6)
-//                                                 .andThen(new InstantCommand(() -> amp.setMotorSpeed(0.0))),
-//                                         new InstantCommand(() -> index.setMotorSpeed(0)),
-//                                         new InstantCommand(() -> shooter.setMotorSpeed(0)))));
+      Driver2.y().whileTrue(
+                new SequentialCommandGroup(
+                        new InstantCommand(() -> pivot.goToAngle(Pivot.kLowMidAngleSP)),
+                        new InstantCommand(() -> amp.starttimer()),
+                        new ParallelCommandGroup(
+                                new RunCommand(() -> amp.setMotorSpeed(0.7)).withTimeout(0.75)
+                                        .andThen(new InstantCommand(() -> amp.setMotorSpeed(0.0))),
+                                new RunCommand(() -> shooter.shootFlywheelOnRPM(1000), shooter),
+                                new SequentialCommandGroup(
+                                        new WaitCommand(0.5),
+                                        new WaitUntilCommand(() -> shooter.getFlywheelRPM() >= 500),
+                                        new RunCommand(() -> index.setMotorSpeed(0.5), index),
+                                        new InstantCommand(() -> intake.setHasNote(false)),
+                                        new InstantCommand(
+                                                () -> SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value)))))
+                .onFalse(
+                        new SequentialCommandGroup(
+                                new InstantCommand(() -> pivot.goToAngle(Pivot.kLowMidAngleSP)),
+                                new ParallelCommandGroup(
+                                        new InstantCommand(() -> amp.starttimer()),
+                                        new RunCommand(() -> amp.setMotorSpeed(-0.3)).withTimeout(0.6)
+                                                .andThen(new InstantCommand(() -> amp.setMotorSpeed(0.0))),
+                                        new InstantCommand(() -> index.setMotorSpeed(0)),
+                                        new InstantCommand(() -> shooter.setMotorSpeed(0)))));
  
 //         // // Center on Note Pickup
-//         Driver1.x().whileTrue(
-//                 new ConditionalCommand(
-//                         new SequentialCommandGroup(
-//                                 new CMD_CenterOnNote(drivetrain, photonVision, Driver1).withTimeout(1.5),
-//                                 new ParallelCommandGroup(
-//                                         new RunCommand(() -> drivetrain.drive(-0.5, 0, 0, false, true))).withTimeout(3.0).until(() -> index.CurrentLimitSpike()),
-//                                         new InstantCommand(() -> pivot.goToAngle(75)),
-//                                         new InstantCommand(() -> index.starttimer()),
-//                                         new RunCommand(() -> index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
-//                                         new RunCommand(() -> intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
-//                                                 () -> index.CurrentLimitSpike())
-//                                         .andThen(
-//                                                 new InstantCommand(
-//                                                         () -> Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)),
-//                                                 new InstantCommand(
-//                                                         () -> Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)))
-//                                         .andThen(
-//                                                 new InstantCommand(() -> intake.setHasNote(true)),
-//                                                 new RunCommand(() -> index.setMotorSpeed(0.0)).withTimeout(0.0).andThen(
-//                                                         new ParallelCommandGroup(
-//                                                                 new InstantCommand(() -> index.setMotorSpeed(0)),
-//                                                                 new InstantCommand(() -> shooter.setMotorSpeed(0)),
-//                                                                 new InstantCommand(
-//                                                                         () -> SUB_LEDs.ledValue = BlinkinPattern.GREEN.value)))), 
-//                         new WaitCommand(0),
-//                         ()-> SUB_PhotonVision.getInstance().hasResults))                                                               
-//                 .onFalse(
-//                         new ParallelCommandGroup(
-//                                 new InstantCommand(() -> index.setMotorSpeed(0)),
-//                                 new InstantCommand(() -> intake.setMotorSpeed(0)),
-//                                 new InstantCommand(() -> shooter.shootFlywheelOnRPM(4000))).andThen(
-//                                         new SequentialCommandGroup(
-//                                                 new WaitCommand(.5),
-//                                                 new ParallelCommandGroup(
-//                                                         new InstantCommand(() -> Driver1.getHID()
-//                                                                 .setRumble(GenericHID.RumbleType.kBothRumble, 0)),
-//                                                         new InstantCommand(() -> Driver2.getHID()
-//                                                                 .setRumble(GenericHID.RumbleType.kBothRumble, 0))),
-//                                                 new WaitCommand(1.0),
-//                                                 new InstantCommand(
-//                                                         () -> pivot.goToAngle(Constants.Pivot.kLowAngleSP)))));
+        Driver1.x().whileTrue(
+                new ConditionalCommand(
+                        new SequentialCommandGroup(
+                                new CMD_CenterOnNote(drivetrain, photonVision, Driver1).withTimeout(1.5),
+                                new ParallelCommandGroup(
+                                        new RunCommand(() -> drivetrain.drive(-0.5, 0, 0, false, true))).withTimeout(3.0).until(() -> index.CurrentLimitSpike()),
+                                        new InstantCommand(() -> pivot.goToAngle(75)),
+                                        new InstantCommand(() -> index.starttimer()),
+                                        new RunCommand(() -> index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
+                                        new RunCommand(() -> intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
+                                                () -> index.CurrentLimitSpike())
+                                        .andThen(
+                                                new InstantCommand(
+                                                        () -> Driver1.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)),
+                                                new InstantCommand(
+                                                        () -> Driver2.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1)))
+                                        .andThen(
+                                                new InstantCommand(() -> intake.setHasNote(true)),
+                                                new RunCommand(() -> index.setMotorSpeed(0.0)).withTimeout(0.0).andThen(
+                                                        new ParallelCommandGroup(
+                                                                new InstantCommand(() -> index.setMotorSpeed(0)),
+                                                                new InstantCommand(() -> shooter.setMotorSpeed(0)),
+                                                                new InstantCommand(
+                                                                        () -> SUB_LEDs.ledValue = BlinkinPattern.GREEN.value)))), 
+                        new WaitCommand(0),
+                        ()-> SUB_PhotonVision.getInstance().hasResults))                                                               
+                .onFalse(
+                        new ParallelCommandGroup(
+                                new InstantCommand(() -> index.setMotorSpeed(0)),
+                                new InstantCommand(() -> intake.setMotorSpeed(0)),
+                                new InstantCommand(() -> shooter.shootFlywheelOnRPM(4000))).andThen(
+                                        new SequentialCommandGroup(
+                                                new WaitCommand(.5),
+                                                new ParallelCommandGroup(
+                                                        new InstantCommand(() -> Driver1.getHID()
+                                                                .setRumble(GenericHID.RumbleType.kBothRumble, 0)),
+                                                        new InstantCommand(() -> Driver2.getHID()
+                                                                .setRumble(GenericHID.RumbleType.kBothRumble, 0))))));
 
     }
 

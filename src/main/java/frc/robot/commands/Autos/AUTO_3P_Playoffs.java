@@ -40,13 +40,10 @@ public class AUTO_3P_Playoffs extends AutoPaths {
                 startingPose = p1.getPreviewStartingHolonomicPose();
             }
         }
-        startingPose.rotateBy(Rotation2d.fromDegrees(180));
         return Commands.sequence(
                 autos.scoringSequence(Pivot.kSpeakerAngleSP - 6, 4000, 0.45),
                 autos.resetOdometry(startingPose),
-                new RunCommand(() -> RobotContainer.photonPoseUpdate()).withTimeout(0.5),
-                new InstantCommand(() -> SUB_Drivetrain.getInstance().setGyroRotation(180)),
-
+                
                 autos.pathIntake(p1Name).withTimeout(4),
                 autos.scoringSequence(Pivot.kLowAngleSP + 2, 4000, 0.45),
 

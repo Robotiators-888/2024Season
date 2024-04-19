@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.FieldConstants;
@@ -112,7 +113,7 @@ public class AutoGenerator {
   public Command visionAlignToNote() {
     return new ConditionalCommand(
         new ParallelCommandGroup(
-          new CMD_AutoCenterOnNote(drivetrain, photonVision).withTimeout(1.5).andThen(
+          new CMD_AutoCenterOnNote(drivetrain, photonVision).withTimeout(2.5).andThen(
               new RunCommand(() -> drivetrain.drive(-0.5, 0, 0, false, true))).withTimeout(3.0)
               .until(() -> index.CurrentLimitSpike()),
           new ParallelCommandGroup(
@@ -163,7 +164,8 @@ public class AutoGenerator {
   public Command scoringSequence(double setpoint, int rpm) {
     return new SequentialCommandGroup(
         new InstantCommand(() -> pivot.goToAngle(setpoint)),
-        new WaitCommand(.25),
+        //new WaitCommand(.25),
+        new WaitUntilCommand(()->(Math.abs(pivot.getAngle()-setpoint)<=2)),
         new RunCommand(() -> shooter.shootFlywheelOnRPM(rpm), shooter)
             .until(() -> shooter.getFlywheelRPM() >= rpm - 250)
             .andThen(new RunCommand(() -> index.setMotorSpeed(0.75)).withTimeout(0.15))
