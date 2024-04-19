@@ -163,7 +163,7 @@ public class AutoGenerator {
               new ParallelCommandGroup(
                   new InstantCommand(() -> index.setMotorSpeed(0)),
                   new InstantCommand(() -> intake.setMotorSpeed(0)),
-                  new InstantCommand(() -> shooter.shootFlywheelOnRPM(4000)))),
+                  new InstantCommand(() -> shooter.shootFlywheelOnRPM(0)))),
         new WaitCommand(0),
         ()->SUB_PhotonVision.getInstance().hasResults);
   }

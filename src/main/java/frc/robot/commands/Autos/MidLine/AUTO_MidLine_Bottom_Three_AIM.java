@@ -49,12 +49,14 @@ public class AUTO_MidLine_Bottom_Three_AIM extends AutoPaths {
                 PathPlannerBase.followTrajectory(p0Name).withTimeout(1),
                 autos.aimedShot().withTimeout(1.5),
 
-                autos.pathIntake(p1Name).withTimeout(4),
+                autos.pathIntake(p1Name).withTimeout(3.55),
+                autos.visionAlignToNote().withTimeout(1.5),
                 PathPlannerBase.followTrajectory(p2Name).withTimeout(4),
                 autos.aimedShot().withTimeout(1.5),
                 // autos.autoAimShot(0.0),
 
-                autos.pathIntake(p3Name).withTimeout(4),
+                autos.pathIntake(p3Name).withTimeout(3.35),
+                autos.visionAlignToNote().withTimeout(1.5),
                 PathPlannerBase.followTrajectory(p4Name).withTimeout(4),
                 autos.aimedShot().withTimeout(1.5)
 

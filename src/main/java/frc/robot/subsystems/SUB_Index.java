@@ -31,10 +31,10 @@ public class SUB_Index extends SubsystemBase {
   }
 
   public boolean CurrentLimitSpike() {
-    double avg = (indexLeft.getOutputCurrent() + indexRight.getOutputCurrent()) / 2.0;
+    double avg = (indexLeft.getOutputCurrent());
 
     SmartDashboard.putNumber("Index/OutputCurrent", avg);
-    return (currentTimer.hasElapsed(.45) && avg > 15.0);
+    return (currentTimer.hasElapsed(.35) && avg > 15.0);
   }
 
   public static SUB_Index getInstance() {

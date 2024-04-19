@@ -43,7 +43,7 @@ public class AUTO_3P_Playoffs extends AutoPaths {
         return Commands.sequence(
                 autos.scoringSequence(Pivot.kSpeakerAngleSP - 6, 4000, 0.45),
                 autos.resetOdometry(startingPose),
-                
+
                 autos.pathIntake(p1Name).withTimeout(4),
                 autos.scoringSequence(Pivot.kLowAngleSP + 2, 4000, 0.45),
 

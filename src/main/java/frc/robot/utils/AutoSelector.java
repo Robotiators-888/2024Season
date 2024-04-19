@@ -32,8 +32,9 @@ public class AutoSelector {
         chooser.addOption("3P_Top", new AUTO_3P_Top());
         chooser.addOption("3P_Middle", new AUTO_3P_Mid());
         chooser.addOption("3P_Midline_ONLY_Bottom", new AUTO_MidLine_Bottom_Three());
+        chooser.addOption("3P_Midline_AIM_ONLY_Bottom", new AUTO_MidLine_Bottom_Three_AIM());
+
         chooser.addOption("3P_Midline_Top", new AUTO_3P_Playoffs());
-        chooser.addOption("3P_Midline_ONLY_Bottom_AIM", new AUTO_MidLine_Bottom_Three_AIM());
 
 
         chooser.addOption("4P_MidLine_3_1st", new AUTO_MidLine_FourP_One());
