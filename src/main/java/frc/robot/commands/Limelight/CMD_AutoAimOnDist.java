@@ -95,6 +95,7 @@ public class CMD_AutoAimOnDist extends Command {
   @Override
   public void end(boolean interrupted) {
     SmartDashboard.putBoolean("SPEAKER LOCK?", true);
+    drivetrain.drive(0, 0, 0, true, true);
 
   }
 
