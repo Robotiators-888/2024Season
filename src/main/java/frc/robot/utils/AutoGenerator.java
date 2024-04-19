@@ -117,7 +117,10 @@ public class AutoGenerator {
         new SequentialCommandGroup(
                 new WaitUntilCommand(() -> shooter.getFlywheelRPM() >= 3500),
                 new RunCommand(() -> index.setMotorSpeed(0.5), index),
-                new InstantCommand(() -> intake.setHasNote(false))))
+                new InstantCommand(() -> intake.setHasNote(false)))).andThen(
+                new ParallelCommandGroup(
+                    new InstantCommand(() -> intake.setHasNote(true)),
+                    new InstantCommand(() -> index.setMotorSpeed(0.0), index)))
     );
   }
 
