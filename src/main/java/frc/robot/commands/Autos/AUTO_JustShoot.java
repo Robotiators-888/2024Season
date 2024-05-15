@@ -11,13 +11,11 @@ import frc.robot.utils.AutoGenerator;
 
 /** Add your docs here. */
 public class AUTO_JustShoot extends AutoPaths {
-    
 
     @Override
     public Command load(AutoGenerator autos) {
         return Commands.sequence(
-            autos.scoringSequence(Pivot.kSpeakerAngleSP-6, 4000)
-        );
+                autos.scoringSequence(Pivot.kSpeakerAngleSP - 6, 4000));
 
     }
 }

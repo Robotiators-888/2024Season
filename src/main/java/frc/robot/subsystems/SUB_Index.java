@@ -21,26 +21,26 @@ public class SUB_Index extends SubsystemBase {
   DigitalInput dio9 = new DigitalInput(9);
   Timer currentTimer = new Timer();
 
-  public boolean getTopBannerSensor(){
+  public boolean getTopBannerSensor() {
     return dio9.get();
   }
 
-  public void starttimer(){
-  currentTimer.reset();
-  currentTimer.start();
+  public void starttimer() {
+    currentTimer.reset();
+    currentTimer.start();
   }
 
-  public boolean CurrentLimitSpike(){
-    double avg = (indexLeft.getOutputCurrent()+indexRight.getOutputCurrent())/2.0;
+  public boolean CurrentLimitSpike() {
+    double avg = (indexLeft.getOutputCurrent());
 
     SmartDashboard.putNumber("Index/OutputCurrent", avg);
-    return (currentTimer.hasElapsed(.45) && avg > 15.0);
+    return (currentTimer.hasElapsed(.35) && avg > 15.0);
   }
 
-  public static SUB_Index getInstance(){
-    if (INSTANCE == null){
+  public static SUB_Index getInstance() {
+    if (INSTANCE == null) {
       INSTANCE = new SUB_Index();
-    } 
+    }
 
     return INSTANCE;
   }
@@ -59,20 +59,20 @@ public class SUB_Index extends SubsystemBase {
     indexRight.setSmartCurrentLimit(40);
     indexLeft.enableVoltageCompensation(12);
     indexRight.enableVoltageCompensation(12);
-    indexRight.follow(indexLeft, true); 
+    indexRight.follow(indexLeft, true);
     indexLeft.setIdleMode(IdleMode.kBrake);
     indexRight.setIdleMode(IdleMode.kBrake);
     Timer.delay(.1);
-    
+
     indexLeft.burnFlash();
     indexRight.burnFlash();
-    //Timer.delay(0.2);
+    // Timer.delay(0.2);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    //SmartDashboard.putNumber("Index RPM", indexLeft.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("Index RPM", indexLeft.getEncoder().getVelocity());
     SmartDashboard.putBoolean("Index/Banner", getTopBannerSensor());
     SmartDashboard.putNumber("Index/LeftIndexCurrent", indexLeft.getOutputCurrent());
     SmartDashboard.putNumber("Index/RightIndexCurrent", indexRight.getOutputCurrent());
@@ -80,8 +80,8 @@ public class SUB_Index extends SubsystemBase {
     SmartDashboard.putNumber("Index/RightIndexVelocity", indexRight.getEncoder().getVelocity());
   }
 
-  public void setMotorSpeed(double speed){
-    
+  public void setMotorSpeed(double speed) {
+
     indexLeft.set(speed);
   }
 }

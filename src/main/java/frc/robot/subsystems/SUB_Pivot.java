@@ -5,7 +5,6 @@ import static frc.robot.Constants.Pivot.*;
 import java.util.function.Supplier;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
@@ -29,102 +28,97 @@ public class SUB_Pivot extends SubsystemBase {
   public InterpolatingDoubleTreeMap constantApplicationMap = new InterpolatingDoubleTreeMap();
   private final CANSparkMax pivotMotor;
   public final SparkAbsoluteEncoder rotateEncoder;
-  private final RelativeEncoder rotateRelativeEncoder;
   private Timer pivotTimer;
-  private TrapezoidProfile pivotTrapezoidProfile;
   private SparkPIDController pivotPID;
   private double pivotSetpoint;
-  private TrapezoidProfile.State targetState;
   private TrapezoidProfile.State currentState;
 
-  private TrapezoidProfile.State nextState;
   private double feedforward;
-  private double manualValue;
   // Counteract Gravity on Arm, Currently lbsArm is arbitrary (For kG of FF)
   public InterpolatingDoubleTreeMap distToPivotAngle = new InterpolatingDoubleTreeMap();
   double gravitional_force_in_Kg = (lbsArm * 4.44822162) / 9.8;
 
-public static SUB_Pivot getInstance(){
-  if (INSTANCE == null){
-    INSTANCE = new SUB_Pivot();
+  public static SUB_Pivot getInstance() {
+    if (INSTANCE == null) {
+      INSTANCE = new SUB_Pivot();
+    }
+
+    return INSTANCE;
   }
 
-  return INSTANCE;
-}
+  private SUB_Pivot() {
+    pivotMotor = new CANSparkMax(kPIVOT_ROTATE_MOTOR_CANID, MotorType.kBrushless);
+    rotateEncoder = pivotMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+    pivotMotor.getEncoder();
+    new TrapezoidProfile(kArmMotionConstraint);
+    pivotMotor.restoreFactoryDefaults();
+    pivotMotor.setOpenLoopRampRate(0.6); // motor takes 0.6 secs to reach desired power
+    pivotMotor.setInverted(false);
+    pivotMotor.setIdleMode(IdleMode.kBrake);
+    rotateEncoder.setPositionConversionFactor(360);
+    rotateEncoder.setVelocityConversionFactor(360);
+    rotateEncoder.setInverted(true);
+    rotateEncoder.setZeroOffset(Pivot.kPivotOffset); // We are accepting that this is broken
+    pivotMotor.setSmartCurrentLimit(50);
+    // pivotEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
+    // pivotEncoder.setVelocityConversionFactor(1.0/4.0 * 2 * Math.PI);
+    // pivotEncoder.setPositionConversionFactor(1.0/4.0 * 2 * Math.PI);
+    // rotateRelativeEncoder.setPositionConversionFactor(1.0/(300.0)*2*Math.PI);
+    // rotateRelativeEncoder.setPosition(pivotEncoder.getPosition());
+    pivotPID = pivotMotor.getPIDController();
+    pivotPID.setFeedbackDevice(rotateEncoder);
+    PIDGains.setSparkMaxGains(pivotPID, new PIDGains(0, 0, 0));
+    pivotPID.setOutputRange(-0.3, 0.3);
+    setPIDF(pivotPID, 0.020, 0, 0.00, 0);
 
- private SUB_Pivot(){
-        pivotMotor = new CANSparkMax(kPIVOT_ROTATE_MOTOR_CANID, MotorType.kBrushless);
-        rotateEncoder = pivotMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
-        rotateRelativeEncoder = pivotMotor.getEncoder();
-        pivotTrapezoidProfile = new TrapezoidProfile(kArmMotionConstraint);
-        pivotMotor.restoreFactoryDefaults();
-        pivotMotor.setOpenLoopRampRate(0.6); // motor takes 0.6 secs to reach desired power
-        pivotMotor.setInverted(false);
-        pivotMotor.setIdleMode(IdleMode.kBrake);
-        rotateEncoder.setPositionConversionFactor(360);
-        rotateEncoder.setVelocityConversionFactor(360);
-        rotateEncoder.setInverted(true);
-        rotateEncoder.setZeroOffset(Pivot.kPivotOffset); // We are accepting that this is broken
-        pivotMotor.setSmartCurrentLimit(50);
-        // pivotEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
-        // pivotEncoder.setVelocityConversionFactor(1.0/4.0 * 2 * Math.PI);
-        // pivotEncoder.setPositionConversionFactor(1.0/4.0 * 2 * Math.PI);
-        // rotateRelativeEncoder.setPositionConversionFactor(1.0/(300.0)*2*Math.PI);
-        // rotateRelativeEncoder.setPosition(pivotEncoder.getPosition());
-        pivotPID = pivotMotor.getPIDController();
-        pivotPID.setFeedbackDevice(rotateEncoder);
-        PIDGains.setSparkMaxGains(pivotPID, new PIDGains(0, 0, 0));
-        pivotPID.setOutputRange(-0.2, 0.2);
-        setPIDF(pivotPID, 0.020, 0, 0.00, 0);
+    Timer.delay(.1);
 
-        Timer.delay(.1);
-        
-        
-        System.out.println("DONE");
-        pivotMotor.burnFlash();
-      
-        pivotSetpoint = khome;
-        
+    System.out.println("DONE");
+    pivotMotor.burnFlash();
 
-        pivotTimer = new Timer();
-        pivotTimer.start();
-        pivotTimer.reset(); 
-        setLimits();
-        targetState = new TrapezoidProfile.State(75, 0.0);
-        currentState = new TrapezoidProfile.State(75, 0.0);
+    pivotSetpoint = khome;
 
-        constantApplicationMap.put(107.0 , -0.04);
-        constantApplicationMap.put(95.0, -0.08);
-        constantApplicationMap.put(61.0, -0.03);
-        
-        distToPivotAngle.put(Units.inchesToMeters(36.0), 86.0-27.0);
-        distToPivotAngle.put(Units.inchesToMeters(49), 59.0);
-        distToPivotAngle.put(Units.inchesToMeters(61), 53.0);
-        distToPivotAngle.put(Units.inchesToMeters(73), 45.0);
-        distToPivotAngle.put(Units.inchesToMeters(87), 44.0);
-        distToPivotAngle.put(Units.inchesToMeters(85), 41.0);
-        
-        distToPivotAngle.put(Units.inchesToMeters(97), 37.0);
-        distToPivotAngle.put(Units.inchesToMeters(109), 36.0);
-        distToPivotAngle.put(Units.inchesToMeters(121), 34.0);
-        //distToPivotAngle.put()
+    pivotTimer = new Timer();
+    pivotTimer.start();
+    pivotTimer.reset();
+    setLimits();
+    new TrapezoidProfile.State(75, 0.0);
+    currentState = new TrapezoidProfile.State(75, 0.0);
 
+    constantApplicationMap.put(107.0, -0.04);
+    constantApplicationMap.put(95.0, -0.08);
+    constantApplicationMap.put(61.0, -0.03);
 
-        // Extrapolated from lin reg on previous ^ data
-        distToPivotAngle.put(Units.inchesToMeters(152.283), 29.611);
-        distToPivotAngle.put(Units.inchesToMeters(164.016),  26.7);
-        // distToPivotAngle.put(Units.inchesToMeters(13*12 +13), -4.61*13 +72.57);
-        // distToPivotAngle.put(Units.inchesToMeters(14*12 +13), -4.61*14 +72.57);
-        // distToPivotAngle.put(Units.inchesToMeters(15*12 +13), -4.61*15 +72.57);
-        // distToPivotAngle.put(Units.inchesToMeters(16*12 +13), -4.61*16 +72.57);
-      
-        //Timer.delay(0.2);
-        pivotMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
-        pivotMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
-        pivotMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
-        pivotSetpoint = rotateEncoder.getPosition();
-    }
-   
+    distToPivotAngle.put(Units.inchesToMeters(36.0), 86.0 - 27.0);
+    distToPivotAngle.put(Units.inchesToMeters(49), 59.0);
+    distToPivotAngle.put(Units.inchesToMeters(61), 53.0);
+    distToPivotAngle.put(Units.inchesToMeters(73), 45.0);
+    distToPivotAngle.put(Units.inchesToMeters(87), 44.0);
+    distToPivotAngle.put(Units.inchesToMeters(85), 41.0);
+
+    distToPivotAngle.put(Units.inchesToMeters(97), 37.0);
+    distToPivotAngle.put(Units.inchesToMeters(109), 36.0);
+    distToPivotAngle.put(Units.inchesToMeters(121), 34.0);
+    // distToPivotAngle.put()
+
+    // Extrapolated from lin reg on previous ^ data
+    distToPivotAngle.put(Units.inchesToMeters(152.283), 29.611);
+    distToPivotAngle.put(Units.inchesToMeters(164.016), 26.7);
+    // distToPivotAngle.put(Units.inchesToMeters(13*12 +13), -4.61*13 +72.57);
+    // distToPivotAngle.put(Units.inchesToMeters(14*12 +13), -4.61*14 +72.57);
+    // distToPivotAngle.put(Units.inchesToMeters(15*12 +13), -4.61*15 +72.57);
+    // distToPivotAngle.put(Units.inchesToMeters(16*12 +13), -4.61*16 +72.57);
+
+    // Timer.delay(0.2);
+    pivotMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+    pivotMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+    pivotMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+    pivotSetpoint = rotateEncoder.getPosition();
+  }
+
+  public double getAngle(){
+    return rotateEncoder.getPosition();
+  }
 
   public void setLimits() {
     // set soft limits and current limits for how far the manip can move
@@ -179,14 +173,14 @@ public static SUB_Pivot getInstance(){
 
   public void goToAngle(double angle) {
     pivotSetpoint = Math.min(kMaxArmAngle, Math.max(kMinArmAngle, angle));
-    targetState = new TrapezoidProfile.State(pivotSetpoint, 0.0);
+    new TrapezoidProfile.State(pivotSetpoint, 0.0);
     currentState = new TrapezoidProfile.State(rotateEncoder.getPosition(), rotateEncoder.getVelocity());
   }
 
-public void runManual(double _power) {
-     pivotMotor.set(_power);
-     setPivotSetpoint(rotateEncoder.getPosition());
-}
+  public void runManual(double _power) {
+    pivotMotor.set(_power);
+    setPivotSetpoint(rotateEncoder.getPosition());
+  }
 
   public void runAutomatic() {
     // currentState = pivotTrapezoidProfile.calculate(.02, currentState,

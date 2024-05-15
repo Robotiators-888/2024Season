@@ -15,7 +15,7 @@ import frc.robot.Constants.*;
 import frc.robot.utils.AutoGenerator;
 
 /** Add your docs here. */
-public class AUTO_3P_Top extends AutoPaths{
+public class AUTO_3P_Top extends AutoPaths {
 
     @Override
     public Command load(AutoGenerator autos) {
@@ -23,27 +23,26 @@ public class AUTO_3P_Top extends AutoPaths{
         String p2Name = "TopGP_to_MiddleGP_Scorepos";
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
         var alliance = DriverStation.getAlliance();
-    
+
         Pose2d startingPose = null;
         if (alliance.isPresent()) {
-            if (alliance.get() == DriverStation.Alliance.Red){
+            if (alliance.get() == DriverStation.Alliance.Red) {
                 startingPose = p1.flipPath().getPreviewStartingHolonomicPose();
             } else {
                 startingPose = p1.getPreviewStartingHolonomicPose();
             }
-        } 
+        }
 
         return Commands.sequence(
-            autos.scoringSequence(Pivot.kSpeakerAngleSP, 2500),
-            autos.resetOdometry(startingPose),
+                autos.scoringSequence(Pivot.kSpeakerAngleSP, 2500),
+                autos.resetOdometry(startingPose),
 
-            autos.pathIntake(p1Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP, 4000),
+                autos.pathIntake(p1Name).withTimeout(4),
+                autos.scoringSequence(Pivot.kLowAngleSP, 4000),
 
-            autos.pathIntake(p2Name),
-            new WaitCommand(.25),
-            autos.scoringSequence(Pivot.kLowAngleSP, 4000)
-        );
+                autos.pathIntake(p2Name),
+                new WaitCommand(.25),
+                autos.scoringSequence(Pivot.kLowAngleSP, 4000));
     }
-    
+
 }

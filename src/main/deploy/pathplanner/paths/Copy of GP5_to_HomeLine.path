@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.463986356544141,
-        "y": 2.3601727203454415
+        "x": 8.280700937992206,
+        "y": 0.7624410159761787
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.598904701515001,
-        "y": 2.0811447562072236
+        "x": 6.848289125149679,
+        "y": 1.2313944627889262
       },
       "isLocked": false,
-      "linkedName": "GP_4"
+      "linkedName": "GP_5"
     },
     {
       "anchor": {
-        "x": 5.142206205700426,
-        "y": 1.7916532434138215
+        "x": 5.191770383540767,
+        "y": 1.7884538626220114
       },
       "prevControl": {
-        "x": 5.964604415792016,
-        "y": 1.6741677848293086
+        "x": 6.335208098987628,
+        "y": 1.2607133785696143
       },
       "nextControl": {
-        "x": 4.24413380436827,
-        "y": 1.9199493007469866
+        "x": 3.9719459304959925,
+        "y": 2.351449764027292
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.307869517349053,
-        "y": 3.216164428751041
+        "x": 2.509089589607751,
+        "y": 3.4449726042309234
       },
       "prevControl": {
-        "x": 2.794022032158561,
-        "y": 2.6667874706411325
+        "x": 2.963532784208426,
+        "y": 3.019848325410937
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BottomShootPos"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -55,13 +55,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 142.99,
+    "rotation": 146.9761324442033,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Mid Line Paths",
+  "folder": "Note Detect Path",
   "previewStartingState": {
-    "rotation": -178.53119928561415,
+    "rotation": 178.5479053790663,
     "velocity": 0
   },
   "useDefaultConstraints": true

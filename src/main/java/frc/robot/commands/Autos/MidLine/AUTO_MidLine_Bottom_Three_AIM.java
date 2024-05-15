@@ -18,7 +18,7 @@ import frc.robot.utils.AutoGenerator;
 import frc.robot.utils.PathPlannerBase;
 
 /** Add your docs here. */
-public class AUTO_MidLine_Bottom_Three extends AutoPaths {
+public class AUTO_MidLine_Bottom_Three_AIM extends AutoPaths {
 
     @Override
     public Command load(AutoGenerator autos) {
@@ -47,16 +47,18 @@ public class AUTO_MidLine_Bottom_Three extends AutoPaths {
 
                 autos.resetOdometry(startingPose),
                 PathPlannerBase.followTrajectory(p0Name).withTimeout(1),
-                autos.scoringSequence(Pivot.kSpeakerAngleSP - 20, 4000, 0.45),
+                autos.aimedShot().withTimeout(1.5),
 
-                autos.pathIntake(p1Name).withTimeout(4),
+                autos.pathIntake(p1Name).withTimeout(3.55),
+                autos.visionAlignToNote().withTimeout(1.5),
                 PathPlannerBase.followTrajectory(p2Name).withTimeout(4),
-                autos.scoringSequence(Pivot.kLowAngleSP - 1, 4500, 0.5),
+                autos.aimedShot().withTimeout(1.5),
                 // autos.autoAimShot(0.0),
 
-                autos.pathIntake(p3Name).withTimeout(4),
+                autos.pathIntake(p3Name).withTimeout(3.35),
+                autos.visionAlignToNote().withTimeout(1.5),
                 PathPlannerBase.followTrajectory(p4Name).withTimeout(4),
-                autos.scoringSequence(Pivot.kLowAngleSP - 1, 4500, 0.75)
+                autos.aimedShot().withTimeout(1.5)
 
         // autos.autoAimShot(0.0)
 

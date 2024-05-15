@@ -1,0 +1,25 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6043303678736167,
+      "y": 4.46444742621149
+    },
+    "rotation": 120.52970589993416
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GERSTNER_AUTO"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Silly Autos",
+  "choreoAuto": false
+}

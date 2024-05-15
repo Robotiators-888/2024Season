@@ -13,12 +13,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.FieldConstants;
@@ -26,13 +28,15 @@ import frc.robot.RobotContainer;
 import frc.robot.commands.AutoActions.CMD_Shoot;
 import frc.robot.commands.AutoActions.CMD_ShootSEQ;
 import frc.robot.commands.Limelight.CMD_AutoAimOnDist;
+import frc.robot.commands.Limelight.CMD_AutoAimOnDist_NO_DRIVE;
+import frc.robot.commands.Limelight.CMD_AutoCenterOnNote;
 import frc.robot.subsystems.SUB_Drivetrain;
 import frc.robot.subsystems.SUB_Index;
 import frc.robot.subsystems.SUB_Intake;
 import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.subsystems.SUB_Shooter;
 import frc.robot.subsystems.Vision.SUB_Limelight;
-import frc.robot.subsystems.Vision.NoteDetect.NoteVision;
+import frc.robot.subsystems.Vision.SUB_PhotonVision;
 
 /** This utility class is built for selecting made autos */
 public class AutoGenerator {
@@ -41,6 +45,7 @@ public class AutoGenerator {
   SUB_Intake intake = SUB_Intake.getInstance();
   SUB_Shooter shooter = SUB_Shooter.getInstance();
   SUB_Pivot pivot = SUB_Pivot.getInstance();
+  SUB_PhotonVision photonVision = SUB_PhotonVision.getInstance();
   // SUB_Limelight limelight = SUB_Limelight.getInstance();
   CommandXboxController driver1;
 
@@ -86,28 +91,81 @@ public class AutoGenerator {
   }
 
   // ====================================================================
-  // Paths
-  // ====================================================================
-
-  // ====================================================================
-  // Routines
+  //                              Routines
   // ====================================================================
 
   public Command resetOdometry(Pose2d pose) {
-    if(!RobotContainer.standardPosChecker.getSelected().booleanValue()){
-      //drivetrain.getPose().rotateBy(Rotation2d.fromDegrees(180));
-        // drivetrain.resetOdometry(
-        //   new Pose2d(
-        //     SmartDashboard.getNumber("STARTING POSE/ABSOLUTE X meters", 0), 
-        //     SmartDashboard.getNumber("STARTING POSE/ABSOLUTE Y meters", 0), 
-        //     Rotation2d.fromDegrees(SmartDashboard.getNumber("STARTING POSE/ABSOLUTE ROTATION degrees", 0))));
-          return new InstantCommand(
-        () -> drivetrain.resetOdometry(drivetrain.getPose()));
-    }  
-    else{
-    return new InstantCommand(
-        () -> drivetrain.resetOdometry(pose));
+    if (!RobotContainer.standardPosChecker.getSelected().booleanValue()) {
+      // drivetrain.getPose().rotateBy(Rotation2d.fromDegrees(180));
+      // drivetrain.resetOdometry(
+      // new Pose2d(
+      // SmartDashboard.getNumber("STARTING POSE/ABSOLUTE X meters", 0),
+      // SmartDashboard.getNumber("STARTING POSE/ABSOLUTE Y meters", 0),
+      // Rotation2d.fromDegrees(SmartDashboard.getNumber("STARTING POSE/ABSOLUTE
+      // ROTATION degrees", 0))));
+      return new InstantCommand(
+          () -> drivetrain.resetOdometry(drivetrain.getPose()));
+    } else {
+      return new InstantCommand(
+          () -> drivetrain.resetOdometry(pose));
     }
+  }
+
+  public Command aimedShot(){
+    return 
+      new CMD_AutoAimOnDist(SUB_Pivot.getInstance(), SUB_Drivetrain.getInstance()).withTimeout(1.2)
+        .andThen(
+          new ParallelCommandGroup(
+            new RunCommand(() -> shooter.shootFlywheelOnRPM(4000), shooter),
+            new SequentialCommandGroup(
+                    new WaitUntilCommand(() -> shooter.getFlywheelRPM() >= 3500),
+                    new RunCommand(() -> index.setMotorSpeed(0.5), index).withTimeout(0.10),
+                    new InstantCommand(() -> intake.setHasNote(false)))).andThen(
+            new ParallelCommandGroup(
+                new InstantCommand(() -> index.setMotorSpeed(0.0), index)), 
+                new InstantCommand(()->drivetrain.drive(0, 0, 0, true, true)))
+    );
+  }
+
+  public Command aimedShotWithoutDrive(){
+    return 
+      new CMD_AutoAimOnDist_NO_DRIVE(SUB_Pivot.getInstance(), SUB_Drivetrain.getInstance()).withTimeout(0.3)
+        .andThen(
+          new ParallelCommandGroup(
+            new RunCommand(() -> shooter.shootFlywheelOnRPM(4000), shooter),
+            new SequentialCommandGroup(
+                    new WaitUntilCommand(() -> shooter.getFlywheelRPM() >= 3500),
+                    new RunCommand(() -> index.setMotorSpeed(0.5), index).withTimeout(0.10),
+                    new InstantCommand(() -> intake.setHasNote(false)))).andThen(
+            new ParallelCommandGroup(
+                new InstantCommand(() -> index.setMotorSpeed(0.0), index))));
+  }
+
+  public Command visionAlignToNote() {
+    return new ConditionalCommand(
+        new ParallelCommandGroup(
+          new CMD_AutoCenterOnNote(drivetrain, photonVision).withTimeout(2.5).andThen(
+              new RunCommand(() -> drivetrain.drive(-0.5, 0, 0, false, true))).withTimeout(3.0)
+              .until(() -> index.CurrentLimitSpike()),
+          new ParallelCommandGroup(
+              new InstantCommand(() -> pivot.goToAngle(75)),
+              new InstantCommand(() -> index.starttimer()),
+              new RunCommand(() -> index.setMotorSpeed(Constants.Intake.kIndexSpeed), index),
+              new RunCommand(() -> intake.setMotorSpeed(Constants.Intake.kIntakingSpeed))).until(
+                  () -> index.CurrentLimitSpike())
+              .andThen(
+                  new InstantCommand(() -> intake.setHasNote(true)),
+                  new RunCommand(() -> index.setMotorSpeed(0.0)).withTimeout(0.0).andThen(
+                      new ParallelCommandGroup(
+                          new InstantCommand(() -> index.setMotorSpeed(0)),
+                          new InstantCommand(() -> shooter.setMotorSpeed(0))))))
+          .andThen(
+              new ParallelCommandGroup(
+                  new InstantCommand(() -> index.setMotorSpeed(0)),
+                  new InstantCommand(() -> intake.setMotorSpeed(0)),
+                  new InstantCommand(() -> shooter.shootFlywheelOnRPM(0)))),
+        new WaitCommand(0),
+        ()->SUB_PhotonVision.getInstance().hasResults);
   }
 
   public Command resetOdometry(Pose2d pose, Rotation2d rot) {
@@ -127,9 +185,9 @@ public class AutoGenerator {
 
   // TODO: Test SEQ
   public Command scoringSequence() {
-    return new RunCommand(() -> shooter.shootFlywheelOnRPM(4000), shooter)
-        .until(() -> shooter.getFlywheelRPM() >= 3500)
-        .andThen(new RunCommand(() -> index.setMotorSpeed(0.5)).withTimeout(0.25))
+    return new RunCommand(() -> shooter.shootFlywheelOnRPM(4500), shooter)
+        .until(() -> shooter.getFlywheelRPM() >= 4000)
+        .andThen(new RunCommand(() -> index.setMotorSpeed(0.75)).withTimeout(0.10))
         .andThen(new InstantCommand(() -> index.setMotorSpeed(0)))
         .andThen(new InstantCommand(() -> intake.setHasNote(true)));
   }
@@ -137,10 +195,11 @@ public class AutoGenerator {
   public Command scoringSequence(double setpoint, int rpm) {
     return new SequentialCommandGroup(
         new InstantCommand(() -> pivot.goToAngle(setpoint)),
-        new WaitCommand(.25),
+        //new WaitCommand(.25),
+        new WaitUntilCommand(()->(Math.abs(pivot.getAngle()-setpoint)<=2)),
         new RunCommand(() -> shooter.shootFlywheelOnRPM(rpm), shooter)
-            .until(() -> shooter.getFlywheelRPM() >= rpm - 500)
-            .andThen(new RunCommand(() -> index.setMotorSpeed(0.5)).withTimeout(0.25))
+            .until(() -> shooter.getFlywheelRPM() >= rpm - 250)
+            .andThen(new RunCommand(() -> index.setMotorSpeed(0.75)).withTimeout(0.15))
             .andThen(new InstantCommand(() -> index.setMotorSpeed(0)))
             .andThen(new InstantCommand(() -> intake.setHasNote(true))));
   }
@@ -152,7 +211,7 @@ public class AutoGenerator {
         new WaitCommand(delay),
         new RunCommand(() -> shooter.shootFlywheelOnRPM(rpm), shooter)
             .until(() -> shooter.getFlywheelRPM() >= rpm - 250)
-            .andThen(new RunCommand(() -> index.setMotorSpeed(0.5)).withTimeout(0.25))
+            .andThen(new RunCommand(() -> index.setMotorSpeed(0.75)).withTimeout(0.15))
             .andThen(new InstantCommand(() -> index.setMotorSpeed(0)))
             .andThen(new InstantCommand(() -> intake.setHasNote(true))));
   }
@@ -175,17 +234,6 @@ public class AutoGenerator {
     return new ParallelCommandGroup(
         runIntake(),
         PathPlannerBase.followTrajectory(path));
-  }
-
-  public Command noteDetectPath(String path) {
-    return new SequentialCommandGroup(
-        PathPlannerBase.followTrajectory(path)
-            .onlyWhile(() -> !NoteVision.getInstance().hasTarget())
-            .andThen(
-                runIntake()
-                    .deadlineWith(
-                        NoteVision.getInstance().autoIntake(() -> 2, SUB_Drivetrain.getInstance(),
-                            SUB_Intake.getInstance()))));
   }
 
   public Command runShooter(int rpm) {
@@ -231,14 +279,8 @@ public class AutoGenerator {
         new CMD_Shoot(shooter, index, drivetrain, intake, pivot));
   }
 
-  // public Command shootWhenReady(){
-  // return
-  // shooter.runOnce(()->shooter.setRPM(4000)).until(()->(shooter.getFlywheelRPM()
-  // >= 3500)).andThen(index.runOnce(()->index.setMotorSpeed(.5)));
-  // }
-
   // ====================================================================
-  // Helpers
+  //                                  Helpers
   // ====================================================================
 
   public void registerAllCommands() {

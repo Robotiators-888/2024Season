@@ -17,7 +17,7 @@ import frc.robot.subsystems.*;
 import frc.robot.subsystems.SUB_Pivot;
 import frc.robot.subsystems.Vision.*;
 
-public class CMD_AutoAimOnDist extends Command {
+public class CMD_AutoAimOnDist_NO_DRIVE extends Command {
   SUB_Pivot pivot;
   SUB_Limelight limelight;
   SUB_Drivetrain drivetrain;
@@ -30,10 +30,9 @@ public class CMD_AutoAimOnDist extends Command {
   double yError;
   double angle;
 
-  private final PIDController robotAngleController = new PIDController( 0.57, 0, 0.05); // 0.25, 0, 0
 
   /** Creates a new CMD_AdjustPivotOnDist. */
-  public CMD_AutoAimOnDist(SUB_Pivot pivot, SUB_Drivetrain drivetrain) {
+  public CMD_AutoAimOnDist_NO_DRIVE(SUB_Pivot pivot, SUB_Drivetrain drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.  
     this.pivot = pivot;
     this.drivetrain = drivetrain;
@@ -42,7 +41,6 @@ public class CMD_AutoAimOnDist extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    robotAngleController.reset();
     
     var alliance = DriverStation.getAlliance();
     if (alliance.isPresent()){
@@ -60,8 +58,6 @@ public class CMD_AutoAimOnDist extends Command {
 
     SmartDashboard.putBoolean("SPEAKER LOCK?", false);
 
-    robotAngleController.setTolerance(0.04);
-    robotAngleController.enableContinuousInput(-Math.PI, Math.PI);
 
   }
 
@@ -84,11 +80,6 @@ public class CMD_AutoAimOnDist extends Command {
     SmartDashboard.putNumber("Angle", angle);
     SmartDashboard.putNumber("Cur Rotation Radians", MathUtil.angleModulus(currentPose.getRotation().getRadians()));
     SmartDashboard.putNumber("Distance error", positionError);
-
-    drivetrain.drive(
-    0, 0,
-    robotAngleController.calculate(MathUtil.angleModulus(currentPose.getRotation().getRadians()), angle),
-  true, true);
   }
 
   // Called once the command ends or is interrupted.
@@ -100,7 +91,6 @@ public class CMD_AutoAimOnDist extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(pivot.calculateDegreesRotation()-pivot.distToPivotAngle.get(positionError)) < 5 
-    && (Math.abs(drivetrain.getRotation2d().getRadians()-angle) <= 0.04);
+    return Math.abs(pivot.calculateDegreesRotation()-pivot.distToPivotAngle.get(positionError)) < 5;
   }
 }

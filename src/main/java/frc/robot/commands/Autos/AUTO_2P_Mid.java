@@ -15,7 +15,7 @@ import frc.robot.utils.AutoGenerator;
 import frc.robot.utils.PathPlannerBase;
 
 /** Add your docs here. */
-public class AUTO_2P_Mid extends AutoPaths{
+public class AUTO_2P_Mid extends AutoPaths {
 
     @Override
     public Command load(AutoGenerator autos) {
@@ -23,25 +23,24 @@ public class AUTO_2P_Mid extends AutoPaths{
         String p2name = "Middle_to_MiddleHome";
         PathPlannerPath p1 = PathPlannerPath.fromPathFile(p1Name);
         var alliance = DriverStation.getAlliance();
-    
+
         Pose2d startingPose = null;
         if (alliance.isPresent()) {
-            if (alliance.get() == DriverStation.Alliance.Red){
+            if (alliance.get() == DriverStation.Alliance.Red) {
                 startingPose = p1.flipPath().getPreviewStartingHolonomicPose();
             } else {
                 startingPose = p1.getPreviewStartingHolonomicPose();
             }
-        } 
+        }
         // TODO Auto-generated method stub
         return Commands.sequence(
-            autos.scoringSequence(Pivot.kSpeakerAngleSP-5,4000, 0.45),
-            autos.resetOdometry(startingPose),
+                autos.scoringSequence(Pivot.kSpeakerAngleSP - 5, 4000, 0.45),
+                autos.resetOdometry(startingPose),
 
-            autos.pathIntake(p1Name).withTimeout(4),
-            autos.scoringSequence(Pivot.kLowAngleSP+6, 4000, 0.33),
+                autos.pathIntake(p1Name).withTimeout(4),
+                autos.scoringSequence(Pivot.kLowAngleSP + 6, 4000, 0.33),
 
-            PathPlannerBase.followTrajectory(p2name)
-        );
+                PathPlannerBase.followTrajectory(p2name));
     }
-    
+
 }

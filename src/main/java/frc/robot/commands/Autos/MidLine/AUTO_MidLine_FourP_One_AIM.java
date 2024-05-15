@@ -44,15 +44,15 @@ public class AUTO_MidLine_FourP_One_AIM extends AutoPaths {
 
             autos.pathIntake(p1Name).withTimeout(4),
             //autos.scoringSequence(Pivot.kLowAngleSP+3, 4000, 0.33),
-            autos.autoAimShot(0.5),
+            autos.aimedShot().withTimeout(1.5),
 
             autos.pathIntake(p2Name).withTimeout(4),
-            autos.autoAimShot(0.5),
+            autos.aimedShot().withTimeout(1.5),
 
             autos.pathIntake(p3Name).withTimeout(4),
             PathPlannerBase.followTrajectory(p4Name),
 
-            autos.autoAimShot(0.5)
+            autos.aimedShot().withTimeout(1.5)
         );
     }
     

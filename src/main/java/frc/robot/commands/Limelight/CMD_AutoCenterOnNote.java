@@ -21,32 +21,29 @@ import frc.robot.subsystems.Vision.SUB_PhotonVision;
 import static frc.robot.Constants.Pivot.*;
 
 import org.photonvision.targeting.PhotonTrackedTarget;
-public class CMD_CenterOnNote extends Command {
+public class CMD_AutoCenterOnNote extends Command {
   SUB_Pivot pivot;
   SUB_Limelight limelight;
   SUB_Drivetrain drivetrain;
   SUB_PhotonVision photonVision;
 
+
   CommandXboxController driverController;
 
-  private final PIDController robotAngleController = new PIDController( 0.01, 0, .0005); // 0.25, 0, 0
+  private final PIDController robotAngleController = new PIDController( 0.015, 0, .0005); // 0.25, 0, 0
   private PhotonTrackedTarget note;
   
   /** Creates a new CMD_AdjustPivotOnDist. */
-  public CMD_CenterOnNote(SUB_Drivetrain drivetrain, SUB_PhotonVision photonVision, CommandXboxController driverController) {
+  public CMD_AutoCenterOnNote(SUB_Drivetrain drivetrain, SUB_PhotonVision photonVision) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.drivetrain = drivetrain;
-    this.driverController = driverController;
     this.photonVision = photonVision;
-    addRequirements(drivetrain);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
     note = photonVision.getBestNote();
-
     robotAngleController.setTolerance(4.0);
   }
 
@@ -56,12 +53,12 @@ public class CMD_CenterOnNote extends Command {
     note = photonVision.getBestNote();
 
     if (note == null){
-
+      
     } else {
       drivetrain.drive(
-      -MathUtil.applyDeadband(Math.copySign(Math.pow(driverController.getRawAxis(1), 2), driverController.getRawAxis(1)), OIConstants.kDriveDeadband),
+      0,
       -MathUtil.clamp(robotAngleController.calculate(note.getYaw(), 0), -0.3, 0.3),
-      -MathUtil.applyDeadband(driverController.getRawAxis(4), OIConstants.kDriveDeadband),
+      0,
       false, true);
     }
   }
