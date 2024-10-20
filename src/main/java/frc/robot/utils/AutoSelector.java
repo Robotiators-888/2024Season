@@ -43,7 +43,7 @@ public class AutoSelector {
         chooser.addOption("4P_Top", new AUTO_4P_Top());
         chooser.addOption("4P_Middle", new AUTO_4P_Mid());
         chooser.addOption("4P_Middle_REV", new AUTO_4P_Mid_REV());
-
+        chooser.addOption("STUPID_DEVIN_AUTO", new AUTO_DEVIN_IS_STUPID());
         // DCMP AUTO
         // chooser.addOption("4P_Middle PLAYOFFS!!!!!", new AUTO_4P_Mid_PLAYOFFS());
 
@@ -53,7 +53,7 @@ public class AutoSelector {
 
         chooser.addOption("Gerstner Auto", new AUTO_Silly_GERSTNER());
 
-        // chooser.addOption("1 Meter back", new AUTO_1_Meter());
+        chooser.addOption("1 Meter back", new AUTO_1_Meter());
         // chooser.addOption("2 Meter", new AUTO_2_Meter());
         // chooser.addOption("5 Meter", new AUTO_5_Meter());
 
