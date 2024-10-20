@@ -171,20 +171,20 @@ public class RobotContainer {
         Driver1.a().whileTrue(
                 new CMD_AlignSource(pivot, drivetrain, Driver1));
 
-        // Manual Auto shot
-        Driver1.b().whileTrue(
-                new ParallelCommandGroup(
-                        new RunCommand(() -> shooter.shootFlywheelOnRPM(4000), shooter),
-                        new SequentialCommandGroup(
-                                new WaitUntilCommand(() -> shooter.getFlywheelRPM() >= 3500),
-                                new RunCommand(() -> index.setMotorSpeed(0.5), index),
-                                new InstantCommand(() -> intake.setHasNote(false)),
-                                new InstantCommand(
-                                        () -> SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value))))
-                .onFalse(
-                        new ParallelCommandGroup(
-                                new InstantCommand(() -> index.setMotorSpeed(0)),
-                                new InstantCommand(() -> shooter.setMotorSpeed(0)))); // Spin Shooter OUT
+        // // Manual Auto shot
+        // Driver1.b().whileTrue(
+        //         new ParallelCommandGroup(
+        //                 new RunCommand(() -> shooter.shootFlywheelOnRPM(4000), shooter),
+        //                 new SequentialCommandGroup(
+        //                         new WaitUntilCommand(() -> shooter.getFlywheelRPM() >= 3500),
+        //                         new RunCommand(() -> index.setMotorSpeed(0.5), index),
+        //                         new InstantCommand(() -> intake.setHasNote(false)),
+        //                         new InstantCommand(
+        //                                 () -> SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value))))
+        //         .onFalse(
+        //                 new ParallelCommandGroup(
+        //                         new InstantCommand(() -> index.setMotorSpeed(0)),
+        //                         new InstantCommand(() -> shooter.setMotorSpeed(0)))); // Spin Shooter OUT
 
         // Align to Source Intake
         Driver1.y().whileTrue(new ParallelCommandGroup(
@@ -232,34 +232,49 @@ public class RobotContainer {
                 new InstantCommand(() -> SUB_Shooter.MANUAL_RPM += 250)); // Increase manual RPM by 250
 
         // Manual Source intake
+        // Driver2.rightTrigger().whileTrue(
+        //         new ParallelCommandGroup(
+        //                 new InstantCommand(() -> index.starttimer()),
+        //                 new RunCommand(() -> index.setMotorSpeed(-Constants.Intake.kIndexSpeed), index),
+        //                 new RunCommand(() -> shooter.shootFlywheelOnRPM(-1000), shooter)).until(
+        //                         () -> index.CurrentLimitSpike())
+        //                 .andThen(
+        //                         new RunCommand(() -> index.setMotorSpeed(-0.05)).withTimeout(0.025))
+        //                 .andThen(
+        //                         new ParallelCommandGroup(
+        //                                 new InstantCommand(() -> intake.setHasNote(true)),
+        //                                 new InstantCommand(() -> index.setMotorSpeed(0)),
+        //                                 new InstantCommand(() -> shooter.setMotorSpeed(0))).andThen(
+        //                                         new SequentialCommandGroup(
+        //                                                 new WaitCommand(.5),
+        //                                                 new ParallelCommandGroup(
+        //                                                         new InstantCommand(
+        //                                                                 () -> Driver1.getHID().setRumble(
+        //                                                                         GenericHID.RumbleType.kBothRumble, 0)),
+        //                                                         new InstantCommand(
+        //                                                                 () -> Driver2.getHID().setRumble(
+        //                                                                         GenericHID.RumbleType.kBothRumble, 0)),
+        //                                                         new InstantCommand(
+        //                                                                 () -> SUB_LEDs.ledValue = BlinkinPattern.GREEN.value))))))
+        //         .onFalse(
+        //                 new ParallelCommandGroup(
+        //                         new RunCommand(() -> shooter.setMotorSpeed(0.0), shooter),
+        //                         new RunCommand(() -> index.setMotorSpeed(0.0), index))); // Spin Shooter IN
+
         Driver2.rightTrigger().whileTrue(
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> index.starttimer()),
-                        new RunCommand(() -> index.setMotorSpeed(-Constants.Intake.kIndexSpeed), index),
-                        new RunCommand(() -> shooter.shootFlywheelOnRPM(-1000), shooter)).until(
-                                () -> index.CurrentLimitSpike())
-                        .andThen(
-                                new RunCommand(() -> index.setMotorSpeed(-0.05)).withTimeout(0.025))
-                        .andThen(
-                                new ParallelCommandGroup(
-                                        new InstantCommand(() -> intake.setHasNote(true)),
-                                        new InstantCommand(() -> index.setMotorSpeed(0)),
-                                        new InstantCommand(() -> shooter.setMotorSpeed(0))).andThen(
-                                                new SequentialCommandGroup(
-                                                        new WaitCommand(.5),
-                                                        new ParallelCommandGroup(
-                                                                new InstantCommand(
-                                                                        () -> Driver1.getHID().setRumble(
-                                                                                GenericHID.RumbleType.kBothRumble, 0)),
-                                                                new InstantCommand(
-                                                                        () -> Driver2.getHID().setRumble(
-                                                                                GenericHID.RumbleType.kBothRumble, 0)),
-                                                                new InstantCommand(
-                                                                        () -> SUB_LEDs.ledValue = BlinkinPattern.GREEN.value))))))
+                        new RunCommand(() -> shooter.shootFlywheelOnRPM(4000), shooter),
+                        new SequentialCommandGroup(
+                                new WaitUntilCommand(() -> shooter.getFlywheelRPM() >= 3500),
+                                new RunCommand(() -> index.setMotorSpeed(0.5), index),
+                                new InstantCommand(() -> intake.setHasNote(false)),
+                                new InstantCommand(
+                                        () -> SUB_LEDs.ledValue = BlinkinPattern.RAINBOW_RAINBOW_PALETTE.value))))
                 .onFalse(
                         new ParallelCommandGroup(
-                                new RunCommand(() -> shooter.setMotorSpeed(0.0), shooter),
-                                new RunCommand(() -> index.setMotorSpeed(0.0), index))); // Spin Shooter IN
+                                new InstantCommand(() -> index.setMotorSpeed(0)),
+                                new InstantCommand(() -> shooter.setMotorSpeed(0)))); // Spin Shooter OUT
+
 
         // Auto Aim shot
         Driver2.b().whileTrue(

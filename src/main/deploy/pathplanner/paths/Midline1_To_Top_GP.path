@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 13.679596502050146,
-        "y": 6.992561413694256
+        "x": 8.31894750384993,
+        "y": 7.430241005203245
       },
       "prevControl": null,
       "nextControl": {
-        "x": 15.471249745463991,
-        "y": 7.300960742478606
+        "x": 9.31894750384993,
+        "y": 7.430241005203245
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "DEVIN2"
     },
     {
       "anchor": {
-        "x": 8.3,
-        "y": 7.46
+        "x": 3.0221706157698036,
+        "y": 7.065858703145978
       },
       "prevControl": {
-        "x": 6.992974273247295,
-        "y": 7.122229306569525
+        "x": 2.0221706157698036,
+        "y": 7.065858703145978
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "DEVIN1"
     }
   ],
   "rotationTargets": [],
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -157.38013505195963,
+    "rotation": -146.31,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Mid Line Paths",
+  "folder": "BOB DEVIN",
   "previewStartingState": {
-    "rotation": -123.02386755579664,
+    "rotation": 180.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

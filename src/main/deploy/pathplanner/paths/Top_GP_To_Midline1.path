@@ -3,36 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.6777587794889373,
-        "y": 6.564499998409658
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 1.1688337704702,
-        "y": 6.658549736488786
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
         "x": 3.0221706157698036,
         "y": 7.065858703145978
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.9738722493717855,
+        "y": 7.372883133117471
+      },
+      "isLocked": false,
+      "linkedName": "DEVIN1"
+    },
+    {
+      "anchor": {
+        "x": 8.31894750384993,
+        "y": 7.430241005203245
+      },
       "prevControl": {
-        "x": 2.565353831640852,
-        "y": 6.918486976759662
+        "x": 7.31894750384993,
+        "y": 7.430241005203245
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "DEVIN1"
+      "linkedName": "DEVIN2"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.9,
-      "rotationDegrees": -159.76,
-      "rotateFast": false
+      "waypointRelativePos": 0.8,
+      "rotationDegrees": -179.75312801625432,
+      "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 0,
+      "rotationDegrees": 0.0,
+      "rotateFast": true
     }
   ],
   "constraintZones": [],
@@ -44,14 +49,14 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": -146.31,
-    "rotateFast": true
+    "velocity": 0,
+    "rotation": -177.87890360333841,
+    "rotateFast": false
   },
   "reversed": false,
-  "folder": "2 Piece Path",
+  "folder": "BOB DEVIN",
   "previewStartingState": {
-    "rotation": -120.0,
+    "rotation": -169.21883355089375,
     "velocity": 0
   },
   "useDefaultConstraints": true
