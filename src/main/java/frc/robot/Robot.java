@@ -9,8 +9,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.TimedRobot;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -69,25 +68,8 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putNumber("STARTING POSE/ABSOLUTE X meters", (SUB_Drivetrain.getInstance().getPose().getX()));
     SmartDashboard.putNumber("STARTING POSE/ABSOLUTE Y meters", (SUB_Drivetrain.getInstance().getPose().getY()));
     SmartDashboard.putNumber("STARTING POSE/ABSOLUTE ROTATION degrees", SUB_Drivetrain.getInstance().getPose().getRotation().getDegrees());
-    RobotContainer.photonPoseUpdate();
   }
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
-  @Override
-  public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
-  }
-
-  /** This function is called periodically during autonomous. */
-  @Override
-  public void autonomousPeriodic() {
-    RobotContainer.photonPoseUpdate();
-  }
 
   @Override
   public void teleopInit() {
@@ -103,10 +85,7 @@ public class Robot extends LoggedRobot {
   }
 
   /** This function is called periodically during operator control. */
-  @Override
-  public void teleopPeriodic() {
-    m_robotContainer.teleopPeriodic();
-  }
+  
 
   @Override
   public void testInit() {
