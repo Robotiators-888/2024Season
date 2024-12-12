@@ -11,12 +11,12 @@
             "groupId": "org.littletonrobotics.akit.junction",
             "artifactId": "wpilib-shim",
             "version": "3.2.1"
-        },        
+        },
         {
             "groupId": "org.littletonrobotics.akit.junction",
             "artifactId": "junction-core",
             "version": "3.2.1"
-        },        
+        },
         {
             "groupId": "org.littletonrobotics.akit.conduit",
             "artifactId": "conduit-api",
