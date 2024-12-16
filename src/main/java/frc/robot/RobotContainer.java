@@ -5,9 +5,9 @@
 package frc.robot;
 
 import frc.robot.Constants.*;
-
+import frc.robot.subsystems.SUB_Shooter;
 import frc.robot.subsystems.SUB_Drivetrain;
-
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -42,6 +42,8 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        final shootersubsystem = new ShooterSubsystem();
+        NamedCommands.registerCommand("exampleCommand", ()->ShooterSubsystem.setMotorSpeed(.1));
 
         standardPosChecker.addOption("Odometery Init", Boolean.TRUE);
         standardPosChecker.setDefaultOption("ATag Init", Boolean.FALSE);

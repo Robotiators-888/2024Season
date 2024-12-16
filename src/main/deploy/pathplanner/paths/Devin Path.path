@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.461170410712915,
-        "y": 4.126676732781015
+        "x": 1.3725738150477713,
+        "y": 5.550936522700434
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.772316943560543,
-        "y": 4.023876956519567
+        "x": 2.3725738150477715,
+        "y": 5.550936522700434
       },
       "isLocked": false,
-      "linkedName": "GP_3"
+      "linkedName": "Devin's Start Pose"
     },
     {
       "anchor": {
-        "x": 5.039406429438977,
-        "y": 3.818277403996669
+        "x": 2.9066934025451485,
+        "y": 7.0
       },
       "prevControl": {
-        "x": 6.504246778390905,
-        "y": 3.8819661148206652
+        "x": 2.9147747973990055,
+        "y": 7.99996734499543
       },
       "nextControl": {
-        "x": 4.7016357360085035,
-        "y": 3.8035917216736053
+        "x": 2.894982565999367,
+        "y": 5.550936522700434
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.307869517349053,
-        "y": 3.216164428751041
+        "x": 2.9066934025451485,
+        "y": 4.133925300660873
       },
       "prevControl": {
-        "x": 2.8088212240825197,
-        "y": 3.3157421699458793
+        "x": 2.894982565999367,
+        "y": 5.562647359246215
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BottomShootPos"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -55,13 +55,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 142.99,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Mid Line Paths",
+  "folder": null,
   "previewStartingState": {
-    "rotation": 177.7974018382342,
+    "rotation": 2.3016925111731537,
     "velocity": 0
   },
   "useDefaultConstraints": true

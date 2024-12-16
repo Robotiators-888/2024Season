@@ -2,22 +2,8 @@
   "robotWidth": 0.79,
   "robotLength": 0.61,
   "holonomicMode": true,
-  "pathFolders": [
-    "2 Piece Path",
-    "3 Piece Path",
-    "4 Piece Path",
-    "5 Piece Path",
-    "Mid Line Paths",
-    "Note Detect Path",
-    "Silly Paths",
-    "Troubleshooting "
-  ],
-  "autoFolders": [
-    "2 Piece",
-    "3 Piece",
-    "4 Piece",
-    "Silly Autos"
-  ],
+  "pathFolders": [],
+  "autoFolders": [],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,
