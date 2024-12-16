@@ -4,17 +4,26 @@
 
 package frc.robot;
 
-import frc.robot.Constants.*;
-import frc.robot.subsystems.SUB_Shooter;
-import frc.robot.subsystems.SUB_Drivetrain;
-import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.SUB_Drivetrain;
+import frc.robot.utils.AllianceFlipUtil;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -34,29 +43,36 @@ public class RobotContainer {
     public static CommandXboxController Driver1 = new CommandXboxController(OIConstants.kDriver1ontrollerPort);
     public static CommandXboxController Driver2 = new CommandXboxController(OIConstants.kDriver2ControllerPort);
 
-    public static SendableChooser<Boolean> standardPosChecker = new SendableChooser<Boolean>();
+    public static SendableChooser<Boolean> standardPosChecker = new SendableChooser<>();
 
-    public static SendableChooser<Double> delayChooser = new SendableChooser<Double>();
+    public static SendableChooser<Double> delayChooser = new SendableChooser<>();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        final shootersubsystem = new ShooterSubsystem();
-        NamedCommands.registerCommand("exampleCommand", ()->ShooterSubsystem.setMotorSpeed(.1));
 
         standardPosChecker.addOption("Odometery Init", Boolean.TRUE);
         standardPosChecker.setDefaultOption("ATag Init", Boolean.FALSE);
         SmartDashboard.putData("Standard Pose Chooser", standardPosChecker);
 
 
-        delayChooser.setDefaultOption("0 Sec", Double.valueOf(0.0));
-        delayChooser.addOption("1 Sec", Double.valueOf(1.0));
-        delayChooser.addOption("2 Sec", Double.valueOf(2.0));
-        delayChooser.addOption("3 Sec", Double.valueOf(3.0));
-        delayChooser.addOption("4 Sec", Double.valueOf(4.0));
-        delayChooser.addOption("5 Sec", Double.valueOf(5.0));
+        delayChooser.setDefaultOption("0 Sec", 0.0);
+        delayChooser.addOption("1 Sec", 1.0);
+        delayChooser.addOption("2 Sec", 2.0);
+        delayChooser.addOption("3 Sec", 3.0);
+        delayChooser.addOption("4 Sec", 4.0);
+        delayChooser.addOption("5 Sec", 5.0);
         SmartDashboard.putData("Delay Chooser", delayChooser);
+
+
+        // Configure AutoBuilder last
+        AutoBuilder
+        .configureHolonomic(drivetrain::getPose, drivetrain::resetPose, drivetrain::getChassisSpeeds,
+            drivetrain::driveRobotRelative,
+            new HolonomicPathFollowerConfig(new PIDConstants(1.5, 0.0, 0.0), new PIDConstants(5.0, 0, 0),
+                Constants.Drivetrain.kMaxModuleSpeed, Constants.Drivetrain.kTrackRadius, new ReplanningConfig()),
+            AllianceFlipUtil::shouldFlip, drivetrain);
 
 
         // Configure the trigger bindings
@@ -120,12 +136,25 @@ public class RobotContainer {
     private void configureBindings() {
     }
 
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
-
+    
     public void robotPeriodic() {
+
     }
+    public Command getAutonomousCommand() {
+        try{
+                // Load the path you want to follow using its name in the GUI
+                PathPlannerPath path = PathPlannerPath.fromPathFile("GERSTNER_AUTO");
+
+                // Create a path following command using AutoBuilder. This will also trigger event markers.
+                return AutoBuilder.followPath(path);
+        } catch (Exception e) {
+                DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
+                return Commands.none();
+        }
+    }
+
+public void teleopPeriodic() {
+        // TODO Auto-generated method stub
+}
+    
 }
